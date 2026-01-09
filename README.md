@@ -21,6 +21,26 @@ src/main/resources/
 
 docs/                                 # Tài liệu thiết kế & SQL script
 screenshots/                          # Hình ảnh giao diện
+
+
+src/main/java/
+ ├── Backend/
+ │    ├── DTO/
+ │    │    └── ---.java
+ │    ├── DAO/
+ │    │    └── ---DAO.java
+ │    ├── BUS/
+ │    │    └── ---BUS.java
+ │    └── DatabaseHelper.java
+ ├── Frontend/
+ │    ├── GUI/
+ │    │    ├── MainFrame.java
+ │    │    └── QuanLyLaptopPanel.java
+ │    └── Component/
+ │         └── (Các dialog thêm/sửa)
+ └── App.java (Điểm chạy chính)
+
+ 
 ```
 
 ---
