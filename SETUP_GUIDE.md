@@ -68,7 +68,7 @@ Nếu hiện thông tin **Apache Maven** là thành công! ✓
 ```
 1. Truy cập: http://localhost/phpmyadmin
 2. Tạo database mới: quanlylaptop
-3. Mở file: docs/database.sql
+3. Mở file: ___.sql
 4. Copy toàn bộ nội dung vào thẻ SQL
 5. Nhấn Go ✓
 ```
