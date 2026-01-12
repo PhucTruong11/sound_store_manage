@@ -7,11 +7,11 @@ import java.sql.SQLException;
 public class DatabaseHelper {
     // 1. Cấu hình thông tin (Cô giáo thường chấm kỹ chỗ này)
     // Nếu database của bạn tên khác thì sửa chỗ 'quanlysieuthidienthoai' nhé
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/quanlylaptop?useSSL=false&serverTimezone=UTC";
+    public static final String DB_URL = "jdbc:mysql://localhost:3306/quanlyamthanh?useSSL=false&serverTimezone=UTC";
     public static final String USER = "root";     // Tên đăng nhập mặc định của XAMPP
     public static final String PASS = "";         // Mật khẩu mặc định là rỗng
 
-    // 2. Hàm lấy kết nối JDBC
+    // Hàm lấy kết nối JDBC
     public static Connection getConnection() {
         Connection conn = null;
         try {
