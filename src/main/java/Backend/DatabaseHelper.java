@@ -2,33 +2,63 @@ package Backend;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.util.Properties;
+import java.io.InputStream;
 
 public class DatabaseHelper {
-    // 1. Cấu hình thông tin (Cô giáo thường chấm kỹ chỗ này)
-    // Nếu database của bạn tên khác thì sửa chỗ 'quanlysieuthidienthoai' nhé
-    public static final String DB_URL = "jdbc:mysql://localhost:3306/quanlyamthanh?useSSL=false&serverTimezone=UTC";
-    public static final String USER = "root";     // Tên đăng nhập mặc định của XAMPP
-    public static final String PASS = "";         // Mật khẩu mặc định là rỗng
 
-    // Hàm lấy kết nối JDBC
-    public static Connection getConnection() {
-        Connection conn = null;
-        try {
-            // Dòng này để khai báo Driver (bắt buộc với JDBC cũ, giờ có thể bỏ nhưng nên để cho chắc)
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            
-            // Mở kết nối
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            // System.out.println("Kết nối thành công!"); // Bỏ comment dòng này để test
-            
-        } catch (ClassNotFoundException e) {
-            System.out.println("Không tìm thấy Driver JDBC!");
-            e.printStackTrace();
-        } catch (SQLException e) {
-            System.out.println("Lỗi kết nối SQL: " + e.getMessage());
+    // =========================
+    // Thông tin cấu hình Database
+    // Được đọc từ file db.properties
+    // =========================
+    private static String DB_URL;
+    private static String USER;
+    private static String PASS;
+
+    /*
+     * Khối static:
+     * - Chạy 1 lần khi class được load
+     * - Đọc thông tin database từ db.properties
+     * - Giúp code chạy được trên cả Windows & Linux
+     * - Không hard-code user/password
+     */
+    static {
+        try (
+                // Lấy file db.properties trong src/main/resources
+                InputStream is = DatabaseHelper.class
+                        .getClassLoader()
+                        .getResourceAsStream("db.properties")
+        ) {
+            Properties props = new Properties();
+            props.load(is);
+
+            DB_URL = props.getProperty("db.url");
+            USER   = props.getProperty("db.user");
+            PASS   = props.getProperty("db.pass");
+
+        } catch (Exception e) {
+            System.out.println("❌ Không đọc được file db.properties");
             e.printStackTrace();
         }
-        return conn;
+    }
+
+    /*
+     * Hàm tạo kết nối Database
+     * - Được gọi ở các lớp DAO
+     * - Trả về Connection hoặc null nếu lỗi
+     */
+    public static Connection getConnection() {
+        try {
+            // Load JDBC Driver (an toàn cho mọi phiên bản Java)
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Tạo và trả về kết nối
+            return DriverManager.getConnection(DB_URL, USER, PASS);
+
+        } catch (Exception e) {
+            System.out.println("❌ Lỗi kết nối Database!");
+            e.printStackTrace();
+            return null;
+        }
     }
 }
