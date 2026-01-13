@@ -79,7 +79,7 @@ Nếu hiện thông tin **Apache Maven** là thành công! ✓
 
 ### 🔧 Bước Cài Đặt
 
-1. **Mở dự án:** `laptop_store_manage` bằng VS Code
+1. **Mở dự án:** `sound_store_manage` bằng VS Code
 2. **Cài Extension:** `Extension Pack for Java` (Microsoft)
    - Ctrl + Shift + X → Tìm "Extension Pack for Java" → Install
 

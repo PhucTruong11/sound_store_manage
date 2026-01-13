@@ -11,7 +11,7 @@ import Backend.DTO.Amthanh;
 public class AmthanhDAO {
 
     // Hàm lấy danh sách Laptop từ Database
-    public ArrayList<Amthanh> getListLaptop() {
+    public ArrayList<Amthanh> getListAmthanh() {
         ArrayList<Amthanh> list = new ArrayList<>();
         
         // Ví dụ bảng tên là 'sanpham'

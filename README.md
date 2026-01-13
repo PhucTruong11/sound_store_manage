@@ -1,5 +1,4 @@
-# 💻 Hệ Thống Quản Lý Cửa Hàng Laptop
-> **Laptop Store Management System**
+# 💻 Hệ Thống Quản Lý Cửa Hàng Thiết Bị Âm Thanh
 
 Dự án đồ án môn học **Ngôn ngữ lập trình Java**, sử dụng kiến trúc **3-Tier** (3 lớp) kết hợp với giao diện **Java Swing** và cơ sở dữ liệu **MySQL**.
 
@@ -35,7 +34,7 @@ src/main/java/
  ├── Frontend/
  │    ├── GUI/
  │    │    ├── MainFrame.java
- │    │    └── QuanLyLaptopPanel.java
+ │    │    └── QuanLyAmThanhPanel.java
  │    └── Component/
  │         └── (Các dialog thêm/sửa)
  └── App.java (Điểm chạy chính)
@@ -47,7 +46,7 @@ src/main/java/
 
 ## 📋 Tính Năng Chính
 
-✅ Quản lý danh sách laptop  
+✅ Quản lý danh sách sản phẩm
 ✅ Cập nhật thông tin sản phẩm  
 ✅ Xóa sản phẩm khỏi hệ thống  
 ✅ Tìm kiếm nhanh chóng  
@@ -124,8 +123,8 @@ Hệ thống sử dụng cơ sở dữ liệu quan hệ với các bảng chính
 
 | Bảng | Mô Tả |
 |-----|--------|
-| **Sản Phẩm (SanPham)** | Quản lý thông tin chung Laptop, Bàn phím, Chuột... |
-| **Chi Tiết Thiết Bị** | Thông số kỹ thuật chi tiết (CPU, RAM, GPU...) |
+| **Sản Phẩm (SanPham)** | Quản lý thông tin chung ... |
+| **Chi Tiết Thiết Bị** | Thông số kỹ thuật chi tiết ... |
 | **Nhân Viên & Tài Khoản** | Quản lý người dùng & phân quyền hệ thống |
 | **Hóa Đơn (Nhập/Xuất)** | Lịch sử giao dịch & chi tiết hóa đơn |
 | **Đối Tác** | Thông tin Khách hàng & Nhà cung cấp |

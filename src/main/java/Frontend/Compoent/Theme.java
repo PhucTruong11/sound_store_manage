@@ -12,9 +12,9 @@ public class Theme {
     public static final Color BACKGROUND_COLOR = new Color(245, 246, 250); // Màu nền app (Trắng xám nhẹ)
 
     // Màu chức năng
-    public static final Color ACCENT_COLOR = new Color(39, 174, 96);   // Xanh lá (Thêm/Lưu)
-    public static final Color DANGER_COLOR = new Color(231, 76, 60);   // Đỏ (Xóa/Đăng xuất)
-    public static final Color WARNING_COLOR = new Color(241, 196, 15); // Vàng (Cảnh báo/Sửa)
+    public static final Color ACCENT_COLOR = new Color(42, 187, 155);   // Xanh lá (Thêm/Lưu)
+    public static final Color DANGER_COLOR = new Color(235, 87, 87);   // Đỏ (Xóa/Đăng xuất)
+    public static final Color WARNING_COLOR = new Color(243, 156, 18); // Vàng (Cảnh báo/Sửa)
 
     public static final int ROUNDING_ARC = 15;
 

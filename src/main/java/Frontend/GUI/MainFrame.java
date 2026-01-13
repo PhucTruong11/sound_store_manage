@@ -1,16 +1,10 @@
 package Frontend.GUI;
 
 import javax.swing.*;
-
 import java.awt.*;
-// import java.awt.event.ActionEvent;
-// import java.awt.event.ActionListener;
-// import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
-
 public class MainFrame extends JFrame {
-
-    private JPanel mainContent; // Nơi chứa các trang (Panel) chuyển đổi
+    private JPanel mainContent;
 
     public MainFrame() {
         setTitle("Cửa hàng thiết bị âm thanh");
