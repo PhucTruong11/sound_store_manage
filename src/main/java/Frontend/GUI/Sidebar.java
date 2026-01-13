@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
+import Frontend.Compoent.Button;
+import Frontend.GUI.Nhaphang.FromHienThi;
 
 public class Sidebar extends JPanel{
     private MainFrame parent;
@@ -17,26 +19,32 @@ public class Sidebar extends JPanel{
         for(String item : menuItems)
             add(createMenubtn(item));
 
-        JButton btnLogout = createMenubtn("Đăng xuất");
-        btnLogout.setBackground(Theme.DANGER_COLOR);
-        add(btnLogout, "pushy, aligny bottom");
+        Button btnLogout = new Button("Đăng xuất", Theme.DANGER_COLOR);
+        btnLogout.addActionListener(e -> System.exit(0));
+        add(btnLogout, "pushy, aligny bottom, h 40!");
     }
 
     private JButton createMenubtn(String text) {
-        JButton btn = new JButton(text);
-        btn.setFont(new Font("Sagoe UI", Font.PLAIN, 15));
-        btn.setForeground(Color.WHITE);
-        btn.setBackground(Theme.SECONDARY_COLOR);
+        Button btn = new Button(text, Theme.SECONDARY_COLOR);
+        btn.setFont(new Font("Sagoe UI", Font.BOLD, 15));
+        btn.setHorizontalAlignment(SwingConstants.CENTER);
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setHorizontalAlignment(SwingConstants.CENTER);
 
         btn.addActionListener(e -> {
-            if(text.equals("Sản phẩm"))
-                parent.setPage(new QuanlyamthanhPanel());
-            else
-                JOptionPane.showMessageDialog(parent, "Chức năng " + text + " đang phát triển!");
+            switch (text) {
+                case "Sản phẩm":
+                    parent.setPage(new QuanlyamthanhPanel());
+                    break;
+                case "Nhập hàng":
+                    parent.setPage(new FromHienThi());
+                    break;
+                case "Đăng xuất":
+                    System.exit(0);
+                default:
+                    JOptionPane.showMessageDialog(parent, "Chức năng " + text + " đang phát triển!");
+                    break;
+            }
         });
         return btn;
     }
