@@ -3,12 +3,13 @@ package Frontend.GUI;
 import javax.swing.*;
 import java.awt.*;
 import Frontend.Compoent.Theme;
+
 public class MainFrame extends JFrame {
     private JPanel mainContent;
 
     public MainFrame() {
         setTitle("Cửa hàng thiết bị âm thanh");
-        setSize(1200, 800);
+        setSize(1400, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -21,14 +22,16 @@ public class MainFrame extends JFrame {
         mainContent.setBackground(Theme.BACKGROUND_COLOR);
         add(mainContent, BorderLayout.CENTER);
 
-        setPage(new JPanel() {{
-            add(new JLabel("Chào mừng trở lại"));
-        }});
+        setPage(new JPanel() {
+            {
+                add(new JLabel("Chào mừng trở lại"));
+            }
+        });
     }
 
     public void setPage(JPanel panel) {
         mainContent.removeAll(); // Xóa cái cũ đi
-        mainContent.add(panel, BorderLayout.CENTER);  // Thêm cái mới vào
+        mainContent.add(panel, BorderLayout.CENTER); // Thêm cái mới vào
         mainContent.revalidate(); // Vẽ lại giao diện
         mainContent.repaint();
     }
