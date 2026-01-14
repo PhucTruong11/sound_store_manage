@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import Frontend.Compoent.Theme;
+import Frontend.Compoent.Table;
+
 
 public class HoaDonTable extends JScrollPane {
     private JTable table;
@@ -29,19 +31,21 @@ public class HoaDonTable extends JScrollPane {
                 return false;
             }
         };
-        table = new JTable(model);
+        // table = new JTable(model);
+        table = new Table();
+        table.setModel(model);
         this.setViewportView(table);
     }
 
     private void initStyle() {
-        table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
-        table.getTableHeader().setPreferredSize(new Dimension(0, 40));
-        table.setRowHeight(35);
+        // table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
+        // table.getTableHeader().setPreferredSize(new Dimension(0, 40));
+        // table.setRowHeight(35);
 
         // Bo góc và nền cho JScrollPane
-        this.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
-        this.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
-        this.getViewport().setBackground(Color.WHITE);
+        // this.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
+        // this.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+        // this.getViewport().setBackground(Color.WHITE);
 
         // Căn lề các cột
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
