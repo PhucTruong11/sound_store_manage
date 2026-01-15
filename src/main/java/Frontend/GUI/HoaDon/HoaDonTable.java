@@ -52,7 +52,7 @@ public class HoaDonTable extends JScrollPane {
             }
         }
     }
-
+    //click chuột 2 lần để hiện chi tiết hóa đơn
     private void initEvent() {
         table.addMouseListener(new MouseAdapter() {
             @Override

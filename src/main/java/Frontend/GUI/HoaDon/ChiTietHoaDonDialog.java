@@ -24,14 +24,14 @@ public class ChiTietHoaDonDialog extends JDialog {
 
     private void initStyle() {
         setSize(1000, 600); // Kích thước rộng để chứa cả bảng và ảnh
-        setLocationRelativeTo(getOwner());
+        setLocationRelativeTo(getOwner()); 
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(Color.WHITE);
         getRootPane().putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
     }
 
     private void initComponents() {
-        // --- Header ---
+        //Header
         JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlHeader.setBackground(Theme.PRIMARY_COLOR);
         JLabel lblTitle = new JLabel("THÔNG TIN CHI TIẾT HÓA ĐƠN");
@@ -40,20 +40,20 @@ public class ChiTietHoaDonDialog extends JDialog {
         pnlHeader.add(lblTitle);
         add(pnlHeader, BorderLayout.NORTH);
 
-        // --- Bố cục chính (CENTER) ---
+        // (CENTER)
         JPanel pnlMain = new JPanel(new MigLayout("fill, insets 10", "[grow]10[300!]", "[grow]"));
         pnlMain.setBackground(Color.WHITE);
 
-        // 1. Bên trái: Bảng danh sách sản phẩm
+        //Bên trái
         String[] columns = { "STT", "Mã SP", "Tên Sản Phẩm", "Số lượng", "Đơn giá", "Thành tiền" };
         model = new DefaultTableModel(columns, 0);
         tblDetails = new JTable(model);
-        setupTableStyle(); // Hàm chỉnh style bảng bên dưới
+        setupTableStyle(); 
 
         JScrollPane scrollPane = new JScrollPane(tblDetails);
         pnlMain.add(scrollPane, "grow");
 
-        // 2. Bên phải: Khung hiển thị ảnh và IMEI
+        // Bên phải
         JPanel pnlPreview = new JPanel(new MigLayout("wrap 1, fillx, insets 15", "[center]", "[]10[grow]10[]"));
         pnlPreview.setBackground(new Color(248, 249, 250));
         pnlPreview.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
@@ -86,7 +86,7 @@ public class ChiTietHoaDonDialog extends JDialog {
             }
         });
 
-        // --- Footer ---
+        //Footer 
         JPanel pnlFooter = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
         pnlFooter.setBackground(Color.WHITE);
         JButton btnClose = new JButton("ĐÓNG");
