@@ -33,7 +33,7 @@ public class NhapHangTable extends JScrollPane {
         };
         
         tbl = new Table();
-        tbl.setModel(tblModel);// set model của riêng trang đó vào
+        tbl.setModel(tblModel);
         
         // Sự kiện click chuột để cập nhật Sidebar
         tbl.addMouseListener(new MouseAdapter() {

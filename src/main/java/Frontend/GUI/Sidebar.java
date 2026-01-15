@@ -1,12 +1,16 @@
 package Frontend.GUI;
 
 import javax.swing.*;
+
+import com.formdev.flatlaf.extras.FlatSVGIcon;
+
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.Button;
 import Frontend.GUI.HoaDon.HoaDonPanel;
 import Frontend.GUI.Nhaphang.FromHienThi;
+import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
 
 public class Sidebar extends JPanel {
     private MainFrame parent;
@@ -17,19 +21,24 @@ public class Sidebar extends JPanel {
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", "[]20[]"));
 
         String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Hóa đơn", "Phiếu nhập", "Khuyến mãi",
-                "Nhà cung cấp", "Nhân viên", "Khách hàng" };
+                "Nhà cung cấp", "Nhân viên", "Khách hàng", "Phân quyền" };
         for (String item : menuItems)
             add(createMenubtn(item));
 
+        FlatSVGIcon logoutIcon = new FlatSVGIcon("images/icon/log-out.svg", 20, 20);
         Button btnLogout = new Button("Đăng xuất", Theme.DANGER_COLOR);
+        btnLogout.setIcon(logoutIcon);
         btnLogout.addActionListener(e -> System.exit(0));
         add(btnLogout, "pushy, aligny bottom, h 40!");
     }
 
     private JButton createMenubtn(String text) {
+        String iconPath = "images/icon/" + getIconName(text) + ".svg";
+        FlatSVGIcon icon = new FlatSVGIcon(iconPath, 20, 20);
         Button btn = new Button(text, Theme.SECONDARY_COLOR);
-        btn.setFont(new Font("Sagoe UI", Font.BOLD, 15));
-        btn.setHorizontalAlignment(SwingConstants.CENTER);
+        btn.setIcon(icon);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
         btn.setBorderPainted(false);
         btn.setFocusPainted(false);
 
@@ -44,6 +53,9 @@ public class Sidebar extends JPanel {
                 case "Nhập hàng":
                     parent.setPage(new FromHienThi());
                     break;
+                case "Phiếu nhập":
+                    parent.setPage(new FromHienThiPhieuNhap());
+                    break;
                 case "Đăng xuất":
                     System.exit(0);
                 default:
@@ -53,4 +65,20 @@ public class Sidebar extends JPanel {
         });
         return btn;
     }
+
+    private String getIconName(String text) {
+        switch (text) {
+            case "Sản phẩm": return "shopping-basket";
+            case "Bán hàng": return "shield-minus";
+            case "Nhập hàng": return "shield-plus";
+            case "Hóa đơn": return "ticket";
+            case "Phiếu nhập": return "tickets";
+            case "Khuyến mãi": return "ticket-slash";
+            case "Nhà cung cấp": return "dock";
+            case "Nhân viên": return "square-user";
+            case "Khách hàng": return "file-user";
+            case "Phân quyền": return "user-round-pen";
+            default: return "help-circle";
+        }
+    } 
 }

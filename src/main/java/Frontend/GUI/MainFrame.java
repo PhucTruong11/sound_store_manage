@@ -10,6 +10,7 @@ public class MainFrame extends JFrame {
     public MainFrame() {
         setTitle("Cửa hàng thiết bị âm thanh");
         setSize(1400, 800);
+        setBackground(Theme.BACKGROUND_COLOR);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
