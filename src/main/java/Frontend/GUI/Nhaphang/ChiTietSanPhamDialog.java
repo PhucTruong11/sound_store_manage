@@ -3,62 +3,58 @@ package Frontend.GUI.Nhaphang;
 import javax.swing.*;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
+import Frontend.Compoent.InfoField;
+import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.Theme;
 
 public class ChiTietSanPhamDialog extends JDialog{
     public ChiTietSanPhamDialog(JFrame parent, String ma, String ten, String gia) {
         setTitle("Chi tiết sản phẩm");
-        setSize(700, 500);
+        setSize(800, 500);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
         setModal(true); // Chặn tương tác với cửa sổ cha khi đang mở popup
 
-        JPanel header = new JPanel();
-        header.setBackground(Theme.BACKGROUND_COLOR);
-        JLabel title = new JLabel(ten);
-        title.setForeground(Theme.PRIMARY_COLOR);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        header.add(title);
-        add(header, BorderLayout.NORTH);
+        JPanel pnlMain = new JPanel(new MigLayout("fill, insets 20", "[grow]15[300!]", "[grow]"));
+        pnlMain.setBackground(Color.WHITE);
 
-        // Body: Chia làm 2 phần (Ảnh - Thông tin)
-        JPanel body = new JPanel(new MigLayout("fill, insets 20", "[150!][grow]", "[]10[]10[]"));
-        body.setBackground(Color.WHITE);
+        // --- PHẦN THÔNG TIN BÊN TRÁI ---
+        JPanel info = new JPanel(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
+        info.setBackground(new Color(248, 249, 250));
+
+        info.add(new JLabel("Mã sản phẩm:"), "gaptop 10");
+        info.add(new InfoField(ma), "h 40!");
+
+        info.add(new JLabel("Tên sản phẩm:"), "gaptop 10");
+        info.add(new InfoField(ten), "h 40!");
+
+        info.add(new JLabel("Đơn giá nhập:"), "gaptop 10");
+        info.add(new InfoField(gia), "h 40!");
+
+        // --- PHẦN PREVIEW BÊN PHẢI ---
+        JPanel pnlPreview = new JPanel(new MigLayout("wrap 1, fillx, insets 15", "[center]", "[]push[]5[]"));
+        pnlPreview.setBackground(new Color(248, 249, 250));
+        pnlPreview.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
 
         JLabel lblImg = new JLabel();
-        lblImg.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
-        lblImg.setHorizontalAlignment(SwingConstants.CENTER);
-        lblImg.setText("IMG");
-        body.add(lblImg, "growy, spany, w 150!, h 150!");
+        lblImg.putClientProperty("FlatLaf.style", "arc: 15"); 
+        lblImg.setOpaque(true);
+        lblImg.setBackground(Color.WHITE);
+        lblImg.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
 
-        body.add(new JLabel("Mã sản phẩm:"));
-        JTextField txtMa = createReadOnlyField(ma);
-        body.add(txtMa, "growx, wrap");
+        JLabel lblImei = new JLabel("Mã IMEI/Serial bảo hành:");
+        lblImei.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
-        body.add(new JLabel("Đơn giá nhập:"));
-        JTextField txtGia = createReadOnlyField(gia);
-        body.add(txtGia, "growx, wrap");
+        InfoField txtImei = new InfoField("IMEI-123456789");
+        txtImei.setEditable(false);
+        txtImei.setHorizontalAlignment(JTextField.CENTER);
 
-        add(body, BorderLayout.CENTER);
+        pnlPreview.add(lblImg, "w 250!, h 250!");
+        pnlPreview.add(lblImei, "left, gaptop 20");
+        pnlPreview.add(txtImei, "growx, h 40!, gaptop 5");
 
-        JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        footer.setBackground(Color.WHITE);
-        footer.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(230, 230, 230)));
-        
-        JButton btnClose = new JButton("Đóng");
-        btnClose.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        btnClose.addActionListener(e -> dispose());
-        footer.add(btnClose);
-        
-        add(footer, BorderLayout.SOUTH);
-    }
-
-    private JTextField createReadOnlyField(String text) {
-        JTextField txt = new JTextField(text);
-        txt.setEditable(false);
-        txt.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        txt.setBackground(Color.WHITE);
-        txt.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
-        return txt;
+        pnlMain.add(info, "grow");
+        pnlMain.add(pnlPreview, "growy");
+        add(pnlMain, BorderLayout.CENTER);
     }
 }

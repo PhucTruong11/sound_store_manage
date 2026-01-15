@@ -11,7 +11,7 @@ public class NhapHangSidebar extends JPanel{
     private JSpinner spnSoLuongNhap;
 
     public NhapHangSidebar() {
-        setLayout(new MigLayout("wrap 1, fillx, insets 5", "[grow]", "[]10[]10[]"));
+        setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: 15");
 
@@ -21,9 +21,11 @@ public class NhapHangSidebar extends JPanel{
     }
 
     private void initFilter() {
-        JComboBox<String> cboNhaCungCap = new JComboBox<>(new String[]{"Tất cả", "Sony Electronics", "JBL Official", "Marshall VN"});
-        add(new JLabel("Nhà cung cấp:"), "gapbottom 5");
-        add(cboNhaCungCap, "growx, h 35!");
+        add(new JLabel("Nhân viên nhập"), "gaptop 10");
+        add(new JComboBox<>(new String[] {"Phúc Trương"}), "h 35!");
+
+        add(new JLabel("Nhà cung cấp:"), "gaptop 10");
+        add(new JComboBox<>(new String[] {"Tất cả", "Sony Electronics", "JBL Official", "Marshall VN"}), "h 35!");
     }
 
     private void initInfo() {
