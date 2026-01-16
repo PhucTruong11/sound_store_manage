@@ -11,6 +11,7 @@ import Frontend.Compoent.Button;
 import Frontend.GUI.HoaDon.HoaDonPanel;
 import Frontend.GUI.Nhaphang.FromHienThi;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
+import Frontend.GUI.BanHang.BanHangPanel;
 
 public class Sidebar extends JPanel {
     private MainFrame parent;
@@ -46,6 +47,9 @@ public class Sidebar extends JPanel {
             switch (text) {
                 case "Sản phẩm":
                     parent.setPage(new QuanlyamthanhPanel());
+                    break;
+                case "Bán hàng":
+                    parent.setPage(new BanHangPanel());
                     break;
                 case "Hóa đơn":
                     parent.setPage(new HoaDonPanel());
