@@ -10,7 +10,7 @@ public class FromHienThi extends JPanel {
     private NhapHangTable table;
 
     public FromHienThi() {
-        setLayout(new MigLayout("fill, insets 10", "[280!]15[grow, fill]", "[][grow]"));
+        setLayout(new MigLayout("fill, insets 15", "[280!]15[grow, fill]", "[][grow]"));
         setBackground(Theme.BACKGROUND_COLOR);
 
         toolbar = new NhapHangToolbar();

@@ -5,33 +5,30 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
+import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 
 public class ChiTietHoaDonNhapDialog extends JDialog {
     private String maHD;
     private JTable tblDetails;
     private DefaultTableModel model;
-    private JLabel lblImage; // Hiển thị hình ảnh sản phẩm
-    private JLabel lblInfo; // Hiển thị tên & IMEI sản phẩm đang chọn
+    private JLabel lblImage;
+    private JLabel lblInfo;
 
     public ChiTietHoaDonNhapDialog(JFrame parent, String maHD) {
         super(parent, "Chi tiết hóa đơn: " + maHD, true);
         this.maHD = maHD;
-        initStyle();
-        initComponents();
-        loadData();
-    }
-
-    private void initStyle() {
-        setSize(1000, 600); // Kích thước rộng để chứa cả bảng và ảnh
+        setSize(1000, 600);
         setLocationRelativeTo(getOwner());
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(Color.WHITE);
         getRootPane().putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+
+        initComponents();
+        loadData();
     }
 
     private void initComponents() {
-        // --- Header ---
         JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.CENTER));
         pnlHeader.setBackground(Theme.PRIMARY_COLOR);
         JLabel lblTitle = new JLabel("THÔNG TIN CHI TIẾT HÓA ĐƠN");
@@ -40,20 +37,17 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
         pnlHeader.add(lblTitle);
         add(pnlHeader, BorderLayout.NORTH);
 
-        // --- Bố cục chính (CENTER) ---
         JPanel pnlMain = new JPanel(new MigLayout("fill, insets 10", "[grow]10[300!]", "[grow]"));
         pnlMain.setBackground(Color.WHITE);
 
-        // 1. Bên trái: Bảng danh sách sản phẩm
         String[] columns = { "STT", "Mã SP", "Tên Sản Phẩm", "Số lượng", "Đơn giá", "Thành tiền" };
         model = new DefaultTableModel(columns, 0);
-        tblDetails = new JTable(model);
-        setupTableStyle(); // Hàm chỉnh style bảng bên dưới
+        tblDetails = new Table();
+        tblDetails.setModel(model);
 
         JScrollPane scrollPane = new JScrollPane(tblDetails);
         pnlMain.add(scrollPane, "grow");
 
-        // 2. Bên phải: Khung hiển thị ảnh và IMEI
         JPanel pnlPreview = new JPanel(new MigLayout("wrap 1, fillx, insets 15", "[center]", "[]10[grow]10[]"));
         pnlPreview.setBackground(new Color(248, 249, 250));
         pnlPreview.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
@@ -67,7 +61,7 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
         lblImage.setHorizontalAlignment(JLabel.CENTER);
 
         JLabel lblImeiTitle = new JLabel("Mã IMEI/Serial bảo hành:");
-        JTextField txtImei = new JTextField("IMEI-123456789"); // Sau này load từ DB
+        JTextField txtImei = new JTextField("IMEI-123456789");
         txtImei.setEditable(false);
         txtImei.setHorizontalAlignment(JTextField.CENTER);
 
@@ -85,24 +79,6 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
                 updatePreview();
             }
         });
-
-        // --- Footer ---
-        JPanel pnlFooter = new JPanel(new FlowLayout(FlowLayout.RIGHT, 20, 10));
-        pnlFooter.setBackground(Color.WHITE);
-        JButton btnClose = new JButton("ĐÓNG");
-        btnClose.addActionListener(e -> dispose());
-        pnlFooter.add(btnClose);
-        add(pnlFooter, BorderLayout.SOUTH);
-    }
-
-    private void setupTableStyle() {
-        tblDetails.setRowHeight(35);
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        for (int i = 0; i < tblDetails.getColumnCount(); i++) {
-            if (i != 2)
-                tblDetails.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
-        }
     }
 
     private void updatePreview() {
@@ -110,12 +86,11 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
         if (row != -1) {
             String tenSP = model.getValueAt(row, 2).toString();
             lblInfo.setText(tenSP);
-            lblImage.setIcon(new ImageIcon("path/to/image.jpg")); // Thay bằng đường dẫn ảnh thật
+            lblImage.setIcon(new ImageIcon("path/to/image.jpg"));
         }
     }
 
     private void loadData() {
-        // Giả lập dữ liệu cho app thiết bị âm thanh
         model.addRow(new Object[] { "1", "TAI001", "Tai nghe Sony WH-1000XM5", "1", "8,500,000", "8,500,000" });
         model.addRow(new Object[] { "2", "LOA005", "Loa Marshall Stanmore III", "1", "10,200,000", "10,200,000" });
     }
