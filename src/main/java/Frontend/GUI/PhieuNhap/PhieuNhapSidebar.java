@@ -48,4 +48,7 @@ public class PhieuNhapSidebar extends JPanel{
         Button btnLoc = new Button("LỌC", Theme.ACCENT_COLOR);
         add(btnLoc, "pushy, aligny bottom, growx, h 40!");
     }
+
+    public void updateInfo(String maHDN, String nhanVienNhap, String khachHang, String tongTien) {
+    }
 }
