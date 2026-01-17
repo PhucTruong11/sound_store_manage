@@ -35,7 +35,6 @@ public class NhapHangTable extends JScrollPane {
         tbl = new Table();
         tbl.setModel(tblModel);
         
-        // Sự kiện click chuột để cập nhật Sidebar
         tbl.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

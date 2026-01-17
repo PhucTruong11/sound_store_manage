@@ -12,7 +12,7 @@ public class PhieuNhapToolbar extends JPanel{
     public PhieuNhapToolbar() {
         setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]"));
         setBackground(Color.WHITE);
-        putClientProperty("Flatlaf.style", "arc: " + Theme.ROUNDING_ARC );
+        putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC );
 
         SearchTextField txtSearch = new SearchTextField("Tìm phiếu nhập hàng ...");
         ButtonXuatPdf btnPdf = new ButtonXuatPdf("XUẤT PDF");
@@ -21,8 +21,5 @@ public class PhieuNhapToolbar extends JPanel{
         add(txtSearch, "growx, h 35!");
         add(btnPdf, "w 120!, h 35!");
         add(btnExcel, "w 120!, h 35!");
-
     }
-
-    
 }
