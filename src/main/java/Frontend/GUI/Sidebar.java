@@ -12,6 +12,8 @@ import Frontend.GUI.HoaDon.HoaDonPanel;
 import Frontend.GUI.Nhaphang.FromHienThiNhapHang;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
 import Frontend.GUI.BanHang.BanHangPanel;
+import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
+import Frontend.GUI.BaoHanh.BaoHanhPanel;
 import Frontend.GUI.NhaCungCap.FromHienThiNCC;
 
 public class Sidebar extends JPanel {
@@ -61,6 +63,12 @@ public class Sidebar extends JPanel {
                 case "Phiếu nhập":
                     parent.setPage(new FromHienThiPhieuNhap());
                     break;
+                // case "Khuyến mãi":
+                // parent.setPage(new KhuyenMaiPanel());
+                // break;
+                // case "Bảo hành":
+                // parent.setPage("BaoHanhPanel()");
+                // break;
                 case "Nhà cung cấp":
                     parent.setPage(new FromHienThiNCC());
                     break;
@@ -76,17 +84,28 @@ public class Sidebar extends JPanel {
 
     private String getIconName(String text) {
         switch (text) {
-            case "Sản phẩm": return "shopping-basket";
-            case "Bán hàng": return "shield-minus";
-            case "Nhập hàng": return "shield-plus";
-            case "Hóa đơn": return "ticket";
-            case "Phiếu nhập": return "tickets";
-            case "Khuyến mãi": return "ticket-slash";
-            case "Nhà cung cấp": return "dock";
-            case "Nhân viên": return "square-user";
-            case "Khách hàng": return "file-user";
-            case "Phân quyền": return "user-round-pen";
-            default: return "help-circle";
+            case "Sản phẩm":
+                return "shopping-basket";
+            case "Bán hàng":
+                return "shield-minus";
+            case "Nhập hàng":
+                return "shield-plus";
+            case "Hóa đơn":
+                return "ticket";
+            case "Phiếu nhập":
+                return "tickets";
+            case "Khuyến mãi":
+                return "ticket-slash";
+            case "Nhà cung cấp":
+                return "dock";
+            case "Nhân viên":
+                return "square-user";
+            case "Khách hàng":
+                return "file-user";
+            case "Phân quyền":
+                return "user-round-pen";
+            default:
+                return "help-circle";
         }
-    } 
+    }
 }
