@@ -7,13 +7,14 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
-import Frontend.Compoent.Button;
+import Frontend.Compoent.CustomButton;
 import Frontend.GUI.HoaDon.HoaDonPanel;
-import Frontend.GUI.Nhaphang.FromHienThi;
+import Frontend.GUI.Nhaphang.FromHienThiNhapHang;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
 import Frontend.GUI.BanHang.BanHangPanel;
 import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
 import Frontend.GUI.BaoHanh.BaoHanhPanel;
+import Frontend.GUI.NhaCungCap.FromHienThiNCC;
 
 public class Sidebar extends JPanel {
     private MainFrame parent;
@@ -29,7 +30,7 @@ public class Sidebar extends JPanel {
             add(createMenubtn(item));
 
         FlatSVGIcon logoutIcon = new FlatSVGIcon("images/icon/log-out.svg", 20, 20);
-        Button btnLogout = new Button("Đăng xuất", Theme.DANGER_COLOR);
+        CustomButton btnLogout = new CustomButton("Đăng xuất", Theme.DANGER_COLOR);
         btnLogout.setIcon(logoutIcon);
         btnLogout.addActionListener(e -> System.exit(0));
         add(btnLogout, "pushy, aligny bottom, h 40!");
@@ -38,7 +39,7 @@ public class Sidebar extends JPanel {
     private JButton createMenubtn(String text) {
         String iconPath = "images/icon/" + getIconName(text) + ".svg";
         FlatSVGIcon icon = new FlatSVGIcon(iconPath, 20, 20);
-        Button btn = new Button(text, Theme.SECONDARY_COLOR);
+        CustomButton btn = new CustomButton(text, Theme.SECONDARY_COLOR);
         btn.setIcon(icon);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 15));
         btn.setHorizontalAlignment(SwingConstants.LEFT);
@@ -57,7 +58,7 @@ public class Sidebar extends JPanel {
                     parent.setPage(new HoaDonPanel());
                     break;
                 case "Nhập hàng":
-                    parent.setPage(new FromHienThi());
+                    parent.setPage(new FromHienThiNhapHang());
                     break;
                 case "Phiếu nhập":
                     parent.setPage(new FromHienThiPhieuNhap());
@@ -68,6 +69,9 @@ public class Sidebar extends JPanel {
                 // case "Bảo hành":
                 // parent.setPage("BaoHanhPanel()");
                 // break;
+                case "Nhà cung cấp":
+                    parent.setPage(new FromHienThiNCC());
+                    break;
                 case "Đăng xuất":
                     System.exit(0);
                 default:

@@ -4,7 +4,7 @@ import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 import java.awt.*;
-import Frontend.Compoent.Button;
+import Frontend.Compoent.CustomButton;
 
 public class HoaDonSidebar extends JPanel {
 
@@ -43,7 +43,7 @@ public class HoaDonSidebar extends JPanel {
     }
 
     private void initComfirmButton() {
-        Button btnXacNhan = new Button("LỌC", Theme.ACCENT_COLOR);
+        CustomButton btnXacNhan = new CustomButton("LỌC", Theme.ACCENT_COLOR);
         add(btnXacNhan, "pushy, aligny bottom, growx, h 40!");
     }
 

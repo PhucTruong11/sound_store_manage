@@ -10,7 +10,7 @@ public class FromHienThiPhieuNhap extends JPanel{
     private PhieuNhapTable table;
     
     public FromHienThiPhieuNhap() {
-        setLayout(new MigLayout("fill, insets 10", "[280!]15[grow, fill]", "[][grow]"));
+        setLayout(new MigLayout("fill, insets 15", "[280!]15[grow, fill]", "[][grow]"));
         setBackground(Theme.BACKGROUND_COLOR);
 
         toolbar = new PhieuNhapToolbar();

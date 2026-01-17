@@ -3,8 +3,8 @@ package Frontend.Compoent;
 import javax.swing.*;
 import java.awt.*;
 
-public class Button extends JButton{
-    public Button(String text, Color bg) {
+public class CustomButton extends JButton{
+    public CustomButton(String text, Color bg) {
         super(text);
         setFont(new Font("Segoe UI", Font.BOLD, 14));
         setForeground(Color.WHITE);
