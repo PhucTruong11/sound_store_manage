@@ -1,7 +1,7 @@
 package Frontend.GUI.Nhaphang;
 
 import Frontend.Compoent.Theme;
-import Frontend.Compoent.Button;
+import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
@@ -58,7 +58,7 @@ public class NhapHangSidebar extends JPanel{
         spnSoLuongNhap = new JSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
         add(spnSoLuongNhap, "split 2, w 120!, h 30!");
 
-        Button btnThem = new Button("THÊM", new Color(52, 152, 219));
+        CustomButton btnThem = new CustomButton("THÊM", new Color(52, 152, 219));
         btnThem.addActionListener(e -> addProductToTable());
         add(btnThem, "growx, h 30!");
     }
@@ -76,7 +76,7 @@ public class NhapHangSidebar extends JPanel{
     }
 
     private void initConfirmButton() {
-        Button btnXacNhan = new Button("XÁC NHẬN NHẬP", Theme.ACCENT_COLOR);
+        CustomButton btnXacNhan = new CustomButton("XÁC NHẬN NHẬP", Theme.ACCENT_COLOR);
         btnXacNhan.addActionListener(e -> {
         if (modelNhap.getRowCount() == 0) {
             JOptionPane.showMessageDialog(this, "Danh sách chờ nhập đang trống!");
@@ -87,9 +87,6 @@ public class NhapHangSidebar extends JPanel{
         JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
         XacNhanNhapHangDialog dialog = new XacNhanNhapHangDialog(parent, modelNhap);
         dialog.setVisible(true);
-        
-        // Nếu sau khi xác nhận mà muốn xóa sạch bảng mini ở Sidebar:
-        // modelNhap.setRowCount(0); 
     });
         add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");
     }
@@ -121,7 +118,7 @@ public class NhapHangSidebar extends JPanel{
     public void updateInfo(String ma, String ten, String gia) {
         lblMaSP.setText("Mã: " + ma);
         lblTenSP.setText(ten);
-        lblTonKho.setText("Giá: " + gia);
+        lblGia.setText("Giá: " + gia);
     }
     
 }

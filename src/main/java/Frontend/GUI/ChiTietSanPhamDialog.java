@@ -1,4 +1,4 @@
-package Frontend.GUI.Nhaphang;
+package Frontend.GUI;
 
 import javax.swing.*;
 import java.awt.*;

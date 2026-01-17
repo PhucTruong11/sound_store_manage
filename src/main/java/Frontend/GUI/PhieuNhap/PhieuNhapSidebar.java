@@ -1,7 +1,7 @@
 package Frontend.GUI.PhieuNhap;
 
 import Frontend.Compoent.Theme;
-import Frontend.Compoent.Button;
+import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
@@ -45,10 +45,7 @@ public class PhieuNhapSidebar extends JPanel{
     }
 
     private void initConfirmButton() {
-        Button btnLoc = new Button("LỌC", Theme.ACCENT_COLOR);
+        CustomButton btnLoc = new CustomButton("LỌC", Theme.ACCENT_COLOR);
         add(btnLoc, "pushy, aligny bottom, growx, h 40!");
-    }
-
-    public void updateInfo(String maHDN, String nhanVienNhap, String khachHang, String tongTien) {
     }
 }

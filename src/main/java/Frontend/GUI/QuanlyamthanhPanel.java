@@ -5,13 +5,17 @@ import Backend.DTO.Amthanh;
 import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
-import Frontend.Compoent.Button;
+import Frontend.GUI.Nhaphang.ChiTietSanPhamDialog;
+import Frontend.Compoent.CustomButton;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import net.miginfocom.swing.MigLayout;
+import java.util.ArrayList;
 
 public class QuanlyamthanhPanel extends JPanel {
     private AmthanhBUS amthanhBUS = new AmthanhBUS();
@@ -37,7 +41,7 @@ public class QuanlyamthanhPanel extends JPanel {
 
         SearchTextField txtSearch = new SearchTextField("Tìm kiếm theo tên máy...");
 
-        Button btnAdd = new Button("Thêm Mới", Theme.ACCENT_COLOR);
+        CustomButton btnAdd = new CustomButton("Thêm Mới", Theme.ACCENT_COLOR);
 
         JButton btnReload = new JButton("Làm Mới");
         btnReload.addActionListener(e -> loadData());
@@ -62,7 +66,24 @@ public class QuanlyamthanhPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
         add(scrollPane, "grow");
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = table.getSelectedRow();
+                if(row == - 1) return;
+
+                String ma = table.getValueAt(row, 0).toString();
+                String ten = table.getValueAt(row, 1).toString();
+                String gia = table.getValueAt(row, 2).toString();
+
+                if(e.getClickCount() == 2) {
+                    new ChiTietSanPhamDialog(null, ma, ten, gia).setVisible(true);
+                }
+            }
+        });
     }
+
 
     public void loadData() {
         ArrayList<Amthanh> list = amthanhBUS.getAllAmthanh();
