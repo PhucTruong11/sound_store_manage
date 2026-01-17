@@ -30,9 +30,9 @@ public class HoaDonSidebar extends JPanel {
 
     private void initDateRange() {
         add(new JLabel("Từ ngày:"), "gaptop 10");
-        add(new JTextField("2024-01-01"), "h 35!");
+        add(new JTextField("2025-01-01"), "h 35!");
         add(new JLabel("Đến ngày:"), "gaptop 10");
-        add(new JTextField("2024-12-31"), "h 35!");
+        add(new JTextField("2025-12-31"), "h 35!");
     }
 
     private void initPriceRange() {

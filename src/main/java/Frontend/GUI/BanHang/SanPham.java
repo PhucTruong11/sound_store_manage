@@ -24,13 +24,17 @@ public class SanPham extends JPanel {
 
         JLabel lblImg = new JLabel();
         try {
-            ImageIcon icon = new ImageIcon(imgPath);
-            Image scaled = icon.getImage().getScaledInstance(140, 140, Image.SCALE_SMOOTH);
-            lblImg.setIcon(new ImageIcon(scaled));
+            //ảnh chua lấy được từ resouces do có liên quan đến file bus, dto
+            java.net.URL imgURL = getClass().getClassLoader().getResource("images/" + imgPath);
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
+                Image scaled = icon.getImage().getScaledInstance(140, 140, Image.SCALE_SMOOTH);
+                lblImg.setIcon(new ImageIcon(scaled));
+            }
         } catch (Exception e) {
             lblImg.setText("No Image");
         }
-        
+
         add(lblImg, "w 140!, h 140!");
 
         JLabel lblName = new JLabel(tenSP);
@@ -44,13 +48,16 @@ public class SanPham extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                ChiTietSanPhamDialog();
+                showDetail();
             }
         });
     }
 
-    private void ChiTietSanPhamDialog() {
+    private void showDetail() {
         Window parent = SwingUtilities.getWindowAncestor(this);
-        JOptionPane.showMessageDialog(parent, "Đang mở chi tiết: " + tenSP);
+        if (parent instanceof JFrame) {
+            ChiTietSanPhamDialog dialog = new ChiTietSanPhamDialog((JFrame) parent, tenSP, gia, imgPath);
+            dialog.setVisible(true);
+        }
     }
 }

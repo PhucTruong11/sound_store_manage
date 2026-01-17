@@ -1,12 +1,18 @@
 package Frontend.GUI.BanHang;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+import Backend.BUS.AmthanhBUS;
+import Backend.DTO.Amthanh;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import java.util.ArrayList;
 
 public class ProductGrid extends JPanel {
     private JPanel mainPanel;
+    private DefaultTableModel model;
+    private AmthanhBUS amthanhBUS = new AmthanhBUS();
 
     public ProductGrid() {
         setLayout(new BorderLayout());
@@ -26,19 +32,18 @@ public class ProductGrid extends JPanel {
     }
 
     private void loadData() {
-        for (int i = 0; i < 12; i++) {
-            SanPham sp = new SanPham("Loa Bluetooth Marshall " + (i + 1), "10.500.000", "src/");
-            mainPanel.add(sp);
-        }
-    }
-
-    // khi gõ vào ô tim kiếm kỹ tự gì thì nó tự động lọc
-    public void refreshGrid(ArrayList<Object[]> listSP) {
         mainPanel.removeAll();
-        for (Object[] data : listSP) {
-            SanPham sp = new SanPham(data[0].toString(), data[1].toString(), data[2].toString());
-            mainPanel.add(sp);
+
+        for (int i = 1; i <= 12; i++) {
+            String tenMau = "Loa Marshall Stanmore " + i;
+            String giaMau = "10.500.000";
+
+            String anhMau = "src/resources/images/marshall.jpg";
+
+            SanPham card = new SanPham(tenMau, giaMau, anhMau);
+            mainPanel.add(card);
         }
+
         mainPanel.revalidate();
         mainPanel.repaint();
     }
