@@ -7,15 +7,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 public class PhieuNhapTable extends JScrollPane {
     private JTable tbl;
     private DefaultTableModel tblModel;
-    private PhieuNhapSidebar sidebar;
 
-    public PhieuNhapTable(PhieuNhapSidebar sidebar) {
-        this.sidebar = sidebar;
+    public PhieuNhapTable() {
         initTable();
         loadDummyData();
         addTableEvents();

@@ -17,6 +17,7 @@ public class PhieuNhapToolbar extends JPanel{
         SearchTextField txtSearch = new SearchTextField("Tìm phiếu nhập hàng ...");
         ButtonXuatPdf btnPdf = new ButtonXuatPdf("XUẤT PDF");
         ButtonXuatExcel btnExcel = new ButtonXuatExcel("XUẤT EXCEL");
+        
 
         add(txtSearch, "growx, h 35!");
         add(btnPdf, "w 120!, h 35!");

@@ -68,5 +68,7 @@ public class NCCTable extends JPanel{
         tblModel.addRow(new Object[]{"2","NCC02", "Pro Tech", "Hồ Chí Minh", "0879910893"});
     }
 
-
+    public JTable getTbl() {
+        return tbl;
+    }
 }

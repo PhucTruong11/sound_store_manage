@@ -24,7 +24,7 @@ public abstract class BaseThaoTacDialog extends JDialog{
         pnlHeader.add(lblTitle);
         add(pnlHeader, BorderLayout.NORTH);
 
-        pnlContent = new JPanel(new MigLayout("wrap 2, fillx, insets 20", "[][grow]"));
+        pnlContent = new JPanel(new MigLayout("wrap 2, fillx, insets 25", "[110!]10[grow]", "[]10[]"));
         pnlContent.setBackground(Color.WHITE);
         add(pnlContent, BorderLayout.CENTER);
 
@@ -35,7 +35,11 @@ public abstract class BaseThaoTacDialog extends JDialog{
         pnlFooter.add(btnXacNhan);
         add(pnlFooter, BorderLayout.SOUTH);
 
+        btnXacNhan.addActionListener(e -> logicXacNhan());
         btnHuy.addActionListener(e -> dispose());
+
+        // Gọi initForm để lớp con vẽ giao diện
+        initForm();
     }
 
     // Hàm để các lớp con (Thêm/Sửa) tự vẽ giao diện riêng của chúng
