@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PhieuNhapSidebar extends JPanel{
-    public PhieuNhapSidebar() {
+    public PhieuNhapSidebar(PhieuNhapTable table) {
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setPreferredSize(new Dimension(280, 0));
         setBackground(Color.WHITE);
@@ -17,7 +17,7 @@ public class PhieuNhapSidebar extends JPanel{
         initNhaCungCap();
         initDate();
         initPrice();
-        initConfirmButton();
+        initConfirmButton(table);
     }
 
     private void initNhanVienNhap() {
@@ -44,8 +44,13 @@ public class PhieuNhapSidebar extends JPanel{
         add(new JTextField(), "h 35!");
     }
 
-    private void initConfirmButton() {
+    private void initConfirmButton(PhieuNhapTable table) {
         CustomButton btnLoc = new CustomButton("LỌC", Theme.ACCENT_COLOR);
         add(btnLoc, "pushy, aligny bottom, growx, h 40!");
+        // btnLoc.addActionListener(e -> {
+        // 1. Lấy dữ liệu từ các TextField/ComboBox ở Sidebar
+        // 2. Gọi BUS để lọc
+        // 3. Gọi table.updateModel(listDaLoc) để hiển thị
+        // });
     }
 }

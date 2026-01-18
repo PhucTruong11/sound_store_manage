@@ -96,6 +96,23 @@ public class XacNhanNhapHangDialog extends JDialog{
 
         pnlButtons.add(btnHuy);
         pnlButtons.add(btnXacNhan);
+
+        // btnXacNhan.addActionListener(e -> {
+        //     1. Tạo đối tượng PhieuNhapDTO (Mã PN tự tăng, Mã NV, Mã NCC, Tổng tiền, Ngày lập)
+            
+        //     2. Duyệt modelReview để tạo danh sách ArrayList<ChiTietPhieuNhapDTO>
+        //     Mỗi ChiTiet gồm: MaPN, MaSP, SoLuong, DonGia.
+            
+        //     3. Gọi PhieuNhapBUS.insert(phieuNhap, listChiTiet)
+        //     Logic BUS phải thực hiện 3 việc:
+        //       - Lưu vào bảng PhieuNhap.
+        //       - Lưu vào bảng ChiTietPhieuNhap.
+        //       - TĂNG số lượng tồn kho của Sản phẩm trong bảng SanPham.
+            
+        //     JOptionPane.showMessageDialog(this, "Nhập hàng thành công và đã cập nhật tồn kho!");
+        //     dispose();
+        // });
+
         add(pnlButtons, "right");
     }
 
