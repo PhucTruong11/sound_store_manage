@@ -1,9 +1,7 @@
 package Frontend.GUI.BanHang;
 
 import javax.swing.*;
-import Frontend.Compoent.SearchTextField;
 import java.awt.*;
-import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 
 public class BanHangPanel extends JPanel {
