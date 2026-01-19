@@ -65,7 +65,7 @@ public class NhapHangSidebar extends JPanel{
 
     private void initMiniTable() {
         add(new JLabel("Danh sách chờ nhập:"), "gaptop 15");
-        String[] cols = {"Mã SP", "Tên SP", "SL", "Đơn Giá"};
+        String[] cols = {"Mã SP", "Tên SP", "SL", "Đơn giá"};
         modelNhap = new DefaultTableModel(cols, 0);
         tblNhap = new JTable(modelNhap);
 
@@ -102,7 +102,7 @@ public class NhapHangSidebar extends JPanel{
         int sl = (int) spnSoLuongNhap.getValue();
         String gia = lblGia.getText().replace("Giá nhập: ", "");
 
-        modelNhap.addRow(new Object[]{ma, ten, sl, gia});
+        modelNhap.addRow(new Object[]{ma,ten, sl, gia});
 
         resetSelection(); // Reset phần chọn sau khi thêm
     }

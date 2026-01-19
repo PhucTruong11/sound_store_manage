@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.InfoField;
-
 public class ChiTietSanPhamDialog extends JDialog{
     public ChiTietSanPhamDialog(JFrame parent, String ma, String ten, String gia) {
         setTitle("Chi tiết sản phẩm");

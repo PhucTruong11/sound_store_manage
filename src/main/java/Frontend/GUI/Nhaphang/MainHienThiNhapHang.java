@@ -4,12 +4,12 @@ import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 
-public class FromHienThiNhapHang extends JPanel {
+public class MainHienThiNhapHang extends JPanel {
     private NhapHangToolbar toolbar;
     private NhapHangSidebar sidebar;
     private NhapHangTable table;
 
-    public FromHienThiNhapHang() {
+    public MainHienThiNhapHang() {
         setLayout(new MigLayout("fill, insets 15", "[280!]15[grow, fill]", "[][grow]"));
         setBackground(Theme.BACKGROUND_COLOR);
 

@@ -8,7 +8,7 @@ public class NCCFixDialog extends BaseThaoTacDialog{
 
     public NCCFixDialog(String ma, String ten, String diaChi, String sdt) {
         // super đã tự gọi initForm() rồi, không cần gọi lại nữa
-        super("SỬA NHÀ CUNG CẤP", 450, 500);
+        super("SỬA NHÀ CUNG CẤP", 450, 350);
 
         // Đổ dữ liệu cũ vào các ô text
         txtMa.setText(ma);
@@ -21,10 +21,10 @@ public class NCCFixDialog extends BaseThaoTacDialog{
         txtMa.setFocusable(false);
 
         // Focus vào ô Tên và đưa con trỏ về cuối để ko bị bôi xanh
-        SwingUtilities.invokeLater(() -> {
-            txtTen.requestFocusInWindow();
-            txtTen.setCaretPosition(txtTen.getText().length());
-        });
+        // SwingUtilities.invokeLater(() -> {
+        //     txtTen.requestFocusInWindow();
+        //     txtTen.setCaretPosition(txtTen.getText().length());
+        // });
     }
 
     @Override
