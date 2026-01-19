@@ -18,8 +18,8 @@ public class ProductGrid extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        mainPanel = new JPanel(new MigLayout("ins 10, wrap 4, fillx",
-                "[fill, grow]15[fill, grow]15[fill, grow]15[fill, grow]", "[]15[]"));
+        mainPanel = new JPanel(new MigLayout("ins 10, wrap 3, fillx",
+                "[fill, grow]15[fill, grow]15[fill, grow]", "[]15[]"));
         mainPanel.setBackground(Color.WHITE);
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
@@ -34,7 +34,7 @@ public class ProductGrid extends JPanel {
     private void loadData() {
         mainPanel.removeAll();
 
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 1; i <= 9; i++) {
             String tenMau = "Loa Marshall Stanmore " + i;
             String giaMau = "10.500.000";
 

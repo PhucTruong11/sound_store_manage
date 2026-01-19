@@ -8,19 +8,19 @@ import Frontend.Compoent.Theme;
 
 public class BanHangPanel extends JPanel {
     private ProductGrid productGrid;
+    private BanHangSidebar sidebar;
+    private BanHangToolbar toolbar;
 
     public BanHangPanel() {
-        setLayout(new BorderLayout(10, 10));
-        setBackground(Color.WHITE);
+        setLayout(new BorderLayout(15, 15));
+        setBackground(Theme.BACKGROUND_COLOR);
+        this.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
 
-        JPanel pnlHeader = new JPanel(new MigLayout("insets 10 15 10 15, fillx", "[grow]", "[]"));
-        pnlHeader.setBackground(Theme.BACKGROUND_COLOR);
+        toolbar = new BanHangToolbar();
+        add(toolbar, BorderLayout.NORTH);
 
-        SearchTextField txtSearch = new SearchTextField("Tìm kiếm sản phẩm...");
-
-        pnlHeader.add(txtSearch, "w 700!, h 35!");
-
-        add(pnlHeader, BorderLayout.NORTH);
+        sidebar = new BanHangSidebar();
+        add(sidebar, BorderLayout.WEST);
 
         productGrid = new ProductGrid();
         add(productGrid, BorderLayout.CENTER);

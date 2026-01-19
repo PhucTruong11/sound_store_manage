@@ -5,20 +5,20 @@ import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 
 class InfoPanel extends JPanel {
-    public InfoPanel(String ten, String gia, String path) {
+    public InfoPanel(String tenSP, String gia, String imgPath) {
         setLayout(new MigLayout("wrap 1, align center", "[center]"));
         setBackground(Color.WHITE);
 
         JLabel lblImg = new JLabel();
         try {
-            java.net.URL imgURL = getClass().getClassLoader().getResource("images/" + path);
+            java.net.URL imgURL = getClass().getClassLoader().getResource("images/" + imgPath);
 
             if (imgURL != null) {
                 ImageIcon icon = new ImageIcon(imgURL);
                 Image scaled = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
                 lblImg.setIcon(new ImageIcon(scaled));
             } else {
-                System.err.println("Lỗi: Không tìm thấy ảnh tại: images/" + path);
+                System.err.println("Lỗi: Không tìm thấy ảnh tại: images/" + imgPath);
                 lblImg.setText("Không tìm thấy file");
             }
         } catch (Exception e) {
@@ -26,7 +26,7 @@ class InfoPanel extends JPanel {
         }
         lblImg.setBorder(BorderFactory.createLineBorder(new Color(240, 240, 240)));
 
-        JLabel lblName = new JLabel(ten);
+        JLabel lblName = new JLabel(tenSP);
         lblName.setFont(new Font("Segoe UI", Font.BOLD, 22));
 
         JLabel lblPrice = new JLabel(gia + " VNĐ");

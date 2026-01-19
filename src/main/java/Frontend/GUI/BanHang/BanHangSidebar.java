@@ -1,15 +1,14 @@
-package Frontend.GUI.HoaDon;
+package Frontend.GUI.BanHang;
 
 import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 import java.awt.*;
 
-public class HoaDonSidebar extends JPanel {
+public class BanHangSidebar extends JPanel {
 
-    public HoaDonSidebar() {
+    public BanHangSidebar() {
         initLayout();
-        initFilter();
         initDateRange();
         initPriceRange();
     }
@@ -19,11 +18,6 @@ public class HoaDonSidebar extends JPanel {
         setPreferredSize(new Dimension(280, 0));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
-    }
-
-    private void initFilter() {
-        add(new JLabel("Nhân viên bán"), "gaptop 10");
-        add(new JComboBox<>(new String[] { "Tất cả", "Van Nam" }), "h 35!");
     }
 
     private void initDateRange() {
@@ -39,8 +33,4 @@ public class HoaDonSidebar extends JPanel {
         add(new JLabel("Đến số tiền (VNĐ):"), "gaptop 10");
         add(new JTextField(), "h 35!");
     }
-
-    public void updateInfo(String maHD, String khachHang, String tongTien) {
-    }
-
 }
