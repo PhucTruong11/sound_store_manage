@@ -17,7 +17,7 @@ public class PhieuNhapSidebar extends JPanel{
         initNhaCungCap();
         initDate();
         initPrice();
-        initConfirmButton(table);
+        // initConfirmButton(table);
     }
 
     private void initNhanVienNhap() {
@@ -44,13 +44,13 @@ public class PhieuNhapSidebar extends JPanel{
         add(new JTextField(), "h 35!");
     }
 
-    private void initConfirmButton(PhieuNhapTable table) {
-        CustomButton btnLoc = new CustomButton("LỌC", Theme.ACCENT_COLOR);
-        add(btnLoc, "pushy, aligny bottom, growx, h 40!");
-        // btnLoc.addActionListener(e -> {
-        // 1. Lấy dữ liệu từ các TextField/ComboBox ở Sidebar
-        // 2. Gọi BUS để lọc
-        // 3. Gọi table.updateModel(listDaLoc) để hiển thị
-        // });
-    }
+    // private void initConfirmButton(PhieuNhapTable table) {
+    //     CustomButton btnLoc = new CustomButton("LỌC", Theme.ACCENT_COLOR);
+    //     add(btnLoc, "pushy, aligny bottom, growx, h 40!");
+    //     // btnLoc.addActionListener(e -> {
+    //     // 1. Lấy dữ liệu từ các TextField/ComboBox ở Sidebar
+    //     // 2. Gọi BUS để lọc
+    //     // 3. Gọi table.updateModel(listDaLoc) để hiển thị
+    //     // });
+    // }
 }

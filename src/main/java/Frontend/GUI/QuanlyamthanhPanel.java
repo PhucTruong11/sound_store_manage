@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import net.miginfocom.swing.MigLayout;
 import java.util.ArrayList;
 
-public class QuanlyamthanhPanel extends JPanel {
+public class QuanLyamthanhPanel extends JPanel {
     private AmthanhBUS amthanhBUS = new AmthanhBUS();
     private JTable table;
     private DefaultTableModel tableModel;
 
-    public QuanlyamthanhPanel() {
+    public QuanLyamthanhPanel() {
         setLayout(new MigLayout("fill, insets 20", "[grow]", "[]20[]10[grow]"));
         setBackground(Color.WHITE);
 

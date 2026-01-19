@@ -9,12 +9,12 @@ import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.CustomButton;
 import Frontend.GUI.HoaDon.HoaDonPanel;
-import Frontend.GUI.Nhaphang.FromHienThiNhapHang;
+import Frontend.GUI.Nhaphang.MainHienThiNhapHang;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
 import Frontend.GUI.BanHang.BanHangPanel;
 import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
 import Frontend.GUI.BaoHanh.BaoHanhPanel;
-import Frontend.GUI.NhaCungCap.FromHienThiNCC;
+import Frontend.GUI.NhaCungCap.MainHienThiNCC;
 
 public class Sidebar extends JPanel {
     private MainFrame parent;
@@ -25,7 +25,7 @@ public class Sidebar extends JPanel {
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", "[]20[]"));
 
         String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Hóa đơn", "Phiếu nhập", "Khuyến mãi",
-                "Nhà cung cấp", "Nhân viên", "Khách hàng", "Phân quyền" };
+                "Bảo hành", "Nhà cung cấp", "Nhân viên", "Khách hàng", "Phân quyền" };
         for (String item : menuItems)
             add(createMenubtn(item));
 
@@ -49,7 +49,7 @@ public class Sidebar extends JPanel {
         btn.addActionListener(e -> {
             switch (text) {
                 case "Sản phẩm":
-                    parent.setPage(new QuanlyamthanhPanel());
+                    parent.setPage(new QuanLyamthanhPanel());
                     break;
                 case "Bán hàng":
                     parent.setPage(new BanHangPanel());
@@ -58,7 +58,7 @@ public class Sidebar extends JPanel {
                     parent.setPage(new HoaDonPanel());
                     break;
                 case "Nhập hàng":
-                    parent.setPage(new FromHienThiNhapHang());
+                    parent.setPage(new MainHienThiNhapHang());
                     break;
                 case "Phiếu nhập":
                     parent.setPage(new FromHienThiPhieuNhap());
@@ -70,7 +70,7 @@ public class Sidebar extends JPanel {
                 // parent.setPage("BaoHanhPanel()");
                 // break;
                 case "Nhà cung cấp":
-                    parent.setPage(new FromHienThiNCC());
+                    parent.setPage(new MainHienThiNCC());
                     break;
                 case "Đăng xuất":
                     System.exit(0);
@@ -96,6 +96,8 @@ public class Sidebar extends JPanel {
                 return "tickets";
             case "Khuyến mãi":
                 return "ticket-slash";
+            case "Bảo hành":
+                return "shield-check";
             case "Nhà cung cấp":
                 return "dock";
             case "Nhân viên":
