@@ -49,7 +49,7 @@ public class Sidebar extends JPanel {
         btn.addActionListener(e -> {
             switch (text) {
                 case "Sản phẩm":
-                    parent.setPage(new QuanLyamthanhPanel());
+                    parent.setPage(new QuanlyamthanhPanel());
                     break;
                 case "Bán hàng":
                     parent.setPage(new BanHangPanel());

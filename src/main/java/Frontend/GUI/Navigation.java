@@ -29,12 +29,6 @@ public class Navigation extends JPanel{
         JPanel rightPanel = new JPanel(new MigLayout("insets 0, gapx 20", "[] []", "center"));
         rightPanel.setOpaque(false);
 
-        // BASKET
-        JLabel lblBasket = new JLabel();
-        lblBasket.setIcon(new FlatSVGIcon("images/icon/shopping-cart.svg", 22, 22));
-        lblCart.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        rightPanel.add(lblCart, "ay top, gaptop 2");
-
         //USER
         JPanel userBox = new JPanel(new MigLayout("insets 0, wrap 1, gapy 0", "[center]", "[]"));
         userBox.setOpaque(false);
