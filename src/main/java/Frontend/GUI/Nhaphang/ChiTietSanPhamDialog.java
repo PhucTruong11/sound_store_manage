@@ -11,7 +11,7 @@ public class ChiTietSanPhamDialog extends JDialog{
         setSize(800, 500);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout());
-        setModal(true); // Chặn tương tác với cửa sổ cha khi đang mở popup
+        setModal(true); 
 
         JPanel pnlMain = new JPanel(new MigLayout("fill, insets 20", "[grow]15[300!]", "[grow]"));
         pnlMain.setBackground(Color.WHITE);
