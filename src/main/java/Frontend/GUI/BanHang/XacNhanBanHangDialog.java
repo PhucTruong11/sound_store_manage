@@ -90,7 +90,7 @@ public class XacNhanBanHangDialog extends JDialog {
 
         CustomButton btnXacNhan = new CustomButton("XÁC NHẬN & XUẤT HÓA ĐƠN", Theme.ACCENT_COLOR);
         btnXacNhan.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Nhập hàng thành công!");
+            JOptionPane.showMessageDialog(this, "Bán hàng thành công!");
             dispose();
         });
 
