@@ -35,7 +35,7 @@ public class ProductGrid extends JPanel {
             String ma = "SP" + page + i;
             String ten = "Sản phẩm trang " + page + " số " + i;
             String gia = "10.500.000";
-            String anh = "images/product/marshall.jpg";
+            String anh = "";
 
             InfoPanel card = new InfoPanel(ma, ten, gia, anh, sidebar);
             mainPanel.add(card);
