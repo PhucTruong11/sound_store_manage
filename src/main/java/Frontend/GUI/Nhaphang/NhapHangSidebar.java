@@ -3,6 +3,8 @@ package Frontend.GUI.Nhaphang;
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import java.awt.*;
@@ -68,10 +70,22 @@ public class NhapHangSidebar extends JPanel{
         String[] cols = {"Mã SP", "Tên SP", "SL", "Đơn giá"};
         modelNhap = new DefaultTableModel(cols, 0);
         tblNhap = new JTable(modelNhap);
-
         tblNhap.setRowHeight(25);
-        JScrollPane scroll = new JScrollPane(tblNhap);
 
+        // ẨN CỘT Tên SP (index 1) và Đơn giá (index 3)
+        tblNhap.getColumnModel().getColumn(1).setMinWidth(0);
+        tblNhap.getColumnModel().getColumn(1).setMaxWidth(0);
+        tblNhap.getColumnModel().getColumn(1).setPreferredWidth(0);
+
+        tblNhap.getColumnModel().getColumn(3).setMinWidth(0);
+        tblNhap.getColumnModel().getColumn(3).setMaxWidth(0);
+        tblNhap.getColumnModel().getColumn(3).setPreferredWidth(0);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tblNhap.setDefaultRenderer(Object.class, centerRenderer);
+
+        JScrollPane scroll = new JScrollPane(tblNhap);
         add(scroll, "h 140!, gaptop 5");
     }
 
@@ -100,7 +114,7 @@ public class NhapHangSidebar extends JPanel{
         String ma = lblMaSP.getText();
         String ten = lblTenSP.getText();
         int sl = (int) spnSoLuongNhap.getValue();
-        String gia = lblGia.getText().replace("Giá nhập: ", "");
+        String gia = lblGia.getText();
 
         modelNhap.addRow(new Object[]{ma,ten, sl, gia});
 

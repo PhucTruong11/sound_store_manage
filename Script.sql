@@ -34,10 +34,10 @@ CREATE TABLE SanPham (
     TenSP VARCHAR(100) NOT NULL,
     MaLoai VARCHAR(20),
     MaHang VARCHAR(20),
-    MauSac VARCHAR(50),      -- Thêm trực tiếp
-    CongSuat VARCHAR(50),    -- Thêm trực tiếp
-    Pin VARCHAR(50),         -- Thêm trực tiếp
-    KetNoi VARCHAR(100),     -- Thêm trực tiếp
+    -- MauSac VARCHAR(50),      -- Thêm trực tiếp
+    -- CongSuat VARCHAR(50),    -- Thêm trực tiếp
+    -- Pin VARCHAR(50),         -- Thêm trực tiếp
+    -- KetNoi VARCHAR(100),     -- Thêm trực tiếp
     GiaNhap DOUBLE,
     GiaBan DOUBLE,
     SoLuongTon INT DEFAULT 0,
@@ -109,8 +109,8 @@ CREATE TABLE ChiTietHDBan (
 CREATE TABLE KhuyenMai (
     MaKM VARCHAR(20) NOT NULL, 
     TenKM VARCHAR(100), 
-    DieuKienGiam DOUBLE, 
-    PhanTramGiam INT, 
+    DieuKienGiam VARCHAR(20), 
+    PhanTramGiam DOUBLE, 
     NgayBatDau DATE, 
     NgayKetThuc DATE 
 );

@@ -4,6 +4,8 @@ import Frontend.Compoent.Theme;
 import Frontend.GUI.Nhaphang.XacNhanNhapHangDialog;
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
+
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.*;
 import java.awt.*;
@@ -11,10 +13,10 @@ import java.awt.*;
 public class BanHangSidebar extends JPanel {
 
     private JLabel lblTenSP, lblMaSP, lblGia, lblTonKho;
-    private JSpinner spnSoLuongNhap;
-    private JTable tblNhap;
-    private DefaultTableModel modelNhap;
-    private JComboBox<String> cbxNhanVien, cbxNhaCungCap;
+    private JSpinner spnSoLuongBan;
+    private JTable tblBan;
+    private DefaultTableModel modelBan;
+    private JComboBox<String> cbxNhanVien;
 
     public BanHangSidebar() {
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
@@ -29,14 +31,10 @@ public class BanHangSidebar extends JPanel {
     }
 
     private void initHeader() {
-        add(new JLabel("Nhân viên nhập"), "gaptop 5");
+        add(new JLabel("Nhân viên bán"), "gaptop 5");
         cbxNhanVien = new JComboBox<>(new String[] { "Phúc Trương" });
         cbxNhanVien.setEnabled(false); // Auto lấy tên user, không cho chỉnh
         add(cbxNhanVien, "h 30!");
-
-        add(new JLabel("Nhà cung cấp:"));
-        cbxNhaCungCap = new JComboBox<>(new String[] { "Tất cả", "Sony Electronics", "JBL Official", "Marshall VN" });
-        add(cbxNhaCungCap, "h 30!");
 
         add(new JSeparator(), "gaptop 5, gapbottom 5");
     }
@@ -57,8 +55,8 @@ public class BanHangSidebar extends JPanel {
         add(new JSeparator(), "growx, gaptop 5, gapbottom 5");
 
         add(new JLabel("Số lượng bán:"), "gaptop 5");
-        spnSoLuongNhap = new JSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
-        add(spnSoLuongNhap, "split 2, w 120!, h 30!");
+        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
+        add(spnSoLuongBan, "split 2, w 120!, h 30!");
 
         CustomButton btnThem = new CustomButton("THÊM", new Color(52, 152, 219));
         btnThem.addActionListener(e -> addProductToTable());
@@ -66,28 +64,40 @@ public class BanHangSidebar extends JPanel {
     }
 
     private void initMiniTable() {
-        add(new JLabel("Danh sách bán:"), "gaptop 15");
+        add(new JLabel("Danh sách chờ bán:"), "gaptop 15");
         String[] cols = { "Mã SP", "Tên SP", "SL", "Đơn giá" };
-        modelNhap = new DefaultTableModel(cols, 0);
-        tblNhap = new JTable(modelNhap);
+        modelBan = new DefaultTableModel(cols, 0);
+        tblBan = new JTable(modelBan);
+        tblBan.setRowHeight(25);
 
-        tblNhap.setRowHeight(25);
-        JScrollPane scroll = new JScrollPane(tblNhap);
+        // ẨN CỘT Tên SP (index 1) và Đơn giá (index 3)
+        tblBan.getColumnModel().getColumn(1).setMinWidth(0);
+        tblBan.getColumnModel().getColumn(1).setMaxWidth(0);
+        tblBan.getColumnModel().getColumn(1).setPreferredWidth(0);
+        
+        tblBan.getColumnModel().getColumn(3).setMinWidth(0);
+        tblBan.getColumnModel().getColumn(3).setMaxWidth(0);
+        tblBan.getColumnModel().getColumn(3).setPreferredWidth(0);
 
-        add(scroll, "h 140!, gaptop 5");
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tblBan.setDefaultRenderer(Object.class, centerRenderer);
+
+        JScrollPane scroll = new JScrollPane(tblBan);
+        add(scroll, "h 180!, gaptop 5");
     }
 
     private void initConfirmButton() {
         CustomButton btnXacNhan = new CustomButton("XÁC NHẬN BÁN", Theme.ACCENT_COLOR);
         btnXacNhan.addActionListener(e -> {
-            if (modelNhap.getRowCount() == 0) {
+            if (modelBan.getRowCount() == 0) {
                 JOptionPane.showMessageDialog(this, "Danh sách chờ bán đang trống!");
                 return;
             }
 
             // Mở Dialog xác nhận
             JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-            XacNhanNhapHangDialog dialog = new XacNhanNhapHangDialog(parent, modelNhap);
+            XacNhanNhapHangDialog dialog = new XacNhanNhapHangDialog(parent, modelBan);
             dialog.setVisible(true);
         });
         add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");
@@ -101,10 +111,10 @@ public class BanHangSidebar extends JPanel {
 
         String ma = lblMaSP.getText();
         String ten = lblTenSP.getText();
-        int sl = (int) spnSoLuongNhap.getValue();
+        int sl = (int) spnSoLuongBan.getValue();
         String gia = lblGia.getText().replace("Giá bán: ", "");
 
-        modelNhap.addRow(new Object[] { ma, ten, sl, gia });
+        modelBan.addRow(new Object[] { ma, ten, sl, gia });
 
         resetSelection(); // Reset phần chọn sau khi thêm
     }
@@ -113,7 +123,7 @@ public class BanHangSidebar extends JPanel {
         lblMaSP.setText("Mã: -");
         lblTenSP.setText("Chưa chọn sản phẩm");
         lblGia.setText("Giá nhập: 0");
-        spnSoLuongNhap.setValue(1);
+        spnSoLuongBan.setValue(1);
     }
 
     // Các hàm cập nhật thông tin từ bên ngoài

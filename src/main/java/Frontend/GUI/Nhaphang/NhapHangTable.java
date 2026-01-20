@@ -54,7 +54,6 @@ public class NhapHangTable extends JScrollPane {
             }
         });
 
-        // Căn giữa các cột
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tbl.setDefaultRenderer(Object.class, centerRenderer);

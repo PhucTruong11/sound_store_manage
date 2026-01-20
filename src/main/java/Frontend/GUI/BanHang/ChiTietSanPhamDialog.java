@@ -6,7 +6,7 @@ import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.InfoField;
 
 public class ChiTietSanPhamDialog extends JDialog {
-    public ChiTietSanPhamDialog(JFrame parent, String ma, String ten, String gia) {
+    public ChiTietSanPhamDialog(JFrame parent, String ma, String ten, String gia, String imgPath) {
         setTitle("Chi tiết sản phẩm");
         setSize(800, 500);
         setLocationRelativeTo(parent);
@@ -35,6 +35,20 @@ public class ChiTietSanPhamDialog extends JDialog {
         pnlPreview.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
 
         JLabel lblImg = new JLabel();
+        try {
+            java.net.URL imgURL = getClass().getClassLoader().getResource(imgPath);
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
+                Image scaled = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+                lblImg.setIcon(new ImageIcon(scaled));
+            } else {
+                lblImg.setText("Không tìm thấy ảnh");
+                lblImg.setHorizontalAlignment(SwingConstants.CENTER);
+            }
+        } catch (Exception e) {
+            lblImg.setText("Lỗi nạp ảnh");
+        }
+        
         lblImg.putClientProperty("FlatLaf.style", "arc: 15");
         lblImg.setOpaque(true);
         lblImg.setBackground(Color.WHITE);

@@ -16,12 +16,16 @@ public class PaginationPanel extends JPanel {
 
         setLayout(new FlowLayout(FlowLayout.CENTER, 15, 0));
         setBackground(Color.WHITE);
+        putClientProperty("FlatLaf.style", "arc: 10");
 
-        // Tăng khoảng đệm phía trên (Top: 20) để ngăn việc đè lên sản phẩm hàng cuối
-        setBorder(BorderFactory.createEmptyBorder(20, 0, 10, 0));
+        setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
         JButton btnPrev = new JButton("<");
         JButton btnNext = new JButton(">");
+
+        btnPrev.putClientProperty("FlatLaf.style", "arc: 10");
+        btnNext.putClientProperty("FlatLaf.style", "arc: 10");
+
         lblPageInfo = new JLabel("Trang " + currentPage + " / " + totalPages);
         lblPageInfo.setFont(new Font("Segoe UI", Font.BOLD, 14));
 

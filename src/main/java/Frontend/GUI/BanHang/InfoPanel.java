@@ -32,12 +32,13 @@ class InfoPanel extends JPanel {
                 lblImg.setText(""); // Xóa text thông báo lỗi nếu tìm thấy ảnh
             } else {
                 // In ra console để kiểm tra đường dẫn thực tế đang bị sai ở đâu
-                System.err.println("Không tìm thấy: images/product/marshall.jpg" + imgPath);
+                System.err.println("Không tìm thấy: " + imgPath);
                 lblImg.setText("Không tìm thấy file");
             }
         } catch (Exception e) {
             lblImg.setText("Lỗi nạp ảnh");
         }
+
         lblImg.setBorder(BorderFactory.createLineBorder(new Color(240, 240, 240)));
 
         JLabel lblName = new JLabel(tenSP);
@@ -54,8 +55,15 @@ class InfoPanel extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                // 1. Click đơn: Cập nhật Sidebar
                 if (sidebar != null) {
                     sidebar.updateInfo(maSP, tenSP, gia);
+                }
+                // 2. Double Click: Mở Dialog chi tiết
+                if(e.getClickCount() == 2) {
+                    JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(InfoPanel.this);
+                    ChiTietSanPhamDialog dialog = new ChiTietSanPhamDialog(parent, maSP, tenSP, gia, imgPath);
+                    dialog.setVisible(true);
                 }
             }
 
