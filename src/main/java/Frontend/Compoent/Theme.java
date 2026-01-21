@@ -15,6 +15,7 @@ public class Theme {
     public static final Color ACCENT_COLOR = new Color(42, 187, 155);   // Xanh lá (Thêm/Lưu)
     public static final Color DANGER_COLOR = new Color(235, 87, 87);   // Đỏ (Xóa/Đăng xuất)
     public static final Color WARNING_COLOR = new Color(243, 156, 18); // Vàng (Cảnh báo/Sửa)
+    public static final Color PURPLE_COLOR = new Color(155, 89, 182); // Tím (Làm mới)
 
     public static final int ROUNDING_ARC = 15;
 
