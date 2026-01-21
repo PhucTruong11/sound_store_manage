@@ -9,12 +9,14 @@ import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.CustomButton;
 import Frontend.GUI.HoaDon.HoaDonPanel;
+import Frontend.GUI.KhachHang.FromHienThiKhachHang;
 import Frontend.GUI.Nhaphang.FromHienThiNhapHang;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
 import Frontend.GUI.BanHang.BanHangPanel;
 import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
 import Frontend.GUI.BaoHanh.BaoHanhPanel;
 import Frontend.GUI.NhaCungCap.FromHienThiNCC;
+import Frontend.GUI.NhanVien.FromHienThiNV;
 
 public class Sidebar extends JPanel {
     private MainFrame parent;
@@ -63,9 +65,17 @@ public class Sidebar extends JPanel {
                 case "Phiếu nhập":
                     parent.setPage(new FromHienThiPhieuNhap());
                     break;
+                case "Nhân viên":
+                    parent.setPage(new FromHienThiNV());
+                    break;
+
+                case "Khách hàng":
+                    parent.setPage(new FromHienThiKhachHang());
+                    break;
+
                 // case "Khuyến mãi":
                 // parent.setPage(new KhuyenMaiPanel());
-                // break;
+                // break;                          iun  nbi                                                   gh                
                 // case "Bảo hành":
                 // parent.setPage("BaoHanhPanel()");
                 // break;

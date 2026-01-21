@@ -1,4 +1,8 @@
--- 1. Tạo Database tên là 'quanlylaptop' (nếu chưa có)
+DROP TABLE IF EXISTS sanpham;
+DROP TABLE IF EXISTS nhanvien;
+DROP TABLE IF EXISTS khachhang;
+
+-- 1. Tạo Database tên là 'quanlyamthanh' (nếu chưa có)
 CREATE DATABASE IF NOT EXISTS quanlyamthanh CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- 2. Chọn Database này để làm việc
@@ -33,3 +37,27 @@ INSERT INTO sanpham (MaSP, TenSP, DonGia) VALUES
 ('AT018', 'Tai nghe Beats Studio Pro', 7500000),
 ('AT019', 'Loa Devialet Phantom I 108dB', 85000000),
 ('AT020', 'Microphone Shure SM7B', 11500000);
+
+CREATE TABLE IF NOT EXISTS nhanvien (
+    ma_nv INT AUTO_INCREMENT PRIMARY KEY,
+    ten_nv VARCHAR(100) NOT NULL,
+    sdt VARCHAR(20),
+    dia_chi VARCHAR(200),
+    chuc_vu VARCHAR(50)
+);
+INSERT INTO nhanvien (ten_nv, sdt, dia_chi, chuc_vu)
+VALUES 
+('Nguyễn Văn A', '0901234567', 'Hà Nội', 'Quản lý'),
+('Trần Thị B', '0912345678', 'TP HCM', 'Nhân viên');
+
+
+CREATE TABLE IF NOT EXISTS khachhang (
+    ma_kh INT AUTO_INCREMENT PRIMARY KEY,
+    ten_kh VARCHAR(100) NOT NULL,
+    sdt VARCHAR(20),
+    dia_chi VARCHAR(200)
+);
+INSERT INTO khachhang (ten_kh, sdt, dia_chi)
+VALUES
+('Lê Văn C', '0987654321', 'Đà Nẵng'),
+('Phạm Thị D', '0976543210', 'Cần Thơ');
