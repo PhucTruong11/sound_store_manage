@@ -1,4 +1,4 @@
-package Frontend.GUI.Nhaphang;
+package Frontend.GUI.BanHang;
 
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.CustomButton;
@@ -9,12 +9,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
-public class XacNhanNhapHangDialog extends JDialog{
+public class XacNhanBanHangDialog extends JDialog {
     private JTable tblReview;
     private DefaultTableModel modelReview;
     private JLabel lblTongSL, lblTongTien;
-    
-    public XacNhanNhapHangDialog(JFrame parent, DefaultTableModel sourceModel) {
+
+    public XacNhanBanHangDialog(JFrame parent, DefaultTableModel sourceModel) {
         super(parent, "Xác nhận phiếu nhập hàng", true);
         setLayout(new MigLayout("fill, insets 20", "[grow]", "[][grow][]"));
         setSize(800, 500);
@@ -31,13 +31,13 @@ public class XacNhanNhapHangDialog extends JDialog{
         lblTitle.setForeground(Theme.PRIMARY_COLOR);
         add(lblTitle, "center, wrap, gapbottom 15");
 
-        String[] cols = {"STT", "Mã SP", "Tên Sản Phẩm", "SL", "Đơn Giá", "Thành Tiền"};
+        String[] cols = { "STT", "Mã SP", "Tên Sản Phẩm", "SL", "Đơn Giá", "Thành Tiền" };
         modelReview = new DefaultTableModel(cols, 0);
 
         Table tblReview = new Table();
         tblReview.setModel(modelReview);
 
-        tblReview.getColumnModel().getColumn(0).setPreferredWidth(40);
+                tblReview.getColumnModel().getColumn(0).setPreferredWidth(40);
         tblReview.getColumnModel().getColumn(0).setMaxWidth(50);
 
         tblReview.getColumnModel().getColumn(1).setPreferredWidth(80);
@@ -50,7 +50,7 @@ public class XacNhanNhapHangDialog extends JDialog{
         
         tblReview.getColumnModel().getColumn(4).setPreferredWidth(100);
         tblReview.getColumnModel().getColumn(5).setPreferredWidth(120);
-        
+
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblReview.setDefaultRenderer(Object.class, centerRenderer);
@@ -63,16 +63,16 @@ public class XacNhanNhapHangDialog extends JDialog{
             int sl = Integer.parseInt(sourceModel.getValueAt(i, 2).toString());
             String giaStr = sourceModel.getValueAt(i, 3).toString().replaceAll("[^0-9]", "");
             double gia = Double.parseDouble(giaStr);
-            
+
             double thanhTien = sl * gia;
 
-            modelReview.addRow(new Object[]{
-                (i + 1),
-                ma,
-                ten, 
-                sl, 
-                String.format("%,.0f", gia), 
-                String.format("%,.0f", thanhTien)
+            modelReview.addRow(new Object[] {
+                    (i + 1),
+                    ma,
+                    ten,
+                    sl,
+                    String.format("%,.0f", gia),
+                    String.format("%,.0f", thanhTien)
             });
         }
 
@@ -80,12 +80,12 @@ public class XacNhanNhapHangDialog extends JDialog{
 
         JPanel pnlTotal = new JPanel(new MigLayout("fillx", "[grow][right]"));
         pnlTotal.setBackground(new Color(245, 245, 245));
-        pnlTotal.putClientProperty("FlatLaf.style", "arc: 15"); 
-        
+        pnlTotal.putClientProperty("FlatLaf.style", "arc: 15");
+
         lblTongSL = new JLabel("Tổng số lượng: 0");
         lblTongSL.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblTongSL.setForeground(Color.RED);
-        
+
         lblTongTien = new JLabel("Tổng tiền thanh toán: 0 VNĐ");
         lblTongTien.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblTongTien.setForeground(Color.RED);
@@ -96,10 +96,10 @@ public class XacNhanNhapHangDialog extends JDialog{
 
         JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         pnlButtons.setBackground(Color.WHITE);
-        
+
         CustomButton btnHuy = new CustomButton("HỦY BỎ", new Color(149, 165, 166));
         btnHuy.addActionListener(e -> dispose());
-        
+
         CustomButton btnXacNhan = new CustomButton("XÁC NHẬN & XUẤT HÓA ĐƠN", Theme.ACCENT_COLOR);
         btnXacNhan.addActionListener(e -> {
             JOptionPane.showMessageDialog(this, "Nhập hàng thành công!");
@@ -110,19 +110,21 @@ public class XacNhanNhapHangDialog extends JDialog{
         pnlButtons.add(btnXacNhan);
 
         // btnXacNhan.addActionListener(e -> {
-        //     1. Tạo đối tượng PhieuNhapDTO (Mã PN tự tăng, Mã NV, Mã NCC, Tổng tiền, Ngày lập)
-            
-        //     2. Duyệt modelReview để tạo danh sách ArrayList<ChiTietPhieuNhapDTO>
-        //     Mỗi ChiTiet gồm: MaPN, MaSP, SoLuong, DonGia.
-            
-        //     3. Gọi PhieuNhapBUS.insert(phieuNhap, listChiTiet)
-        //     Logic BUS phải thực hiện 3 việc:
-        //       - Lưu vào bảng PhieuNhap.
-        //       - Lưu vào bảng ChiTietPhieuNhap.
-        //       - TĂNG số lượng tồn kho của Sản phẩm trong bảng SanPham.
-            
-        //     JOptionPane.showMessageDialog(this, "Nhập hàng thành công và đã cập nhật tồn kho!");
-        //     dispose();
+        // 1. Tạo đối tượng PhieuNhapDTO (Mã PN tự tăng, Mã NV, Mã NCC, Tổng tiền, Ngày
+        // lập)
+
+        // 2. Duyệt modelReview để tạo danh sách ArrayList<ChiTietPhieuNhapDTO>
+        // Mỗi ChiTiet gồm: MaPN, MaSP, SoLuong, DonGia.
+
+        // 3. Gọi PhieuNhapBUS.insert(phieuNhap, listChiTiet)
+        // Logic BUS phải thực hiện 3 việc:
+        // - Lưu vào bảng PhieuNhap.
+        // - Lưu vào bảng ChiTietPhieuNhap.
+        // - TĂNG số lượng tồn kho của Sản phẩm trong bảng SanPham.
+
+        // JOptionPane.showMessageDialog(this, "Nhập hàng thành công và đã cập nhật tồn
+        // kho!");
+        // dispose();
         // });
 
         add(pnlButtons, "right");

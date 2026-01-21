@@ -1,19 +1,15 @@
 package Frontend.GUI.NhaCungCap;
 
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
+import javax.swing.*;
 import Frontend.Compoent.BaseThaoTacDialog;
-import net.miginfocom.swing.MigLayout;
 
 public class NCCAddDialog extends BaseThaoTacDialog{
     private JTextField txtMa, txtTen, txtDiaChi, txtSDT;
 
     public NCCAddDialog() {
-        super("THÊM NHÀ CUNG CẤP", 450, 400);
+        // super đã tự gọi initForm() rồi, không cần gọi lại nữa
+        super("THÊM NHÀ CUNG CẤP", 450, 350);
 
-        initForm();
-        logicXacNhan();
     }
 
     @Override
@@ -38,7 +34,7 @@ public class NCCAddDialog extends BaseThaoTacDialog{
 
     @Override
     protected void logicXacNhan() {
-        // Gọi BUS để lưu vào Database
+        // TƯƠNG LAI: Kết nối BUS tại đây
         System.out.println("Đã lưu NCC: " + txtTen.getText());
         dispose();
     }

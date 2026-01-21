@@ -81,7 +81,6 @@ public class HoaDonTable extends JScrollPane {
 
     private void showDetailDialog(String maHD) {
         Window ancestor = SwingUtilities.getWindowAncestor(this);// WindowAncestor trả về cửa sổ cha của thành phần giao
-                                                                 // diện người dùng
         if (ancestor instanceof JFrame) {
             ChiTietHoaDonDialog dialog = new ChiTietHoaDonDialog((JFrame) ancestor, maHD);
             dialog.setVisible(true);

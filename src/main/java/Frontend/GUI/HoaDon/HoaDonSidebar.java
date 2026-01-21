@@ -4,7 +4,6 @@ import javax.swing.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 import java.awt.*;
-import Frontend.Compoent.CustomButton;
 
 public class HoaDonSidebar extends JPanel {
 
@@ -13,7 +12,6 @@ public class HoaDonSidebar extends JPanel {
         initFilter();
         initDateRange();
         initPriceRange();
-        initComfirmButton();
     }
 
     private void initLayout() {
@@ -40,11 +38,6 @@ public class HoaDonSidebar extends JPanel {
         add(new JTextField(), "h 35!");
         add(new JLabel("Đến số tiền (VNĐ):"), "gaptop 10");
         add(new JTextField(), "h 35!");
-    }
-
-    private void initComfirmButton() {
-        CustomButton btnXacNhan = new CustomButton("LỌC", Theme.ACCENT_COLOR);
-        add(btnXacNhan, "pushy, aligny bottom, growx, h 40!");
     }
 
     public void updateInfo(String maHD, String khachHang, String tongTien) {

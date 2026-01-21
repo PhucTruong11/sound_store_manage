@@ -2,7 +2,6 @@ package Frontend.GUI.PhieuNhap;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Table;

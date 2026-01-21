@@ -1,4 +1,4 @@
-package Frontend.GUI.NhaCungCap;
+package Frontend.GUI.BaoHanh;
 
 import java.awt.Color;
 
@@ -12,16 +12,16 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
 
-public class NCCToolbar extends JPanel{
-    private NCCTable table;
+public class BaoHanhToolbar extends JPanel {
+    private BaoHanhTable table;
 
-    public NCCToolbar(NCCTable table) {
+    public BaoHanhToolbar(BaoHanhTable table) {
         this.table = table;
         setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]10[]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
-        SearchTextField txtSearch = new SearchTextField("Tìm kiếm nhà cung cấp ...");
+        SearchTextField txtSearch = new SearchTextField("Tìm kiếm thiết bị đã bão hành ...");
         ButtonAdd btnAdd = new ButtonAdd("Thêm");
         ButtonFix btnFix = new ButtonFix("Sửa");
         ButtonDele btnDele = new ButtonDele("Xóa");
@@ -34,7 +34,7 @@ public class NCCToolbar extends JPanel{
         add(btnXuatExcel, "w 110!, h 35!");
 
         btnAdd.addActionListener(e -> {
-            NCCAddDialog dialog = new NCCAddDialog();
+            BaoHanhAddDialog dialog = new BaoHanhAddDialog();
             dialog.setVisible(true);
             // table.loadData(); // Sau khi đóng Dialog, tải lại bảng để thấy dữ liệu mới
         });
@@ -43,18 +43,18 @@ public class NCCToolbar extends JPanel{
             int selectedRow = table.getTbl().getSelectedRow();
 
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 hàng để sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 hàng để sửa!", "Thông báo",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             // Lấy dữ liệu từ các cột (chú ý đúng index cột trong tblModel của bạn)
             String ma = table.getTbl().getValueAt(selectedRow, 0).toString();
             String ten = table.getTbl().getValueAt(selectedRow, 1).toString();
-            String diaChi = table.getTbl().getValueAt(selectedRow, 2).toString();
-            String sdt = table.getTbl().getValueAt(selectedRow, 3).toString();
+            String phanTram = table.getTbl().getValueAt(selectedRow, 2).toString();
 
             // Mở Dialog và truyền dữ liệu qua
-            NCCFixDialog dialog = new NCCFixDialog(ma, ten, diaChi, sdt);
+            BaoHanhFixDialog dialog = new BaoHanhFixDialog(ma, ten, phanTram);
             dialog.setVisible(true);
         });
 
@@ -66,9 +66,9 @@ public class NCCToolbar extends JPanel{
                 return;
             }
 
-            String tenNCC = table.getTbl().getValueAt(selectedRow, 1).toString();
-            int opt = JOptionPane.showConfirmDialog(this, 
-                    "Bạn có chắc muốn xóa nhà cung cấp: " + tenNCC + "?", 
+            String tenBaoHanh = table.getTbl().getValueAt(selectedRow, 1).toString();
+            int opt = JOptionPane.showConfirmDialog(this,
+                    "Bạn có chắc muốn xóa nhà cung cấp: " + tenBaoHanh + "?",
                     "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
 
             if (opt == JOptionPane.YES_OPTION) {

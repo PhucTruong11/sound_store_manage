@@ -1,12 +1,11 @@
-Frontend\GUI\QuanlyamthanhPanel$1.class
 Backend\BUS\HoadonnhaphangBUS.class
-Frontend\GUI\Nhaphang\FromHienThi.class
 Frontend\Compoent\SearchTextField.class
 Frontend\GUI\Sidebar.class
 Frontend\GUI\Nhaphang\NhapHangTable$1.class
 Frontend\GUI\Nhaphang\NhapHangToolbar.class
 Frontend\GUI\Navigation.class
 Backend\DTO\Hoadonbanhang.class
+Frontend\GUI\QuanLyamthanhPanel.class
 Backend\DTO\Doitra.class
 Frontend\GUI\MainFrame.class
 Backend\DTO\Chitietbaohanh.class
@@ -17,6 +16,7 @@ Backend\DatabaseHelper.class
 Frontend\GUI\MainFrame$1.class
 Frontend\GUI\Nhaphang\ChiTietSanPhamDialog.class
 Backend\DTO\Amthanh.class
+Frontend\GUI\QuanLyamthanhPanel$1.class
 Backend\DAO\ChitietbaohanhDAO.class
 Backend\DAO\Khachhang.class
 Backend\DAO\KhachhangDAO.class
@@ -32,7 +32,6 @@ Backend\DAO\ChitietnhaphangDAO.class
 Backend\DAO\ConnguoiDAO.class
 Backend\BUS\AmthanhBUS.class
 Backend\DAO\KhuyenmaiDAO.class
-Frontend\GUI\QuanlyamthanhPanel.class
 Backend\BUS\Nhacungcap.class
 App.class
 Backend\DAO\DoitraDAO.class
@@ -67,5 +66,4 @@ Backend\DTO\Taikhoan.class
 Backend\BUS\Chitietbaohanh.class
 Frontend\GUI\Nhaphang\NhapHangTable$2.class
 Backend\DTO\Sanpham.class
-Frontend\Compoent\Button.class
 Frontend\Compoent\Theme.class
