@@ -12,6 +12,7 @@ import Frontend.GUI.HoaDon.HoaDonPanel;
 import Frontend.GUI.KhachHang.FromHienThiKhachHang;
 import Frontend.GUI.Nhaphang.MainHienThiNhapHang;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
+import Frontend.GUI.SanPham.QuanlyamthanhPanel;
 import Frontend.GUI.BanHang.BanHangPanel;
 import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
 import Frontend.GUI.BaoHanh.BaoHanhPanel;
