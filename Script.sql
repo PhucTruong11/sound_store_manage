@@ -1,12 +1,8 @@
-<<<<<<< HEAD
-DROP TABLE IF EXISTS sanpham;
-DROP TABLE IF EXISTS nhanvien;
-DROP TABLE IF EXISTS khachhang;
+-- DROP TABLE IF EXISTS sanpham;
+-- DROP TABLE IF EXISTS nhanvien;
+-- DROP TABLE IF EXISTS khachhang;
 
--- 1. Tạo Database tên là 'quanlyamthanh' (nếu chưa có)
-=======
--- Tạo Database tên là 'quanlylaptop' (nếu chưa có) --
->>>>>>> 7a49c5bbcdd96c01e27283b70bf7b1092b05d315
+-- Tạo Database tên là 'quanlyamthanh' (nếu chưa có)
 CREATE DATABASE IF NOT EXISTS quanlyamthanh CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE quanlyamthanh;
@@ -23,54 +19,54 @@ CREATE TABLE ConNguoi (
     DiaChi VARCHAR(255)
 );
 
-<<<<<<< HEAD
--- 3. Chèn 20 thiết bị âm thanh mẫu
-INSERT INTO sanpham (MaSP, TenSP, DonGia) VALUES
-('AT001', 'Loa Marshall Stanmore III', 9500000),
-('AT002', 'Tai nghe Sony WH-1000XM5', 8490000),
-('AT003', 'Loa Bluetooth JBL Charge 5', 3990000),
-('AT004', 'Tai nghe Apple AirPods Max', 13500000),
-('AT005', 'Loa Harman Kardon Aura Studio 4', 6900000),
-('AT006', 'Tai nghe Bose QuietComfort Ultra', 10500000),
-('AT007', 'Loa Marshall Emberton II', 4500000),
-('AT008', 'Tai nghe Sennheiser Momentum 4', 9200000),
-('AT009', 'Loa kéo Sony SRS-XG300', 7200000),
-('AT010', 'Loa Bookshelf Edifier R1700BT', 2800000),
-('AT011', 'Tai nghe Marshall Major IV', 3600000),
-('AT012', 'Loa Sonos Era 300', 12500000),
-('AT013', 'Tai nghe Gaming Razer BlackShark V2', 2500000),
-('AT014', 'Loa Soundbar Samsung HW-Q990C', 21500000),
-('AT015', 'Tai nghe In-ear Moondrop Chu II', 550000),
-('AT016', 'Amply DAC Fiio K7 Full Balanced', 5200000),
-('AT017', 'Loa Fender Indio 2', 8900000),
-('AT018', 'Tai nghe Beats Studio Pro', 7500000),
-('AT019', 'Loa Devialet Phantom I 108dB', 85000000),
-('AT020', 'Microphone Shure SM7B', 11500000);
+-- Chèn 20 thiết bị âm thanh mẫu
+-- INSERT INTO sanpham (MaSP, TenSP, DonGia) VALUES
+-- ('AT001', 'Loa Marshall Stanmore III', 9500000),
+-- ('AT002', 'Tai nghe Sony WH-1000XM5', 8490000),
+-- ('AT003', 'Loa Bluetooth JBL Charge 5', 3990000),
+-- ('AT004', 'Tai nghe Apple AirPods Max', 13500000),
+-- ('AT005', 'Loa Harman Kardon Aura Studio 4', 6900000),
+-- ('AT006', 'Tai nghe Bose QuietComfort Ultra', 10500000),
+-- ('AT007', 'Loa Marshall Emberton II', 4500000),
+-- ('AT008', 'Tai nghe Sennheiser Momentum 4', 9200000),
+-- ('AT009', 'Loa kéo Sony SRS-XG300', 7200000),
+-- ('AT010', 'Loa Bookshelf Edifier R1700BT', 2800000),
+-- ('AT011', 'Tai nghe Marshall Major IV', 3600000),
+-- ('AT012', 'Loa Sonos Era 300', 12500000),
+-- ('AT013', 'Tai nghe Gaming Razer BlackShark V2', 2500000),
+-- ('AT014', 'Loa Soundbar Samsung HW-Q990C', 21500000),
+-- ('AT015', 'Tai nghe In-ear Moondrop Chu II', 550000),
+-- ('AT016', 'Amply DAC Fiio K7 Full Balanced', 5200000),
+-- ('AT017', 'Loa Fender Indio 2', 8900000),
+-- ('AT018', 'Tai nghe Beats Studio Pro', 7500000),
+-- ('AT019', 'Loa Devialet Phantom I 108dB', 85000000),
+-- ('AT020', 'Microphone Shure SM7B', 11500000);
 
-CREATE TABLE IF NOT EXISTS nhanvien (
-    ma_nv INT AUTO_INCREMENT PRIMARY KEY,
-    ten_nv VARCHAR(100) NOT NULL,
-    sdt VARCHAR(20),
-    dia_chi VARCHAR(200),
-    chuc_vu VARCHAR(50)
-);
-INSERT INTO nhanvien (ten_nv, sdt, dia_chi, chuc_vu)
-VALUES 
-('Nguyễn Văn A', '0901234567', 'Hà Nội', 'Quản lý'),
-('Trần Thị B', '0912345678', 'TP HCM', 'Nhân viên');
+-- CREATE TABLE IF NOT EXISTS nhanvien (
+--     ma_nv INT AUTO_INCREMENT PRIMARY KEY,
+--     ten_nv VARCHAR(100) NOT NULL,
+--     sdt VARCHAR(20),
+--     dia_chi VARCHAR(200),
+--     chuc_vu VARCHAR(50)
+-- );
 
+-- INSERT INTO nhanvien (ten_nv, sdt, dia_chi, chuc_vu)
+-- VALUES 
+-- ('Nguyễn Văn A', '0901234567', 'Hà Nội', 'Quản lý'),
+-- ('Trần Thị B', '0912345678', 'TP HCM', 'Nhân viên');
 
-CREATE TABLE IF NOT EXISTS khachhang (
-    ma_kh INT AUTO_INCREMENT PRIMARY KEY,
-    ten_kh VARCHAR(100) NOT NULL,
-    sdt VARCHAR(20),
-    dia_chi VARCHAR(200)
-);
-INSERT INTO khachhang (ten_kh, sdt, dia_chi)
-VALUES
-('Lê Văn C', '0987654321', 'Đà Nẵng'),
-('Phạm Thị D', '0976543210', 'Cần Thơ');
-=======
+-- CREATE TABLE IF NOT EXISTS khachhang (
+--     ma_kh INT AUTO_INCREMENT PRIMARY KEY,
+--     ten_kh VARCHAR(100) NOT NULL,
+--     sdt VARCHAR(20),
+--     dia_chi VARCHAR(200)
+-- );
+
+-- INSERT INTO khachhang (ten_kh, sdt, dia_chi)
+-- VALUES
+-- ('Lê Văn C', '0987654321', 'Đà Nẵng'),
+-- ('Phạm Thị D', '0976543210', 'Cần Thơ');
+
 CREATE TABLE NhanVien (
     ID VARCHAR(20) NOT NULL,
     ChucVu VARCHAR(50),
@@ -78,9 +74,42 @@ CREATE TABLE NhanVien (
     Luong DOUBLE
 );
 
+INSERT INTO ConNguoi VALUES 
+  ('NV01','Phúc Trương','0901','Đà Nẵng'),
+  ('NV02','Văn Nam','0902','Hà Nội'),
+  ('NV03','Hoàng Bảo','0903','HCM'),
+  ('NV04','Minh Hưng','0904','Cần Thơ'),
+  ('NV05','Ngọc Ân','0905','Huế'),
+  ('NV06','Thanh Tùng','0906','Hải Phòng');
+
+INSERT INTO NhanVien VALUES 
+  ('NV01','Quản lý','phuc@sw.com',15000),
+  ('NV02','Bán hàng','nam@sw.com',8000),
+  ('NV03','Kho','bao@sw.com',9000),
+  ('NV04','Bán hàng','hung@sw.com',8000),
+  ('NV05','Kỹ thuật','an@sw.com',10000),
+  ('NV06','Bán hàng','tung@sw.com',8000);
+
+
 CREATE TABLE KhachHang (
     ID VARCHAR(20) NOT NULL
 );
+
+INSERT INTO ConNguoi VALUES 
+  ('KH001','Anh Tuấn','0801','Quận 1'),
+  ('KH002','Bảo Ngọc','0802','Quận 3'),
+  ('KH003','Cẩm Tú','0803','Quận 5'),
+  ('KH004','Duy Mạnh','0804','Quận 7'),
+  ('KH005','Elena','0805','Quận 10'),
+  ('KH006','Hoàng Long','0806','Bình Thạnh'),
+  ('KH007','Khánh Linh','0807','Gò Vấp'),
+  ('KH008','Minh Triết','0808','Thủ Đức'),
+  ('KH009','Như Ý','0809','Phú Nhuận'),
+  ('KH010','Quốc Việt','0810','Tân Bình');
+
+INSERT INTO KhachHang (ID) SELECT ID FROM ConNguoi WHERE ID LIKE 'KH%';
+
+
 
 -- ==========================================
 -- Sản phẩm
@@ -100,23 +129,52 @@ CREATE TABLE SanPham (
     TonTai BOOLEAN DEFAULT TRUE
 );
 
+INSERT INTO SanPham VALUES 
+  ('SP001','Marshall Stanmore III','L01','H01','Kem','80W','N/A','Bluetooth 5.2',7000,9500,20,1),
+  ('SP002','Sony WH-1000XM5','L03','H02','Đen','N/A','30h','Bluetooth',6000,8490,15,1),
+  ('SP003','JBL Charge 5','L01','H03','Xanh','40W','20h','Bluetooth 5.1',3000,3990,30,1),
+  ('SP004','Bose QC Ultra','L03','H04','Trắng','N/A','24h','Wireless',8000,10500,10,1),
+  ('SP005','Sennheiser M4','L02','H05','Đen','N/A','60h','Bluetooth 5.2',7000,9200,12,1),
+  ('SP006','Marshall Emberton II','L01','H01','Đen','20W','30h','Bluetooth',3500,4500,25,1),
+  ('SP007','Sony WF-C500','L02','H02','Xanh dương','N/A','10h','TWS',1200,1800,40,1),
+  ('SP008','JBL PartyBox 110','L01','H03','Đen','160W','12h','Bluetooth',8000,11000,8,1),
+  ('SP009','Bose SoundLink','L01','H04','Bạc','5W','12h','Bluetooth',4000,5200,18,1),
+  ('SP010','Sony SRS-XE200','L01','H02','Cam','10W','16h','Bluetooth',2000,2900,22,1);
+
 CREATE TABLE Imei (
     MaImei VARCHAR(50) NOT NULL PRIMARY KEY,
     MaSP VARCHAR(20),
     TinhTrang VARCHAR(50) DEFAULT 'Trong kho' -- 'Trong kho', 'Đã bán', 'Bảo hành'
 );
 
+INSERT INTO Imei (MaImei, MaSP, TinhTrang) VALUES 
+('MS1-001', 'SP001', 'Đã bán'),
+('MS1-002', 'SP001', 'Trong kho'),
+('SN2-001', 'SP002', 'Đã bán');
+
 CREATE TABLE LoaiSP ( 
     MaLoai VARCHAR(20) NOT NULL, 
     TenLoai VARCHAR(50) NOT NULL
 );
 
+INSERT INTO LoaiSP VALUES 
+  ('L01','Loa Bluetooth'),
+  ('L02','Tai nghe In-ear'),
+  ('L03','Tai nghe Over-ear'),
+  ('L04','Amply'),
+  ('L05','Microphone');
 
 CREATE TABLE HangSX ( 
     MaHang VARCHAR(20) NOT NULL, 
     TenHang VARCHAR(50) NOT NULL 
 );
 
+INSERT INTO HangSX VALUES 
+  ('H01','Marshall'),
+  ('H02','Sony'),
+  ('H03','JBL'),
+  ('H04','Bose'),
+  ('H05','Sennheiser');
 
 -- ==========================================
 -- Nhập hàng
@@ -129,6 +187,18 @@ CREATE TABLE HoaDonNhapHang (
     TongTien DOUBLE DEFAULT 0
 );
 
+INSERT INTO HoaDonNhapHang (MaHDNhap, MaNV, MaNCC, TongTien) VALUES 
+  ('HDN001','NV03','NCC01',70000),
+  ('HDN002','NV03','NCC02',60000),
+  ('HDN003','NV03','NCC03',30000),
+  ('HDN004','NV03','NCC04',80000),
+  ('HDN005','NV03','NCC05',70000),
+  ('HDN006','NV03','NCC01',35000),
+  ('HDN007','NV03','NCC02',12000),
+  ('HDN008','NV03','NCC03',80000),
+  ('HDN009','NV03','NCC04',40000),
+  ('HDN010','NV03','NCC05',20000);
+
 CREATE TABLE ChiTietHDNhap ( 
     MaHDNhap VARCHAR(20) NOT NULL, 
     MaSP VARCHAR(20) NOT NULL, 
@@ -136,12 +206,21 @@ CREATE TABLE ChiTietHDNhap (
     ThanhTien DOUBLE 
 );
 
+INSERT INTO ChiTietHDNhap SELECT MaHDNhap, 'SP001', 10, TongTien FROM HoaDonNhapHang;
+
 CREATE TABLE NhaCungCap ( 
     MaNCC VARCHAR(20) NOT NULL, 
     TenNCC VARCHAR(100), 
     DiaChi VARCHAR(255), 
     Sdt VARCHAR(20) 
 );
+
+INSERT INTO NhaCungCap VALUES 
+  ('NCC01','Marshall VN','Hà Nội','0911'),
+  ('NCC02','Sony Store','HCM','0922'),
+  ('NCC03','JBL Official','Đà Nẵng','0933'),
+  ('NCC04','Bose VN','Cần Thơ','0944'),
+  ('NCC05','Sennheiser Dist','Hải Phòng','0955');
 
 -- ==========================================
 -- Bán hàng
@@ -155,12 +234,26 @@ CREATE TABLE HoaDonBanHang (
     TongTien DOUBLE DEFAULT 0
 );
 
+INSERT INTO HoaDonBanHang (MaHDBan, MaNV, MaKH, MaKM, TongTien) VALUES 
+  ('HDB001','NV02','KH001','KM001',8550),
+  ('HDB002','NV04','KH002',NULL,8490),
+  ('HDB003','NV06','KH003','KM001',3591),
+  ('HDB004','NV02','KH004','KM002',8925),
+  ('HDB005','NV04','KH005',NULL,9200),
+  ('HDB006','NV06','KH006','KM003',3600),
+  ('HDB007','NV02','KH007',NULL,1800),
+  ('HDB008','NV04','KH008','KM005',9900),
+  ('HDB009','NV06','KH009',NULL,5200),
+  ('HDB010','NV02','KH010','KM001',2610);
+
 CREATE TABLE ChiTietHDBan ( 
     MaHDBan VARCHAR(20) NOT NULL, 
     MaSP VARCHAR(20) NOT NULL, 
     SoLuong INT, 
-    ThanhTien DOUBLE 
+    ThanhTien DOUBLE
 );
+
+INSERT INTO ChiTietHDBan SELECT MaHDBan, 'SP001', 1, TongTien FROM HoaDonBanHang;
 
 CREATE TABLE KhuyenMai (
     MaKM VARCHAR(20) NOT NULL, 
@@ -170,6 +263,13 @@ CREATE TABLE KhuyenMai (
     NgayBatDau DATE, 
     NgayKetThuc DATE 
 );
+
+INSERT INTO KhuyenMai VALUES 
+  ('KM001','Chào hè',5000,10,'2025-06-01','2025-08-31'),
+  ('KM002','Âm thanh đỉnh',10000,15,'2025-09-01','2025-10-30'),
+  ('KM003','Black Friday',20000,20,'2025-11-20','2025-11-30'),
+  ('KM004','Giáng sinh',5000,5,'2025-12-15','2025-12-31'),
+  ('KM005','Tết âm',8000,10,'2026-01-01','2026-02-15');
 
 CREATE TABLE BaoHanh ( 
     MaBH VARCHAR(20) NOT NULL, 
@@ -252,118 +352,3 @@ ALTER TABLE BaoHanh ADD CONSTRAINT FK_BH_SP FOREIGN KEY (MaSP) REFERENCES SanPha
 ALTER TABLE BaoHanh ADD CONSTRAINT FK_BH_HD FOREIGN KEY (MaHDBan) REFERENCES HoaDonBanHang(MaHDBan);
 ALTER TABLE ChiTietBaoHanh ADD CONSTRAINT FK_CTBH_BH FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH);
 
-
--- ==========================================
--- 6. DỮ LIỆU MẪU (DUMMY DATA)
--- ==========================================
-
--- Nhân viên (6)
-INSERT INTO ConNguoi VALUES 
-  ('NV01','Phúc Trương','0901','Đà Nẵng'),
-  ('NV02','Văn Nam','0902','Hà Nội'),
-  ('NV03','Hoàng Bảo','0903','HCM'),
-  ('NV04','Minh Hưng','0904','Cần Thơ'),
-  ('NV05','Ngọc Ân','0905','Huế'),
-  ('NV06','Thanh Tùng','0906','Hải Phòng');
-
-INSERT INTO NhanVien VALUES 
-  ('NV01','Quản lý','phuc@sw.com',15000),
-  ('NV02','Bán hàng','nam@sw.com',8000),
-  ('NV03','Kho','bao@sw.com',9000),
-  ('NV04','Bán hàng','hung@sw.com',8000),
-  ('NV05','Kỹ thuật','an@sw.com',10000),
-  ('NV06','Bán hàng','tung@sw.com',8000);
-
--- Khách hàng (10)
-INSERT INTO ConNguoi VALUES 
-  ('KH001','Anh Tuấn','0801','Quận 1'),
-  ('KH002','Bảo Ngọc','0802','Quận 3'),
-  ('KH003','Cẩm Tú','0803','Quận 5'),
-  ('KH004','Duy Mạnh','0804','Quận 7'),
-  ('KH005','Elena','0805','Quận 10'),
-  ('KH006','Hoàng Long','0806','Bình Thạnh'),
-  ('KH007','Khánh Linh','0807','Gò Vấp'),
-  ('KH008','Minh Triết','0808','Thủ Đức'),
-  ('KH009','Như Ý','0809','Phú Nhuận'),
-  ('KH010','Quốc Việt','0810','Tân Bình');
-
-INSERT INTO KhachHang (ID) SELECT ID FROM ConNguoi WHERE ID LIKE 'KH%';
-
--- Loại SP & Hãng (5)
-INSERT INTO LoaiSP VALUES 
-  ('L01','Loa Bluetooth'),
-  ('L02','Tai nghe In-ear'),
-  ('L03','Tai nghe Over-ear'),
-  ('L04','Amply'),
-  ('L05','Microphone');
-
-INSERT INTO HangSX VALUES 
-  ('H01','Marshall'),
-  ('H02','Sony'),
-  ('H03','JBL'),
-  ('H04','Bose'),
-  ('H05','Sennheiser');
-
--- Nhà cung cấp & Khuyến mãi (5)
-INSERT INTO NhaCungCap VALUES 
-  ('NCC01','Marshall VN','Hà Nội','0911'),
-  ('NCC02','Sony Store','HCM','0922'),
-  ('NCC03','JBL Official','Đà Nẵng','0933'),
-  ('NCC04','Bose VN','Cần Thơ','0944'),
-  ('NCC05','Sennheiser Dist','Hải Phòng','0955');
-
-INSERT INTO KhuyenMai VALUES 
-  ('KM001','Chào hè',5000,10,'2025-06-01','2025-08-31'),
-  ('KM002','Âm thanh đỉnh',10000,15,'2025-09-01','2025-10-30'),
-  ('KM003','Black Friday',20000,20,'2025-11-20','2025-11-30'),
-  ('KM004','Giáng sinh',5000,5,'2025-12-15','2025-12-31'),
-  ('KM005','Tết âm',8000,10,'2026-01-01','2026-02-15');
-
--- Sản phẩm (10)
-INSERT INTO SanPham VALUES 
-  ('SP001','Marshall Stanmore III','L01','H01','Kem','80W','N/A','Bluetooth 5.2',7000,9500,20,1),
-  ('SP002','Sony WH-1000XM5','L03','H02','Đen','N/A','30h','Bluetooth',6000,8490,15,1),
-  ('SP003','JBL Charge 5','L01','H03','Xanh','40W','20h','Bluetooth 5.1',3000,3990,30,1),
-  ('SP004','Bose QC Ultra','L03','H04','Trắng','N/A','24h','Wireless',8000,10500,10,1),
-  ('SP005','Sennheiser M4','L02','H05','Đen','N/A','60h','Bluetooth 5.2',7000,9200,12,1),
-  ('SP006','Marshall Emberton II','L01','H01','Đen','20W','30h','Bluetooth',3500,4500,25,1),
-  ('SP007','Sony WF-C500','L02','H02','Xanh dương','N/A','10h','TWS',1200,1800,40,1),
-  ('SP008','JBL PartyBox 110','L01','H03','Đen','160W','12h','Bluetooth',8000,11000,8,1),
-  ('SP009','Bose SoundLink','L01','H04','Bạc','5W','12h','Bluetooth',4000,5200,18,1),
-  ('SP010','Sony SRS-XE200','L01','H02','Cam','10W','16h','Bluetooth',2000,2900,22,1);
-
-INSERT INTO Imei (MaImei, MaSP, TinhTrang) VALUES 
-('MS1-001', 'SP001', 'Đã bán'),
-('MS1-002', 'SP001', 'Trong kho'),
-('SN2-001', 'SP002', 'Đã bán');
-
--- Hóa đơn Nhập (10)
-INSERT INTO HoaDonNhapHang (MaHDNhap, MaNV, MaNCC, TongTien) VALUES 
-  ('HDN001','NV03','NCC01',70000),
-  ('HDN002','NV03','NCC02',60000),
-  ('HDN003','NV03','NCC03',30000),
-  ('HDN004','NV03','NCC04',80000),
-  ('HDN005','NV03','NCC05',70000),
-  ('HDN006','NV03','NCC01',35000),
-  ('HDN007','NV03','NCC02',12000),
-  ('HDN008','NV03','NCC03',80000),
-  ('HDN009','NV03','NCC04',40000),
-  ('HDN010','NV03','NCC05',20000);
-
-INSERT INTO ChiTietHDNhap SELECT MaHDNhap, 'SP001', 10, TongTien FROM HoaDonNhapHang;
-
--- Hóa đơn Bán (10)
-INSERT INTO HoaDonBanHang (MaHDBan, MaNV, MaKH, MaKM, TongTien) VALUES 
-  ('HDB001','NV02','KH001','KM001',8550),
-  ('HDB002','NV04','KH002',NULL,8490),
-  ('HDB003','NV06','KH003','KM001',3591),
-  ('HDB004','NV02','KH004','KM002',8925),
-  ('HDB005','NV04','KH005',NULL,9200),
-  ('HDB006','NV06','KH006','KM003',3600),
-  ('HDB007','NV02','KH007',NULL,1800),
-  ('HDB008','NV04','KH008','KM005',9900),
-  ('HDB009','NV06','KH009',NULL,5200),
-  ('HDB010','NV02','KH010','KM001',2610);
-
-INSERT INTO ChiTietHDBan SELECT MaHDBan, 'SP001', 1, TongTien FROM HoaDonBanHang;
->>>>>>> 7a49c5bbcdd96c01e27283b70bf7b1092b05d315

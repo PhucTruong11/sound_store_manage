@@ -18,17 +18,10 @@ public class NhapHangToolbar extends JPanel{
         setOpaque(false);
 
         SearchTextField txtSearch = new SearchTextField("Tìm kiếm tên SP, mã SP...");
-        
-        // ButtonAdd btnAdd = new ButtonAdd("Thêm");
-        // ButtonFix btnFix = new ButtonFix("Sửa");
-        // ButtonDele btnDele = new ButtonDele("Xóa");
         ButtonNhapExcel btnNhapExcel = new ButtonNhapExcel("Nhập Excel");
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
 
         add(txtSearch, "growx, h 35!");
-        // add(btnAdd, "w 100!, h 35!");
-        // add(btnFix, "w 100!, h 35!");
-        // add(btnDele, "w 100!, h 35!");
         add(btnNhapExcel, "w 105!, h 35!");
         add(btnXuatExcel, "w 105!, h 35!");
     }
