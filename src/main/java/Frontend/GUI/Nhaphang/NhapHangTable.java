@@ -67,7 +67,7 @@ public class NhapHangTable extends JScrollPane {
         tblModel.setRowCount(0);
         for (Amthanh sp : list) {
             String formattedPrice = String.format("%,.0f", sp.getGiaBan());
-            Object[] row = {sp.getMaMay(), sp.getTenMay(), formattedPrice, "0"};
+            Object[] row = {sp.getMaSP(), sp.getTenSP(), formattedPrice, "0"};
             tblModel.addRow(row);
         }
     }

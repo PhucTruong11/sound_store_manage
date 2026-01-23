@@ -27,7 +27,8 @@ public class AmthanhDAO {
             String ma = rs.getString("MaSP"); 
             String ten = rs.getString("TenSP");
             double gia = rs.getDouble("DonGia"); 
-            list.add(new Amthanh(ma, ten, gia));
+            int sl=rs.getInt("SoLuong");
+            list.add(new Amthanh(ma, ten, gia,sl));
         }
         } catch (Exception e) {
             e.printStackTrace();
