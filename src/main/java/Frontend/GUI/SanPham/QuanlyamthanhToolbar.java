@@ -48,10 +48,10 @@ public class QuanlyamthanhToolbar extends JPanel {
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
 
         add(txtSearch, "growx, h 35!");       
-        add(cboPhanLoai, "w 130!, h 35!");    
-        add(btnAdd, "w 120!, h 35!");           
-        add(btnRefresh, "w 120!, h 35!");
-        add(btnXuatExcel, "w 120!, h 35!");       
+        add(cboPhanLoai, "w 105!, h 35!");    
+        add(btnAdd, "w 95!, h 35!");           
+        add(btnRefresh, "w 110!, h 35!");
+        add(btnXuatExcel, "w 105!, h 35!");       
 
         btnAdd.addActionListener(e -> {
             JFrame frameCha = (JFrame) SwingUtilities.getWindowAncestor(this);

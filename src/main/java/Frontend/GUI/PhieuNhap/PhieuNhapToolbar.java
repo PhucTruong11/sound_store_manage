@@ -15,12 +15,12 @@ public class PhieuNhapToolbar extends JPanel{
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC );
 
         SearchTextField txtSearch = new SearchTextField("Tìm phiếu nhập hàng ...");
-        ButtonXuatPdf btnPdf = new ButtonXuatPdf("XUẤT PDF");
-        ButtonXuatExcel btnExcel = new ButtonXuatExcel("XUẤT EXCEL");
+        ButtonXuatPdf btnPdf = new ButtonXuatPdf("Xuất PDF");
+        ButtonXuatExcel btnExcel = new ButtonXuatExcel("Xuất EXCEL");
         
 
         add(txtSearch, "growx, h 35!");
-        add(btnPdf, "w 120!, h 35!");
-        add(btnExcel, "w 120!, h 35!");
+        add(btnPdf, "w 105!, h 35!");
+        add(btnExcel, "w 105!, h 35!");
     }
 }

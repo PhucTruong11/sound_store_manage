@@ -9,7 +9,7 @@ import java.awt.*;
 public class ButtonRefresh extends JButton{
         public ButtonRefresh(String text) {
         super(text);
-        setFont(new Font("Segoe UI", Font.BOLD, 14));
+        setFont(new Font("Segoe UI", Font.BOLD, 13));
         setForeground(Color.WHITE);
         setBackground(Theme.PURPLE_COLOR);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
