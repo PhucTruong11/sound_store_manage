@@ -14,13 +14,13 @@ import java.util.ArrayList;
 public class NhapHangTable extends JScrollPane {
     private JTable tbl;
     private DefaultTableModel tblModel;
-    // private AmthanhBUS amthanhBUS = new AmthanhBUS();
+    private AmthanhBUS amthanhBUS = new AmthanhBUS();
     private NhapHangSidebar sidebar; // Để truyền dữ liệu sang Sidebar khi click
 
     public NhapHangTable(NhapHangSidebar sidebar) {
         this.sidebar = sidebar;
         initTable();
-        // loadData();
+        loadData();
     }
 
     private void initTable() {
@@ -74,13 +74,13 @@ public class NhapHangTable extends JScrollPane {
         setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
     }
 
-    // public void loadData() {
-    //     ArrayList<Amthanh> list = amthanhBUS.getAllAmthanh();
-    //     tblModel.setRowCount(0);
-    //     for (Amthanh sp : list) {
-    //         String formattedPrice = String.format("%,.0f", sp.getGiaBan());
-    //         Object[] row = {sp.getMaMay(), sp.getTenMay(), formattedPrice, "0"};
-    //         tblModel.addRow(row);
-    //     }
-    // }
+    public void loadData() {
+        ArrayList<Amthanh> list = amthanhBUS.getAllAmthanh();
+        tblModel.setRowCount(0);
+        for (Amthanh sp : list) {
+            String formattedPrice = String.format("%,.0f", sp.getGiaBan());
+            Object[] row = {sp.getMaSP(), sp.getTenSP(), formattedPrice, "0"};
+            tblModel.addRow(row);
+        }
+    }
 }
