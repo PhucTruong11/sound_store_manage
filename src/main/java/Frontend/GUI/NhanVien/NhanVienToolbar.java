@@ -25,17 +25,13 @@ public class NhanVienToolbar extends JPanel {
         ButtonAdd btnAdd = new ButtonAdd("Thêm");
         ButtonFix btnFix = new ButtonFix("Sửa");
         ButtonDele btnDele = new ButtonDele("Xóa");
-        //ButtonRefresh btnRefresh = new ButtonRefresh("Làm mới");
-        ButtonXuatPdf btnXuatPdf = new ButtonXuatPdf("Xuất PDF");
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
 
         add(txtSearch, "growx, h 35!");
-        add(btnAdd, "w 120!, h 35!");
-        add(btnFix, "w 120!, h 35!");
-        add(btnDele, "w 120!, h 35!");
-        //add(btnRefresh, "w 120!, h 35!");
-        add(btnXuatPdf, "w 120!, h 35!");
-        add(btnXuatExcel, "w 120!, h 35!");
+        add(btnAdd, "w 95!, h 35!");
+        add(btnFix, "w 95!, h 35!");
+        add(btnDele, "w 95!, h 35!");
+        add(btnXuatExcel, "w 105!, h 35!");
 
         btnAdd.addActionListener(e -> {
             NhanVienAddDialog dialog = new NhanVienAddDialog();

@@ -28,10 +28,10 @@ public class NCCToolbar extends JPanel{
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
 
         add(txtSearch, "growx, h 35!");
-        add(btnAdd, "w 110!, h 35!");
-        add(btnFix, "w 110!, h 35!");
-        add(btnDele, "w 110!, h 35!");
-        add(btnXuatExcel, "w 110!, h 35!");
+        add(btnAdd, "w 95!, h 35!");
+        add(btnFix, "w 95!, h 35!");
+        add(btnDele, "w 95!, h 35!");
+        add(btnXuatExcel, "w 105!, h 35!");
 
         btnAdd.addActionListener(e -> {
             NCCAddDialog dialog = new NCCAddDialog();

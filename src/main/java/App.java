@@ -1,4 +1,5 @@
 import Frontend.GUI.MainFrame;
+import Frontend.GUI.LogIn.LoginFrame;
 import Frontend.Compoent.Theme;
 
 public class App {
