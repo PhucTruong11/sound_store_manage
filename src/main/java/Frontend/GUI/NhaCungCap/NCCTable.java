@@ -1,9 +1,10 @@
 package Frontend.GUI.NhaCungCap;
 
+import Backend.BUS.NhaCungCapBUS;
+import Backend.DTO.NhaCungCap;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -16,15 +17,17 @@ public class NCCTable extends JPanel{
     private JTable tbl;
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
+    private NhaCungCapBUS nhacungcapBUS;
 
     public NCCTable() {
+        nhacungcapBUS = new NhaCungCapBUS();
         setLayout(new MigLayout("wrap 1, fill, insets 10", "[grow]", "[]15[grow]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: 20");
 
         initFilterHeader();
         initTable();
-        loadDummyData();
+        loadData();
     }
 
     private void initFilterHeader() {
@@ -63,9 +66,21 @@ public class NCCTable extends JPanel{
         add(scrollPane, "grow");
     }
 
-     private void loadDummyData() {
-        tblModel.addRow(new Object[]{"1","NCC01", "Stek VN", "Hà Nội", "0961253086"});
-        tblModel.addRow(new Object[]{"2","NCC02", "Pro Tech", "Hồ Chí Minh", "0879910893"});
+    public void loadData() {
+        tblModel.setRowCount(0);
+        ArrayList<NhaCungCap> listNCC = nhacungcapBUS.getAllNhaCungCap();
+
+        int stt = 1;
+        for(NhaCungCap ncc : listNCC) {
+            Object[] row = {
+                stt++,
+                ncc.getMaNCC(),
+                ncc.getTenNCC(),
+                ncc.getDiaChi(),
+                ncc.getSdt(),
+            };
+            tblModel.addRow(row);
+        }
     }
 
     public JTable getTbl() {
