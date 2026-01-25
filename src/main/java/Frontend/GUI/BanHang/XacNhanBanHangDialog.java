@@ -55,9 +55,7 @@ public class XacNhanBanHangDialog extends JDialog {
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblReview.setDefaultRenderer(Object.class, centerRenderer);
 
-        // Copy dữ liệu từ Sidebar sang
         for (int i = 0; i < sourceModel.getRowCount(); i++) {
-            // Cột 0: Mã, Cột 1: Tên, Cột 2: SL, Cột 3: Giá
             String ma = sourceModel.getValueAt(i, 0).toString();
             String ten = sourceModel.getValueAt(i, 1).toString();
             int sl = Integer.parseInt(sourceModel.getValueAt(i, 2).toString());

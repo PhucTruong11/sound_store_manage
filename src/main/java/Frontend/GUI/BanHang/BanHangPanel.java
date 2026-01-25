@@ -12,7 +12,7 @@ public class BanHangPanel extends JPanel {
     private PaginationPanel pagination;
 
     public BanHangPanel() {
-        setLayout(new MigLayout("fill, insets 15","[280!]15[grow, fill]", "[][grow][]")); // Dùng BorderLayout làm chuẩn
+        setLayout(new MigLayout("fill, insets 15","[280!]15[grow, fill]", "[][grow][]")); 
         setBackground(Theme.BACKGROUND_COLOR);
 
         toolbar = new BanHangToolbar();
@@ -27,5 +27,11 @@ public class BanHangPanel extends JPanel {
         add(sidebar, "w 280!, growy, span 1 2");
         add(productGrid, "grow, wrap");
         add(pagination, "center, center");
+        // JPanel pnlSouth = new JPanel(new BorderLayout());
+        // pnlSouth.setBackground(Theme.BACKGROUND_COLOR);
+        // pnlSouth.add(pagination, BorderLayout.CENTER);
+
+        // add(pnlSouth, BorderLayout.SOUTH);
+        add(pagination, BorderLayout.SOUTH);
     }
 }

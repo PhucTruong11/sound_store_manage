@@ -1,7 +1,7 @@
-package Frontend.GUI.PhieuNhap;
+package Frontend.GUI.PhieuXuat;
 
-import Backend.BUS.PhieuNhapBUS;
-import Backend.DTO.PhieuNhap;
+import Backend.BUS.PhieuXuatBUS;
+import Backend.DTO.PhieuXuat;
 import Frontend.Compoent.Table;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -13,20 +13,20 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class PhieuNhapTable extends JScrollPane {
-    private JTable tbl;     
+public class PhieuXuatTable extends JScrollPane {
+    private JTable tbl;
     private DefaultTableModel tblModel;
-    private PhieuNhapBUS phieuNhapBUS;
+    private PhieuXuatBUS phieuXuatBUS;
 
-    public PhieuNhapTable() {
-        phieuNhapBUS = new PhieuNhapBUS();
+    public PhieuXuatTable() {
+        phieuXuatBUS = new PhieuXuatBUS();
         initTable();
         loadData();
         addTableEvents();
     }
 
     private void initTable() {
-        String[] columns = { "STT", "Mã HĐN", "Ngày Lập", "Mã NV", "Tổng Tiền" };
+        String[] columns = { "STT", "Mã HĐX", "Ngày Bán", "Mã NV", "Khách Hàng", "Tổng Tiền" };
         tblModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -37,7 +37,6 @@ public class PhieuNhapTable extends JScrollPane {
         tbl = new Table();
         tbl.setModel(tblModel);
 
-        // Căn giữa các cột
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tbl.setDefaultRenderer(Object.class, centerRenderer);
@@ -47,20 +46,21 @@ public class PhieuNhapTable extends JScrollPane {
     }
 
     public void loadData() {
-        tblModel.setRowCount(0); // Xóa dữ liệu cũ trên bảng
-        ArrayList<PhieuNhap> listPN = phieuNhapBUS.getAllPhieuNhap();
+        tblModel.setRowCount(0);
+        ArrayList<PhieuXuat> listPX = phieuXuatBUS.getAllPhieuXuat();
 
-        DecimalFormat df = new DecimalFormat("#, ###");
+        DecimalFormat df = new DecimalFormat("#,### VNĐ");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         int stt = 1;
-        for(PhieuNhap pn :listPN) {
+        for (PhieuXuat px : listPX) {
             Object[] row = {
-                stt++,
-                pn.getmaPhieuNhap(),
-                sdf.format(pn.getngayNhap()),
-                pn.getmaNV(),
-                df.format(pn.getTongTien())
+                    stt++,
+                    px.getMaPhieuXuat(),
+                    px.getNgayXuat() != null ? sdf.format(px.getNgayXuat()) : "N/A",
+                    px.getMaNV(),
+                    px.getMaKH(),
+                    df.format(px.getTongTien())
             };
             tblModel.addRow(row);
         }
@@ -73,17 +73,17 @@ public class PhieuNhapTable extends JScrollPane {
                 if (e.getClickCount() == 2) {
                     int row = tbl.getSelectedRow();
                     if (row != -1) {
-                        String maPN = tblModel.getValueAt(row, 1).toString();
-                        openDetailDialog(maPN);
+                        String maPX = tblModel.getValueAt(row, 1).toString();
+                        openDetailDialog(maPX);
                     }
                 }
             }
         });
     }
 
-    private void openDetailDialog(String maPN) {
+    private void openDetailDialog(String maPX) {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-        ChiTietHoaDonNhapDialog dialog = new ChiTietHoaDonNhapDialog(parentFrame, maPN);
+        ChiTietPhieuXuatDialog dialog = new ChiTietPhieuXuatDialog(parentFrame, maPX);
         dialog.setVisible(true);
     }
 }
