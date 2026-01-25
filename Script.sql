@@ -1,312 +1,424 @@
--- Tạo Database tên là 'quanlylaptop' (nếu chưa có) --
+-- DROP TABLE IF EXISTS sanpham;
+-- DROP TABLE IF EXISTS nhanvien;
+-- DROP TABLE IF EXISTS khachhang;
+
+-- Tạo Database tên là 'quanlyamthanh' (nếu chưa có)
 CREATE DATABASE IF NOT EXISTS quanlyamthanh CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE quanlyamthanh;
 
+-- --------------------------------------------------------
 
-
--- ==========================================
+--
 -- Nhóm Con Người (Kế thừa)
--- ==========================================
+--
+
 CREATE TABLE ConNguoi (
-    ID VARCHAR(20) NOT NULL, -- Định dạng: NV001 hoặc KH001
-    HoTen VARCHAR(100) NOT NULL,
+    ID VARCHAR(20) PRIMARY KEY, -- Định dạng: NV001 hoặc KH001
+    HoTen VARCHAR(40) NOT NULL,
     SDT VARCHAR(20),
-    DiaChi VARCHAR(255)
+    DiaChi VARCHAR(100)
 );
+
+-- --------------------------------------------------------
 
 CREATE TABLE NhanVien (
-    ID VARCHAR(20) NOT NULL,
+    ID VARCHAR(20) PRIMARY KEY,
     ChucVu VARCHAR(50),
     Email VARCHAR(100),
-    Luong DOUBLE
+    Luong DOUBLE,
+    TrangThai BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (ID) REFERENCES ConNguoi(ID)
 );
+
+-- --------------------------------------------------------
 
 CREATE TABLE KhachHang (
-    ID VARCHAR(20) NOT NULL
+    ID VARCHAR(20) PRIMARY KEY,
+    TrangThai BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (ID) REFERENCES ConNguoi(ID)
 );
 
--- ==========================================
--- Sản phẩm
--- ==========================================
+-- --------------------------------------------------------
+
+--
+-- Tài khoản
+--
+
+CREATE TABLE NhomQuyen (
+    MaNhomQuyen VARCHAR(20) PRIMARY KEY,
+    TenNhomQuyen VARCHAR(100),
+    MoTa TEXT
+);
+
+CREATE TABLE TaiKhoan (
+    TenDangNhap VARCHAR(50) PRIMARY KEY,
+    MatKhau VARCHAR(255) NOT NULL,  -- Nên mã hóa BCrypt
+    MaNV VARCHAR(20) UNIQUE,
+    MaNhomQuyen VARCHAR(20),
+    TrangThai BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(ID),
+    FOREIGN KEY (MaNhomQuyen) REFERENCES NhomQuyen(MaNhomQuyen)
+);
+
+CREATE TABLE ChucNang (
+    MaChucNang VARCHAR(50) PRIMARY KEY,
+    TenChucNang VARCHAR(100) NOT NULL,
+    MoTa TEXT
+);
+
+CREATE TABLE ChiTietQuyen (
+    MaNhomQuyen VARCHAR(20),
+    MaChucNang VARCHAR(50),
+    HanhDong VARCHAR(20),  -- create, read, update, delete
+    PRIMARY KEY (MaNhomQuyen, MaChucNang, HanhDong),
+    FOREIGN KEY (MaNhomQuyen) REFERENCES NhomQuyen(MaNhomQuyen),
+    FOREIGN KEY (MaChucNang) REFERENCES ChucNang(MaChucNang)
+);
+
+-- --------------------------------------------------------
+
+
+--
+-- Sản phẩm & Thuộc tính
+--
+
+CREATE TABLE LoaiSP (
+    MaLoai VARCHAR(20) PRIMARY KEY,
+    TenLoai VARCHAR(50) NOT NULL -- Loa, Tai nghe, Amply, Micro
+);
+
+CREATE TABLE HangSX (
+    MaHang VARCHAR(20) PRIMARY KEY,
+    TenHang VARCHAR(50) NOT NULL,
+    QuocGia VARCHAR(50)
+);
+
 CREATE TABLE SanPham (
-    MaSP VARCHAR(20) NOT NULL,
+    MaSP VARCHAR(20) PRIMARY KEY,
     TenSP VARCHAR(100) NOT NULL,
     MaLoai VARCHAR(20),
     MaHang VARCHAR(20),
-    MauSac VARCHAR(50),      -- Thêm trực tiếp
-    CongSuat VARCHAR(50),    -- Thêm trực tiếp
-    Pin VARCHAR(50),         -- Thêm trực tiếp
-    KetNoi VARCHAR(100),     -- Thêm trực tiếp
+    HinhAnh VARCHAR(255),
+    MoTa TEXT,
+    ThoiGianBaoHanh INT DEFAULT 12, -- Tháng
+    TrangThai BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (MaLoai) REFERENCES LoaiSP(MaLoai),
+    FOREIGN KEY (MaHang) REFERENCES HangSX(MaHang)
+);
+
+--
+-- Phiên bản sản phẩm
+--
+
+CREATE TABLE PhienBanSP (
+    MaPhienBan VARCHAR(20) PRIMARY KEY,
+    MaSP VARCHAR(20),
+    MauSac VARCHAR(50),
+    CongSuat VARCHAR(50),     -- VD: 80W, 40W
+    Pin VARCHAR(50),          -- VD: 30h, 20h
+    KetNoi VARCHAR(100),      -- VD: Bluetooth 5.2
     GiaNhap DOUBLE,
     GiaBan DOUBLE,
     SoLuongTon INT DEFAULT 0,
-    TonTai BOOLEAN DEFAULT TRUE
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
 );
 
-CREATE TABLE Imei (
-    MaImei VARCHAR(50) NOT NULL PRIMARY KEY,
-    MaSP VARCHAR(20),
-    TinhTrang VARCHAR(50) DEFAULT 'Trong kho' -- 'Trong kho', 'Đã bán', 'Bảo hành'
+--
+-- Quản lý imei (Từng chiếc) 
+
+CREATE TABLE ChiTietSP (
+    MaImei VARCHAR(50) PRIMARY KEY, -- MS1-001, SN2-001
+    MaPhienBan VARCHAR(20),
+    MaPhieuNhap VARCHAR(20),
+    MaPhieuXuat VARCHAR(20),
+    TinhTrang VARCHAR(50) DEFAULT 'Trong kho', -- Đã bán, Bảo hành
+    FOREIGN KEY (MaPhienBan) REFERENCES PhienBanSP(MaPhienBan)
 );
 
-CREATE TABLE LoaiSP ( 
-    MaLoai VARCHAR(20) NOT NULL, 
-    TenLoai VARCHAR(50) NOT NULL
-);
+-- --------------------------------------------------------
 
-
-CREATE TABLE HangSX ( 
-    MaHang VARCHAR(20) NOT NULL, 
-    TenHang VARCHAR(50) NOT NULL 
-);
-
-
--- ==========================================
+--
 -- Nhập hàng
--- ==========================================
-CREATE TABLE HoaDonNhapHang (
-    MaHDNhap VARCHAR(20) NOT NULL,
-    NgayNhap DATETIME DEFAULT CURRENT_TIMESTAMP,
-    MaNV VARCHAR(20),
-    MaNCC VARCHAR(20),
-    TongTien DOUBLE DEFAULT 0
-);
-
-CREATE TABLE ChiTietHDNhap ( 
-    MaHDNhap VARCHAR(20) NOT NULL, 
-    MaSP VARCHAR(20) NOT NULL, 
-    SoLuong INT, 
-    ThanhTien DOUBLE 
-);
+-- 
 
 CREATE TABLE NhaCungCap ( 
-    MaNCC VARCHAR(20) NOT NULL, 
+    MaNCC VARCHAR(20) PRIMARY KEY, 
     TenNCC VARCHAR(100), 
     DiaChi VARCHAR(255), 
     Sdt VARCHAR(20) 
 );
 
--- ==========================================
--- Bán hàng
--- ==========================================
-CREATE TABLE HoaDonBanHang (
-    MaHDBan VARCHAR(20) NOT NULL,
-    NgayBan DATETIME DEFAULT CURRENT_TIMESTAMP,
+CREATE TABLE PhieuNhap (
+    MaPhieuNhap VARCHAR(20) PRIMARY KEY,
+    NgayNhap DATETIME DEFAULT CURRENT_TIMESTAMP,
     MaNV VARCHAR(20),
-    MaKH VARCHAR(20),
-    MaKM VARCHAR(20),
-    TongTien DOUBLE DEFAULT 0
+    MaNCC VARCHAR(20),
+    TongTien DOUBLE DEFAULT 0,
+    TrangThai BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(ID),
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC)
 );
 
-CREATE TABLE ChiTietHDBan ( 
-    MaHDBan VARCHAR(20) NOT NULL, 
-    MaSP VARCHAR(20) NOT NULL, 
-    SoLuong INT, 
-    ThanhTien DOUBLE 
+CREATE TABLE ChiTietPhieuNhap ( 
+    MaPhieuNhap VARCHAR(20), 
+    MaPhienBan VARCHAR(20) NOT NULL, 
+    SoLuong INT,
+    DonGia DOUBLE,
+    ThanhTien DOUBLE,
+    PRIMARY KEY (MaPhieuNhap, MaPhienBan),
+    FOREIGN KEY (MaPhieuNhap) REFERENCES PhieuNhap(MaPhieuNhap),
+    FOREIGN KEY (MaPhienBan) REFERENCES PhienBanSP(MaPhienBan)
 );
+
+-- --------------------------------------------------------
+
+-- 
+-- Bán hàng
+-- 
 
 CREATE TABLE KhuyenMai (
-    MaKM VARCHAR(20) NOT NULL, 
+    MaKM VARCHAR(20)  PRIMARY KEY, 
     TenKM VARCHAR(100), 
-    DieuKienGiam DOUBLE, 
-    PhanTramGiam INT, 
+    DieuKienGiam DOUBLE,  -- Giá trị đơn tối thiểu
+    PhanTramGiam DOUBLE, 
     NgayBatDau DATE, 
     NgayKetThuc DATE 
 );
 
+CREATE TABLE PhieuXuat (
+    MaPhieuXuat VARCHAR(20) PRIMARY KEY,
+    NgayXuat DATETIME DEFAULT CURRENT_TIMESTAMP,
+    MaNV VARCHAR(20),
+    MaKH VARCHAR(20),
+    MaKM VARCHAR(20),
+    TongTien DOUBLE DEFAULT 0,
+    TrangThai BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(ID),
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(ID),
+    FOREIGN KEY (MaKM) REFERENCES KhuyenMai(MaKM)
+);
+
+CREATE TABLE ChiTietPhieuXuat ( 
+    MaPhieuXuat VARCHAR(20),
+    MaPhienBan VARCHAR(20),
+    SoLuong INT,
+    DonGia DOUBLE,
+    ThanhTien DOUBLE,
+    PRIMARY KEY (MaPhieuXuat, MaPhienBan),
+    FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat),
+    FOREIGN KEY (MaPhienBan) REFERENCES PhienBanSP(MaPhienBan)
+);
+
+-- --------------------------------------------------------
+
+--
+-- Bảo hành
+--
+
 CREATE TABLE BaoHanh ( 
-    MaBH VARCHAR(20) NOT NULL, 
-    MaSP VARCHAR(20), 
-    MaHDBan VARCHAR(20), 
-    NgayKetThuc DATE 
+    MaBH VARCHAR(20) PRIMARY KEY, 
+    MaImei VARCHAR(50), 
+    MaPhieuXuat VARCHAR(20), 
+    NgayBatDau DATE DEFAULT CURRENT_DATE,
+    NgayKetThuc DATE,
+    FOREIGN KEY (MaImei) REFERENCES ChiTietSP(MaImei),
+    FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat)
 );
 
 CREATE TABLE ChiTietBaoHanh ( 
-    MaCTBH VARCHAR(20) NOT NULL, 
+    MaCTBH VARCHAR(20) PRIMARY KEY, 
     MaBH VARCHAR(20), 
     NoiDung TEXT, 
-    TinhTrang VARCHAR(50) 
+    TinhTrang VARCHAR(50) DEFAULT 'Còn bảo hành',
+    FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH)
 );
 
--- ==========================================
--- THIẾT LẬP TRIGGER CẬP NHẬT TỒN KHO
--- ==========================================
+-- --------------------------------------------------------
+
+-- 
+-- THIẾT LẬP TRIGGER CẬP NHẬT TỒN KHO & TỔNG TIÊN
+-- 
+
 DELIMITER //
 
--- 1. Tự động TĂNG tồn kho khi NHẬP hàng
+-- Tự động TĂNG tồn kho khi NHẬP hàng
 CREATE TRIGGER trg_UpdateStockAfterImport
-AFTER INSERT ON ChiTietHDNhap
+AFTER INSERT ON ChiTietPhieuNhap
 FOR EACH ROW
 BEGIN
-    UPDATE SanPham 
+    UPDATE PhienBanSP
     SET SoLuongTon = SoLuongTon + NEW.SoLuong 
-    WHERE MaSP = NEW.MaSP;
+    WHERE MaPhienBan = NEW.MaPhienBan;
 END//
 
--- 2. Tự động GIẢM tồn kho khi BÁN hàng
+-- Tự động GIẢM tồn kho khi BÁN hàng
 CREATE TRIGGER trg_UpdateStockAfterExport
-AFTER INSERT ON ChiTietHDBan
+AFTER INSERT ON ChiTietPhieuXuat
 FOR EACH ROW
 BEGIN
-    UPDATE SanPham 
+    UPDATE PhienBanSP 
     SET SoLuongTon = SoLuongTon - NEW.SoLuong 
-    WHERE MaSP = NEW.MaSP;
+    WHERE MaPhienBan = NEW.MaPhienBan;
+END//
+
+
+-- Tự động TỔNG TIỀN khi NHẬP hàng
+CREATE TRIGGER trg_CalcThanhTienNhap
+BEFORE INSERT ON ChiTietPhieuNhap
+FOR EACH ROW
+BEGIN
+    SET NEW.ThanhTien = NEW.SoLuong * NEW.DonGia;
+END//
+
+CREATE TRIGGER trg_UpdateTongTienNhap
+AFTER INSERT ON ChiTietPhieuNhap
+FOR EACH ROW
+BEGIN
+    UPDATE PhieuNhap
+    SET TongTien = (
+        SELECT SUM(ThanhTien)
+        FROM ChiTietPhieuNhap
+        WHERE MaPhieuNhap = NEW.MaPhieuNhap
+    )
+    WHERE MaPhieuNhap = NEW.MaPhieuNhap;
+END//
+
+-- Tự động TỔNG TIỀN khi XUẤT hàng
+CREATE TRIGGER trg_CalcThanhTienXuat
+BEFORE INSERT ON ChiTietPhieuXuat
+FOR EACH ROW
+BEGIN
+    SET NEW.ThanhTien = NEW.SoLuong * NEW.DonGia;
+END//
+
+CREATE TRIGGER trg_UpdateTongTienXuat
+AFTER INSERT ON ChiTietPhieuXuat
+FOR EACH ROW
+BEGIN
+    UPDATE PhieuXuat
+    SET TongTien = (
+        SELECT SUM(ThanhTien)
+        FROM ChiTietPhieuXuat
+        WHERE MaPhieuXuat = NEW.MaPhieuXuat
+    )
+    WHERE MaPhieuXuat = NEW.MaPhieuXuat;
 END//
 
 DELIMITER ;
 
--- KHÓA CHÍNH (PRIMARY KEY)
-ALTER TABLE ConNguoi ADD PRIMARY KEY (ID);
-ALTER TABLE KhachHang ADD PRIMARY KEY (ID);
-ALTER TABLE NhanVien ADD PRIMARY KEY (ID);
-ALTER TABLE SanPham ADD PRIMARY KEY (MaSP);
-ALTER TABLE Imei ADD PRIMARY KEY (MaImei);
-ALTER TABLE LoaiSP ADD PRIMARY KEY (MaLoai);
-ALTER TABLE HangSX ADD PRIMARY KEY (MaHang);
-ALTER TABLE NhaCungCap ADD PRIMARY KEY (MaNCC);
-ALTER TABLE KhuyenMai ADD PRIMARY KEY (MaKM);
-ALTER TABLE HoaDonBanHang ADD PRIMARY KEY (MaHDBan);
-ALTER TABLE ChiTietHDBan ADD PRIMARY KEY (MaHDBan, MaSP);
-ALTER TABLE HoaDonNhapHang ADD PRIMARY KEY (MaHDNhap);
-ALTER TABLE ChiTietHDNhap ADD PRIMARY KEY (MaHDNhap, MaSP);
-ALTER TABLE BaoHanh ADD PRIMARY KEY (MaBH);
-ALTER TABLE ChiTietBaoHanh ADD PRIMARY KEY (MaCTBH);
+-- --------------------------------------------------------
 
--- KHÓA NGOẠI (FOREIGN KEY)
-ALTER TABLE KhachHang ADD CONSTRAINT FK_KH_Person FOREIGN KEY (ID) REFERENCES ConNguoi(ID);
-ALTER TABLE NhanVien ADD CONSTRAINT FK_NV_Person FOREIGN KEY (ID) REFERENCES ConNguoi(ID);
+-- 
+-- CONSTRAINT & INDEX TỐI ƯU HÓA
+-- 
 
-ALTER TABLE SanPham ADD CONSTRAINT FK_SP_Loai FOREIGN KEY (MaLoai) REFERENCES LoaiSP(MaLoai);
-ALTER TABLE SanPham ADD CONSTRAINT FK_SP_Hang FOREIGN KEY (MaHang) REFERENCES HangSX(MaHang);
-ALTER TABLE Imei ADD CONSTRAINT FK_Imei_SP FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP);
+-- -- CONSTRAINT ĐỂ ĐẢM BẢO DỮ LIỆU HỢP LỆ
+ALTER TABLE PhienBanSP 
+ADD CONSTRAINT chk_giaban CHECK (GiaBan > GiaNhap);
 
-ALTER TABLE HoaDonBanHang ADD CONSTRAINT FK_HDB_NV FOREIGN KEY (MaNV) REFERENCES NhanVien(ID);
-ALTER TABLE HoaDonBanHang ADD CONSTRAINT FK_HDB_KH FOREIGN KEY (MaKH) REFERENCES KhachHang(ID);
-ALTER TABLE HoaDonBanHang ADD CONSTRAINT FK_HDB_KM FOREIGN KEY (MaKM) REFERENCES KhuyenMai(MaKM);
-ALTER TABLE ChiTietHDBan ADD CONSTRAINT FK_CTB_HD FOREIGN KEY (MaHDBan) REFERENCES HoaDonBanHang(MaHDBan);
-ALTER TABLE ChiTietHDBan ADD CONSTRAINT FK_CTB_SP FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP);
+ALTER TABLE PhienBanSP 
+ADD CONSTRAINT chk_soluong CHECK (SoLuongTon >= 0);
 
-ALTER TABLE HoaDonNhapHang ADD CONSTRAINT FK_HDN_NV FOREIGN KEY (MaNV) REFERENCES NhanVien(ID);
-ALTER TABLE HoaDonNhapHang ADD CONSTRAINT FK_HDN_NCC FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC);
-ALTER TABLE ChiTietHDNhap ADD CONSTRAINT FK_CTN_HD FOREIGN KEY (MaHDNhap) REFERENCES HoaDonNhapHang(MaHDNhap);
-ALTER TABLE ChiTietHDNhap ADD CONSTRAINT FK_CTN_SP FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP);
+ALTER TABLE ChiTietPhieuNhap 
+ADD CONSTRAINT chk_soluong_nhap CHECK (SoLuong > 0);
 
-ALTER TABLE BaoHanh ADD CONSTRAINT FK_BH_SP FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP);
-ALTER TABLE BaoHanh ADD CONSTRAINT FK_BH_HD FOREIGN KEY (MaHDBan) REFERENCES HoaDonBanHang(MaHDBan);
-ALTER TABLE ChiTietBaoHanh ADD CONSTRAINT FK_CTBH_BH FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH);
+ALTER TABLE ChiTietPhieuXuat
+ADD CONSTRAINT chk_soluong_xuat CHECK (SoLuong > 0);
 
 
--- ==========================================
--- 6. DỮ LIỆU MẪU (DUMMY DATA)
--- ==========================================
+-- INDEX ĐỂ TỐI ƯU HÓA 
+CREATE INDEX idx_sp_ten ON SanPham(TenSP);
+CREATE INDEX idx_pn_ngay ON PhieuNhap(NgayNhap);
+CREATE INDEX idx_px_ngay ON PhieuXuat(NgayXuat);
+CREATE INDEX idx_chitietsp_tinhtrang ON ChiTietSP(TinhTrang);
+CREATE INDEX idx_connguoi_sdt ON ConNguoi(SDT);
 
--- Nhân viên (6)
-INSERT INTO ConNguoi VALUES 
-  ('NV01','Phúc Trương','0901','Đà Nẵng'),
-  ('NV02','Văn Nam','0902','Hà Nội'),
-  ('NV03','Hoàng Bảo','0903','HCM'),
-  ('NV04','Minh Hưng','0904','Cần Thơ'),
-  ('NV05','Ngọc Ân','0905','Huế'),
-  ('NV06','Thanh Tùng','0906','Hải Phòng');
+-- --------------------------------------------------------
 
-INSERT INTO NhanVien VALUES 
-  ('NV01','Quản lý','phuc@sw.com',15000),
-  ('NV02','Bán hàng','nam@sw.com',8000),
-  ('NV03','Kho','bao@sw.com',9000),
-  ('NV04','Bán hàng','hung@sw.com',8000),
-  ('NV05','Kỹ thuật','an@sw.com',10000),
-  ('NV06','Bán hàng','tung@sw.com',8000);
 
--- Khách hàng (10)
-INSERT INTO ConNguoi VALUES 
-  ('KH001','Anh Tuấn','0801','Quận 1'),
-  ('KH002','Bảo Ngọc','0802','Quận 3'),
-  ('KH003','Cẩm Tú','0803','Quận 5'),
-  ('KH004','Duy Mạnh','0804','Quận 7'),
-  ('KH005','Elena','0805','Quận 10'),
-  ('KH006','Hoàng Long','0806','Bình Thạnh'),
-  ('KH007','Khánh Linh','0807','Gò Vấp'),
-  ('KH008','Minh Triết','0808','Thủ Đức'),
-  ('KH009','Như Ý','0809','Phú Nhuận'),
-  ('KH010','Quốc Việt','0810','Tân Bình');
+-- DỮ LIỆU
 
-INSERT INTO KhachHang (ID) SELECT ID FROM ConNguoi WHERE ID LIKE 'KH%';
+INSERT INTO NhomQuyen VALUES 
+('NQ01', 'Quản lý cửa hàng', 'Full quyền'),
+('NQ02', 'Nhân viên bán hàng', 'Chỉ bán và xem kho'),
+('NQ03', 'Nhân viên kho', 'Chỉ nhập hàng');
 
--- Loại SP & Hãng (5)
+INSERT INTO ConNguoi (ID, HoTen, SDT, DiaChi) VALUES 
+('NV01', 'Trương Phúc', '0909123456', 'Đà Nẵng'),
+('NV02', 'Lê Văn Nam', '0909123457', 'Hà Nội'),
+('KH01', 'Nguyễn Khách', '0912345678', 'TP.HCM'),
+('KH02', 'Trần VIP', '0987654321', 'Cần Thơ');
+
+INSERT INTO NhanVien (ID, ChucVu, Email, Luong) VALUES 
+('NV01', 'Quản lý', 'phuc@sw.com', 20000000),
+('NV02', 'Nhân viên bán hàng', 'nam@sw.com', 10000000);
+
+INSERT INTO KhachHang (ID) VALUES 
+('KH01'),
+('KH02');
+
+INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNV, MaNhomQuyen) VALUES 
+('admin', '123456', 'NV01', 'NQ01'),
+('kho', '123456', 'NV02', 'NQ03');
+
+-- --------------------------------------------------------
+
 INSERT INTO LoaiSP VALUES 
-  ('L01','Loa Bluetooth'),
-  ('L02','Tai nghe In-ear'),
-  ('L03','Tai nghe Over-ear'),
-  ('L04','Amply'),
-  ('L05','Microphone');
+('L01', 'Loa Bluetooth'),
+('L02', 'Tai nghe Over-ear');
 
 INSERT INTO HangSX VALUES 
-  ('H01','Marshall'),
-  ('H02','Sony'),
-  ('H03','JBL'),
-  ('H04','Bose'),
-  ('H05','Sennheiser');
+('H01', 'Marshall', 'Anh'),
+('H02', 'Sony', 'Nhật');
 
--- Nhà cung cấp & Khuyến mãi (5)
+INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, HinhAnh, MoTa, ThoiGianBaoHanh) VALUES 
+('SP01', 'Marshall Stanmore III', 'L01', 'H01', 'stanmore3.jpg', 'Loa decor cực đẹp', 12),
+('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'sony_xm5.jpg', 'Chống ồn đỉnh cao', 12);
+
+INSERT INTO PhienBanSP (MaPhienBan, MaSP, MauSac, CongSuat, Pin, KetNoi, GiaNhap, GiaBan, SoLuongTon) VALUES 
+('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 0),
+('PB02', 'SP01', 'Đen (Black)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 0),
+('PB03', 'SP02', 'Bạc (Silver)', 'N/A', '30 Giờ', 'Bluetooth, 3.5mm', 6000000, 8490000, 0);
+
+-- --------------------------------------------------------
+
 INSERT INTO NhaCungCap VALUES 
-  ('NCC01','Marshall VN','Hà Nội','0911'),
-  ('NCC02','Sony Store','HCM','0922'),
-  ('NCC03','JBL Official','Đà Nẵng','0933'),
-  ('NCC04','Bose VN','Cần Thơ','0944'),
-  ('NCC05','Sennheiser Dist','Hải Phòng','0955');
+('NCC01', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333');
+
+INSERT INTO PhieuNhap (MaPhieuNhap, MaNV, MaNCC) VALUES 
+('PN01', 'NV01', 'NCC01');
+
+INSERT INTO ChiTietPhieuNhap (MaPhieuNhap, MaPhienBan, SoLuong, DonGia) VALUES 
+('PN01', 'PB01', 3, 7000000),
+('PN01', 'PB02', 2, 7000000);
+
+INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
+('111222333', 'PB01', 'PN01', 'Trong kho'),
+('444555666', 'PB01', 'PN01', 'Trong kho'),
+('777888999', 'PB01', 'PN01', 'Trong kho'),
+('123123123', 'PB02', 'PN01', 'Trong kho'),
+('456456456', 'PB02', 'PN01', 'Trong kho');
+
+-- --------------------------------------------------------
 
 INSERT INTO KhuyenMai VALUES 
-  ('KM001','Chào hè',5000,10,'2025-06-01','2025-08-31'),
-  ('KM002','Âm thanh đỉnh',10000,15,'2025-09-01','2025-10-30'),
-  ('KM003','Black Friday',20000,20,'2025-11-20','2025-11-30'),
-  ('KM004','Giáng sinh',5000,5,'2025-12-15','2025-12-31'),
-  ('KM005','Tết âm',8000,10,'2026-01-01','2026-02-15');
+('KM01', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31');
 
--- Sản phẩm (10)
-INSERT INTO SanPham VALUES 
-  ('SP001','Marshall Stanmore III','L01','H01','Kem','80W','N/A','Bluetooth 5.2',7000,9500,20,1),
-  ('SP002','Sony WH-1000XM5','L03','H02','Đen','N/A','30h','Bluetooth',6000,8490,15,1),
-  ('SP003','JBL Charge 5','L01','H03','Xanh','40W','20h','Bluetooth 5.1',3000,3990,30,1),
-  ('SP004','Bose QC Ultra','L03','H04','Trắng','N/A','24h','Wireless',8000,10500,10,1),
-  ('SP005','Sennheiser M4','L02','H05','Đen','N/A','60h','Bluetooth 5.2',7000,9200,12,1),
-  ('SP006','Marshall Emberton II','L01','H01','Đen','20W','30h','Bluetooth',3500,4500,25,1),
-  ('SP007','Sony WF-C500','L02','H02','Xanh dương','N/A','10h','TWS',1200,1800,40,1),
-  ('SP008','JBL PartyBox 110','L01','H03','Đen','160W','12h','Bluetooth',8000,11000,8,1),
-  ('SP009','Bose SoundLink','L01','H04','Bạc','5W','12h','Bluetooth',4000,5200,18,1),
-  ('SP010','Sony SRS-XE200','L01','H02','Cam','10W','16h','Bluetooth',2000,2900,22,1);
+INSERT INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, MaKM) VALUES 
+('PX01', 'NV01', 'KH01', 'KM01');
 
-INSERT INTO Imei (MaImei, MaSP, TinhTrang) VALUES 
-('MS1-001', 'SP001', 'Đã bán'),
-('MS1-002', 'SP001', 'Trong kho'),
-('SN2-001', 'SP002', 'Đã bán');
+INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES 
+('PX01', 'PB01', 1, 8550000);
 
--- Hóa đơn Nhập (10)
-INSERT INTO HoaDonNhapHang (MaHDNhap, MaNV, MaNCC, TongTien) VALUES 
-  ('HDN001','NV03','NCC01',70000),
-  ('HDN002','NV03','NCC02',60000),
-  ('HDN003','NV03','NCC03',30000),
-  ('HDN004','NV03','NCC04',80000),
-  ('HDN005','NV03','NCC05',70000),
-  ('HDN006','NV03','NCC01',35000),
-  ('HDN007','NV03','NCC02',12000),
-  ('HDN008','NV03','NCC03',80000),
-  ('HDN009','NV03','NCC04',40000),
-  ('HDN010','NV03','NCC05',20000);
+UPDATE ChiTietSP 
+SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
+WHERE MaImei = '111222333';
 
-INSERT INTO ChiTietHDNhap SELECT MaHDNhap, 'SP001', 10, TongTien FROM HoaDonNhapHang;
+-- --------------------------------------------------------
 
--- Hóa đơn Bán (10)
-INSERT INTO HoaDonBanHang (MaHDBan, MaNV, MaKH, MaKM, TongTien) VALUES 
-  ('HDB001','NV02','KH001','KM001',8550),
-  ('HDB002','NV04','KH002',NULL,8490),
-  ('HDB003','NV06','KH003','KM001',3591),
-  ('HDB004','NV02','KH004','KM002',8925),
-  ('HDB005','NV04','KH005',NULL,9200),
-  ('HDB006','NV06','KH006','KM003',3600),
-  ('HDB007','NV02','KH007',NULL,1800),
-  ('HDB008','NV04','KH008','KM005',9900),
-  ('HDB009','NV06','KH009',NULL,5200),
-  ('HDB010','NV02','KH010','KM001',2610);
+INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc) VALUES 
+('BH01', '111222333', 'PX01', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH));
 
-INSERT INTO ChiTietHDBan SELECT MaHDBan, 'SP001', 1, TongTien FROM HoaDonBanHang;
+INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES 
+('CTBH01', 'BH01', 'Loa bị rè bass', 'Đang sửa chữa');

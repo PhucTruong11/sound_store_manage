@@ -3,7 +3,7 @@ package Frontend.GUI.BanHang;
 import javax.swing.*;
 import java.awt.*;
 import Frontend.Compoent.Theme;
-import Frontend.GUI.BanHang.PaginationPanel;
+import net.miginfocom.swing.MigLayout;
 
 public class BanHangPanel extends JPanel {
     private ProductGrid productGrid;
@@ -12,22 +12,20 @@ public class BanHangPanel extends JPanel {
     private PaginationPanel pagination;
 
     public BanHangPanel() {
-        setLayout(new BorderLayout(10, 10)); // Dùng BorderLayout làm chuẩn
+        setLayout(new MigLayout("fill, insets 15","[280!]15[grow, fill]", "[][grow][]")); // Dùng BorderLayout làm chuẩn
         setBackground(Theme.BACKGROUND_COLOR);
 
         toolbar = new BanHangToolbar();
-        add(toolbar, BorderLayout.NORTH);
-
         sidebar = new BanHangSidebar();
-        add(sidebar, BorderLayout.WEST);
-
         productGrid = new ProductGrid(sidebar);
-        add(productGrid, BorderLayout.CENTER);
 
         pagination = new PaginationPanel(5, n -> {
             productGrid.loadData(n, sidebar);
         });
 
-        add(pagination, BorderLayout.SOUTH);
+        add(toolbar, "span 2, growx, wrap, gapbottom 10");
+        add(sidebar, "w 280!, growy, span 1 2");
+        add(productGrid, "grow, wrap");
+        add(pagination, "center, center");
     }
 }

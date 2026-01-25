@@ -33,11 +33,23 @@ public class XacNhanBanHangDialog extends JDialog {
 
         String[] cols = { "STT", "Mã SP", "Tên Sản Phẩm", "SL", "Đơn Giá", "Thành Tiền" };
         modelReview = new DefaultTableModel(cols, 0);
-        // tblReview = new JTable(modelReview);
-        // tblReview.setRowHeight(30);
 
         Table tblReview = new Table();
         tblReview.setModel(modelReview);
+
+                tblReview.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblReview.getColumnModel().getColumn(0).setMaxWidth(50);
+
+        tblReview.getColumnModel().getColumn(1).setPreferredWidth(80);
+        tblReview.getColumnModel().getColumn(1).setMaxWidth(100);
+
+        tblReview.getColumnModel().getColumn(3).setPreferredWidth(50);
+        tblReview.getColumnModel().getColumn(3).setMaxWidth(60);
+
+        tblReview.getColumnModel().getColumn(2).setPreferredWidth(250); 
+        
+        tblReview.getColumnModel().getColumn(4).setPreferredWidth(100);
+        tblReview.getColumnModel().getColumn(5).setPreferredWidth(120);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);

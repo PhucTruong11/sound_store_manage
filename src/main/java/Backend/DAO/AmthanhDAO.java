@@ -10,18 +10,15 @@ import Backend.DTO.Amthanh;
 
 public class AmthanhDAO {
 
-    // Hàm lấy danh sách Laptop từ Database
     public ArrayList<Amthanh> getListAmthanh() {
         ArrayList<Amthanh> list = new ArrayList<>();
         
-        // Ví dụ bảng tên là 'sanpham'
         String sql = "SELECT * FROM sanpham"; 
 
-        // Lấy kết nối và kiểm tra null
         Connection conn = DatabaseHelper.getConnection();
         if (conn == null) {
             System.err.println("LỖI: Không thể kết nối đến Database!");
-            return list; // Trả về danh sách trống thay vì làm sập App
+            return list; 
         }
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
@@ -30,7 +27,8 @@ public class AmthanhDAO {
             String ma = rs.getString("MaSP"); 
             String ten = rs.getString("TenSP");
             double gia = rs.getDouble("DonGia"); 
-            list.add(new Amthanh(ma, ten, gia));
+            int sl=rs.getInt("SoLuong");
+            list.add(new Amthanh(ma, ten, gia,sl));
         }
         } catch (Exception e) {
             e.printStackTrace();

@@ -16,11 +16,11 @@ public class HoaDonToolbar extends JPanel {
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
         SearchTextField txtSearch = new SearchTextField("Tìm kiếm hóa đơn...");
-        ButtonXuatPdf btnPdf = new ButtonXuatPdf("XUẤT PDF");
-        ButtonXuatExcel btnExport = new ButtonXuatExcel("XUẤT EXCEL");
+        ButtonXuatPdf btnPdf = new ButtonXuatPdf("Xuất PDF");
+        ButtonXuatExcel btnExport = new ButtonXuatExcel("Xuất EXCEL");
 
         add(txtSearch, "growx, h 35!");
-        add(btnPdf, "w 120!, h 35!");
-        add(btnExport, "w 120!, h 35!");
+        add(btnPdf, "w 105!, h 35!");
+        add(btnExport, "w 105!, h 35!");
     }
 }
