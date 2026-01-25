@@ -38,7 +38,7 @@ public class Navigation extends JPanel{
 
         JLabel lblUser = new JLabel(userName);
         lblUser.setForeground(Color.WHITE);
-        lblUser.setFont(new Font("Segoe UI", Font.BOLD, 11)); // Cỡ chữ 11 nhỏ gọn
+        lblUser.setFont(new Font("Segoe UI", Font.BOLD, 11));
 
         userBox.add(userIconLabel);
         userBox.add(lblUser);

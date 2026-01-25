@@ -1,0 +1,99 @@
+package Backend.DAO;
+
+import Backend.DatabaseHelper;
+import Backend.DTO.PhieuNhap;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class PhieuNhapDAO {
+    // LẤY TẤT CẢ PHIẾU NHẬP
+    public ArrayList<PhieuNhap> getAllPhieuNhap() {
+        ArrayList<PhieuNhap> list = new ArrayList<>();
+        String sql = "SELECT * FROM PhieuNhap WHERE TrangThai = TRUE ORDER BY NgayNhap DESC";
+
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+                while (rs.next()) {
+                    PhieuNhap pn = new PhieuNhap(
+                        rs.getString("MaPhieuNhap"),
+                        rs.getTimestamp("NgayNhap"),
+                        rs.getString("MaNV"),
+                        rs.getString("MaNCC"),
+                        rs.getDouble("TongTien"),
+                        rs.getBoolean("TrangThai")
+                    );
+                    list.add(pn);
+                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // LẤY PHIẾU NHẬP THEO MÃ
+    public PhieuNhap getPhieuNhapByMa(String maPhieuNhap) {
+        String sql = "SELECT * FROM PhieuNhap WHERE MaPhieuNhap = ?";
+        
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, maPhieuNhap);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return new PhieuNhap(
+                    rs.getString("MaPhieuNhap"),
+                    rs.getTimestamp("NgayNhap"),
+                    rs.getString("MaNV"),
+                    rs.getString("MaNCC"),
+                    rs.getDouble("TongTien"),
+                    rs.getBoolean("TrangThai")
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    } 
+
+    // THÊM PHIẾU NHẬP MỚI
+    public boolean insertPhieuNhap(PhieuNhap pn) {
+        String sql = "INSERT INTO PhieuNhap (MaPhieuNhap, MaNV, MaNCC) VALUES (?, ?, ?)";
+        
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, pn.getmaPhieuNhap());
+            stmt.setString(2, pn.getmaNV());
+            stmt.setString(3, pn.getmaNCC());
+            
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // TẠO MÃ PHIẾU NHẬP TỰ ĐỘNG
+    public String generateMaPhieuNhap() {
+        String sql = "SELECT MaPhieuNhap FROM PhieuNhap ORDER BY MaPhieuNhap DESC LIMIT 1";
+        
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            
+            if (rs.next()) {
+                String lastMa = rs.getString("MaPhieuNhap");
+                int num = Integer.parseInt(lastMa.substring(2)); // Bỏ "PN"
+                return String.format("PN%03d", num + 1);
+            } else {
+                return "PN001";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "PN001";
+        }
+    }
+}

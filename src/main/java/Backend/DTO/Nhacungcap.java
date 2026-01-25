@@ -1,40 +1,46 @@
 package Backend.DTO;
 
-public class Nhacungcap {
-    private String MaNCC;
-    private String TenNCC;
-    private String DiaChi;
-    private String SDT;
-    public Nhacungcap(String maNCC, String tenNCC, String diaChi, String sDT) {
-        this.MaNCC = maNCC;
-        this.TenNCC = tenNCC;
-        this.DiaChi = diaChi;
-        this.SDT = sDT;
-    }
-    public String getMaNCC() {
-        return MaNCC;
-    }
-    public void setMaNCC(String maNCC) {
-        MaNCC = maNCC;
-    }
-    public String getTenNCC() {
-        return TenNCC;
-    }
-    public void setTenNCC(String tenNCC) {
-        TenNCC = tenNCC;
-    }
-    public String getDiaChi() {
-        return DiaChi;
-    }
-    public void setDiaChi(String diaChi) {
-        DiaChi = diaChi;
-    }
-    public String getSDT() {
-        return SDT;
-    }
-    public void setSDT(String sDT) {
-        SDT = sDT;
+import java.util.Objects;
+
+public class NhaCungCap {
+    private String maNCC;
+    private String tenNCC;
+    private String diaChi;
+    private String sdt;
+
+    public NhaCungCap() {
     }
 
-    
+    public NhaCungCap(String maNCC, String tenNCC, String diaChi, String sdt) {
+        this.maNCC = maNCC;
+        this.tenNCC = tenNCC;
+        this.diaChi = diaChi;
+        this.sdt = sdt;
+    }
+
+    // Getters & Setters
+    public String getMaNCC() { return maNCC; }
+    public void setMaNCC(String maNCC) { this.maNCC = maNCC; }
+
+    public String getTenNCC() { return tenNCC; }
+    public void setTenNCC(String tenNCC) { this.tenNCC = tenNCC; }
+
+    public String getDiaChi() { return diaChi; }
+    public void setDiaChi(String diaChi) { this.diaChi = diaChi; }
+
+    public String getSdt() { return sdt; }
+    public void setSdt(String sdt) { this.sdt = sdt; }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        NhaCungCap that = (NhaCungCap) obj;
+        return Objects.equals(maNCC, that.maNCC);
+    }
+
+    @Override
+    public String toString() {
+        return tenNCC; // Hiển thị tên trong ComboBox
+    }
 }

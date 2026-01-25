@@ -1,5 +1,7 @@
 package Frontend.GUI.PhieuNhap;
 
+import Backend.BUS.PhieuNhapBUS;
+import Backend.DTO.PhieuNhap;
 import Frontend.Compoent.Table;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -7,19 +9,24 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 public class PhieuNhapTable extends JScrollPane {
     private JTable tbl;
     private DefaultTableModel tblModel;
+    private PhieuNhapBUS phieuNhapBUS;
 
     public PhieuNhapTable() {
+        phieuNhapBUS = new PhieuNhapBUS();
         initTable();
-        loadDummyData();
+        loadData();
         addTableEvents();
     }
 
     private void initTable() {
-        String[] columns = { "STT", "Mã HĐN", "Ngày Lập", "Nhân Viên", "Số Lượng", "Đơn Giá (VNĐ)" };
+        String[] columns = { "STT", "Mã HĐN", "Ngày Lập", "Mã NV", "Tổng Tiền" };
         tblModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -39,10 +46,24 @@ public class PhieuNhapTable extends JScrollPane {
         setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
     }
 
-    private void loadDummyData() {
-        tblModel.addRow(new Object[]{"1", "PN001", "2024-05-20", "Phuc truong", "2", "18,700,000"});
-        tblModel.addRow(new Object[]{"2", "PN002", "2024-05-21", "Van Nam", "1", "10,200,000"});
-        tblModel.addRow(new Object[]{"3", "PN003", "2024-05-22", "Phuc truong", "5", "42,500,000"});
+    public void loadData() {
+        tblModel.setRowCount(0); // Xóa dữ liệu cũ trên bảng
+        ArrayList<PhieuNhap> listPN = phieuNhapBUS.getAllPhieuNhap();
+
+        DecimalFormat df = new DecimalFormat("#, ###");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+        int stt = 1;
+        for(PhieuNhap pn :listPN) {
+            Object[] row = {
+                stt++,
+                pn.getmaPhieuNhap(),
+                sdf.format(pn.getngayNhap()),
+                pn.getmaNV(),
+                df.format(pn.getTongTien())
+            };
+            tblModel.addRow(row);
+        }
     }
 
     private void addTableEvents() {
