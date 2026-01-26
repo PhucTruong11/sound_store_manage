@@ -3,16 +3,19 @@ package Frontend.GUI.HoaDon;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import Backend.DTO.HoaDonBanHang;
+import Backend.BUS.HoadonbanhangBUS;
 import Frontend.Compoent.Table;
-
 
 public class HoaDonTable extends JScrollPane {
     private JTable table;
     private DefaultTableModel model;
     private HoaDonSidebar sidebar;
+    private HoadonbanhangBUS hoaDonBanHangBUS;
 
     public HoaDonTable(HoaDonSidebar sidebar) {
         this.sidebar = sidebar;
@@ -23,6 +26,7 @@ public class HoaDonTable extends JScrollPane {
     }
 
     private void initTable() {
+        hoaDonBanHangBUS = new HoadonbanhangBUS();
         String[] columns = { "STT", "Mã HĐ", "Ngày Lập", "Nhân Viên", "Khách Hàng", "Thời gian", "Tổng Tiền" };
         model = new DefaultTableModel(columns, 0) {
             @Override
@@ -52,7 +56,8 @@ public class HoaDonTable extends JScrollPane {
             }
         }
     }
-    //click chuột 2 lần để hiện chi tiết hóa đơn
+
+    // click chuột 2 lần để hiện chi tiết hóa đơn
     private void initEvent() {
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -89,8 +94,21 @@ public class HoaDonTable extends JScrollPane {
 
     public void loadData() {
         model.setRowCount(0);
-        // Ví dụ dữ liệu
-        model.addRow(new Object[] { "1", "HD001", "2024-10-27", "Van Nam", "Khách lẻ", "09:30", "1.500.000" });
-        model.addRow(new Object[] { "2", "HD002", "2024-10-28", "Van Nam", "Nguyễn Văn A", "14:15", "2.300.000" });
+        ArrayList<HoaDonBanHang> listHoaDonBanHang = hoaDonBanHangBUS.getAllHoaDonBanHang();
+
+        int STT = 1;
+        for (HoaDonBanHang hdbh : listHoaDonBanHang) {
+            Object[] row = {
+                    STT++,
+                    hdbh.getMaHD(),
+                    hdbh.getMaNV(),
+                    hdbh.getMaNV(),
+                    hdbh.getNgayLap(),
+                    hdbh.getTongTien(),
+                    hdbh.getTinhTrang(),
+            };
+            model.addRow(row);
+        }
+
     }
 }

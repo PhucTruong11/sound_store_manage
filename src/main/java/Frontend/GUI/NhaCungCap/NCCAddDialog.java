@@ -9,7 +9,6 @@ public class NCCAddDialog extends BaseThaoTacDialog{
     public NCCAddDialog() {
         // super đã tự gọi initForm() rồi, không cần gọi lại nữa
         super("THÊM NHÀ CUNG CẤP", 450, 350);
-
     }
 
     @Override

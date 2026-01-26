@@ -4,103 +4,63 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 public class PhieuXuat {
-    private String maHDBH;
+    private String maPhieuXuat; 
+    private Timestamp ngayXuat;
     private String maNV;
     private String maKH;
     private String maKM;
-    private Timestamp ngayBan;
     private double tongTien;
-    private String trangThai;
+    private int trangThai; 
 
     public PhieuXuat() {
     }
 
-    public PhieuXuat(String maHDBH, String maNV, String maKH, String maKM, Timestamp ngayBan, double tongTien,
-            String trangThai) {
-        this.maHDBH = maHDBH;
+    public PhieuXuat(String maPhieuXuat, Timestamp ngayXuat, String maNV, String maKH, String maKM, double tongTien, int trangThai) {
+        this.maPhieuXuat = maPhieuXuat;
+        this.ngayXuat = ngayXuat;
         this.maNV = maNV;
         this.maKH = maKH;
         this.maKM = maKM;
-        this.ngayBan = ngayBan;
         this.tongTien = tongTien;
         this.trangThai = trangThai;
     }
 
-    public String getMaHDBH() {
-        return maHDBH;
-    }
+    public String getMaPhieuXuat() { return maPhieuXuat; }
+    public void setMaPhieuXuat(String maPhieuXuat) { this.maPhieuXuat = maPhieuXuat; }
 
-    public void setMaHDBH(String maHDBH) {
-        this.maHDBH = maHDBH;
-    }
+    public Timestamp getNgayXuat() { return ngayXuat; }
+    public void setNgayXuat(Timestamp ngayXuat) { this.ngayXuat = ngayXuat; }
 
-    public String getMaNV() {
-        return maNV;
-    }
+    public String getMaNV() { return maNV; }
+    public void setMaNV(String maNV) { this.maNV = maNV; }
 
-    public void setMaNV(String maNV) {
-        this.maNV = maNV;
-    }
+    public String getMaKH() { return maKH; }
+    public void setMaKH(String maKH) { this.maKH = maKH; }
 
-    public String getMaKH() {
-        return maKH;
-    }
+    public String getMaKM() { return maKM; }
+    public void setMaKM(String maKM) { this.maKM = maKM; }
 
-    public void setMaKH(String maKH) {
-        this.maKH = maKH;
-    }
+    public double getTongTien() { return tongTien; }
+    public void setTongTien(double tongTien) { this.tongTien = tongTien; }
 
-    public String getMaKM() {
-        return maKM;
-    }
+    public int getTrangThai() { return trangThai; }
+    public void setTrangThai(int trangThai) { this.trangThai = trangThai; }
 
-    public void setMaKM(String maKM) {
-        this.maKM = maKM;
-    }
-
-    public Timestamp getNgayBan() {
-        return ngayBan;
-    }
-
-    public void setNgayBan(Timestamp ngayBan) {
-        this.ngayBan = ngayBan;
-    }
-
-    public double getTongTien() {
-        return tongTien;
-    }
-
-    public void setTongTien(double tongTien) {
-        this.tongTien = tongTien;
-    }
-
-    public String getTrangThai() {
-        return trangThai;
-    }
-
-    public void setTrangThai(String trangThai) {
-        this.trangThai = trangThai;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        PhieuXuat other = (PhieuXuat) obj;
+        return Objects.equals(this.maPhieuXuat, other.maPhieuXuat);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(maHDBH);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-
-        final PhieuXuat other = (PhieuXuat) obj;
-
-        return Objects.equals(this.maHDBH, other.maHDBH);
+        return Objects.hash(maPhieuXuat);
     }
 
     @Override
     public String toString() {
-        return "PhieuXuat{" + "maHDBH=" + maHDBH + ", tongTien=" + tongTien + ", trangThai=" + trangThai + '}';
+        return "PhieuXuat{" + "maPhieuXuat=" + maPhieuXuat + ", tongTien=" + tongTien + ", trangThai=" + trangThai + '}';
     }
 }

@@ -7,10 +7,8 @@ public class BaoHanhFixDialog extends BaseThaoTacDialog {
     private JTextField txtMa, txtTen, txtPhanTramGiam;
 
     public BaoHanhFixDialog(String ma, String ten, String phanTram) {
-        // super đã tự gọi initForm() rồi, không cần gọi lại nữa
         super("SỬA BẢO HÀNH", 450, 500);
 
-        // Đổ dữ liệu cũ vào các ô text
         txtMa.setText(ma);
         txtTen.setText(ten);
         txtPhanTramGiam.setText(phanTram);

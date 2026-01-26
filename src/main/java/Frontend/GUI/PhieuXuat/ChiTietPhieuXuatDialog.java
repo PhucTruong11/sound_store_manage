@@ -1,0 +1,102 @@
+package Frontend.GUI.PhieuXuat;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import net.miginfocom.swing.MigLayout;
+import Frontend.Compoent.Table;
+import Frontend.Compoent.Theme;
+import Backend.DTO.ChiTietPhieuXuat;
+
+public class ChiTietPhieuXuatDialog extends JDialog {
+    private String maPX;
+    private JTable tblDetails;
+    private DefaultTableModel model;
+    private JLabel lblImage;
+    private JTextArea txtImeiList;
+
+    public ChiTietPhieuXuatDialog(JFrame parent, String maPX) {
+        super(parent, "Chi tiết phiếu xuất: " + maPX, true);
+        this.maPX = maPX;
+        setSize(1000, 600);
+        setLocationRelativeTo(parent);
+        setLayout(new BorderLayout(10, 10));
+        getContentPane().setBackground(Color.WHITE);
+
+        initComponents();
+        loadData();
+    }
+
+    private void initComponents() {
+        JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pnlHeader.setBackground(Theme.PRIMARY_COLOR);
+        JLabel lblTitle = new JLabel("THÔNG TIN CHI TIẾT PHIẾU XUẤT");
+        lblTitle.setForeground(Color.WHITE);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
+        pnlHeader.add(lblTitle);
+        add(pnlHeader, BorderLayout.NORTH);
+
+        JPanel pnlMain = new JPanel(new MigLayout("fill, insets 15", "[grow]15[350!]", "[grow]"));
+        pnlMain.setBackground(Color.WHITE);
+
+        String[] columns = { "STT", "Mã Phiên Bản", "Tên Sản Phẩm", "Số lượng", "Đơn giá", "Thành tiền" };
+        model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int r, int c) {
+                return false;
+            }
+        };
+        tblDetails = new Table();
+        tblDetails.setModel(model);
+        pnlMain.add(new JScrollPane(tblDetails), "grow");
+
+        JPanel pnlPreview = new JPanel(new MigLayout("wrap 1, fillx, insets 15", "[center]", "[]10[grow]10[]"));
+        pnlPreview.setBackground(new Color(248, 249, 250));
+        pnlPreview.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+
+        lblImage = new JLabel();
+        lblImage.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+        lblImage.setHorizontalAlignment(JLabel.CENTER);
+
+        JLabel lblImeiTitle = new JLabel("Danh sách mã IMEI đã xuất:");
+        lblImeiTitle.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        txtImeiList = new JTextArea(8, 20);
+        txtImeiList.setEditable(false);
+        txtImeiList.setLineWrap(true);
+        txtImeiList.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+
+        pnlPreview.add(lblImage, "w 280!, h 250!");
+        pnlPreview.add(lblImeiTitle, "left, gaptop 20");
+        pnlPreview.add(new JScrollPane(txtImeiList), "growx, h 180!");
+
+        pnlMain.add(pnlPreview, "growy");
+        add(pnlMain, BorderLayout.CENTER);
+    }
+
+    private void loadData() {
+        model.setRowCount(0);
+        DecimalFormat df = new DecimalFormat("#,### VNĐ");
+
+        if (maPX.equals("PX01")) {
+            model.addRow(new Object[] { "1", "PB01", "Loa Marshall Stanmore III", "1", "8.550.000", "8.550.000" });
+            txtImeiList.setText("IMEI-MAR-001\n(Mã IMEI của Marshall Stanmore III)");
+            loadProductImage("marshall.jpg");
+        }
+    }
+
+    private void loadProductImage(String imgName) {
+        try {
+            java.net.URL imgURL = getClass().getClassLoader().getResource("images/product/" + imgName);
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
+                Image scaled = icon.getImage().getScaledInstance(280, 250, Image.SCALE_SMOOTH);
+                lblImage.setIcon(new ImageIcon(scaled));
+            }
+        } catch (Exception e) {
+            lblImage.setText("Lỗi ảnh");
+        }
+    }
+}
