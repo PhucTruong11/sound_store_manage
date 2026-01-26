@@ -79,12 +79,6 @@ public class ChiTietPhieuXuatDialog extends JDialog {
     private void loadData() {
         model.setRowCount(0);
         DecimalFormat df = new DecimalFormat("#,### VNĐ");
-
-        if (maPX.equals("PX01")) {
-            model.addRow(new Object[] { "1", "PB01", "Loa Marshall Stanmore III", "1", "8.550.000", "8.550.000" });
-            txtImeiList.setText("IMEI-MAR-001\n(Mã IMEI của Marshall Stanmore III)");
-            loadProductImage("marshall.jpg");
-        }
     }
 
     private void loadProductImage(String imgName) {

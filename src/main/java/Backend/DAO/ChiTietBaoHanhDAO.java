@@ -6,7 +6,7 @@ import Backend.DTO.ChiTietBaoHanh;
 import java.util.ArrayList;
 import java.sql.*;
 
-public class ChitietbaohanhDAO {
+public class ChiTietBaoHanhDAO {
     public ArrayList<ChiTietBaoHanh> getAllChiTietBaoHanh(String maBH) {
         ArrayList<ChiTietBaoHanh> list = new ArrayList<>();
         String sql = "SELECT * FROM ChiTietBaoHanh WHERE MaBH = ?";

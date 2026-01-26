@@ -1,7 +1,7 @@
 package Frontend.GUI.BaoHanh;
 
 import Backend.DTO.BaoHanh;
-import Backend.BUS.BaohanhBUS;
+import Backend.BUS.BaoHanhBUS;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
@@ -17,10 +17,10 @@ public class BaoHanhTable extends JPanel {
     private JTable tbl;
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
-    private BaohanhBUS baoHanhBUS;
+    private BaoHanhBUS baoHanhBUS;
 
     public BaoHanhTable() {
-        baoHanhBUS = new BaohanhBUS();
+        baoHanhBUS = new BaoHanhBUS();
         setLayout(new MigLayout("wrap 1, fill, insets 10", "[grow]", "[]15[grow]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: 20");

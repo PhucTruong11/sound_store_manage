@@ -1,5 +1,5 @@
 package Backend.BUS;
 
-public class KhachhangBUS {
+public class NhanVienBUS {
     
 }

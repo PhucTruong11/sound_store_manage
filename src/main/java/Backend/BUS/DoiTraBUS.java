@@ -1,5 +1,5 @@
 package Backend.BUS;
 
-public class DoitraBUS {
+public class DoiTraBUS {
     
 }

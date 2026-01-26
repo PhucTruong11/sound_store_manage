@@ -1,5 +1,5 @@
 package Backend.DAO;
 
-public class Khachhang {
+public class NhanVienDAO {
     
 }
