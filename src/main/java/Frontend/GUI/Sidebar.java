@@ -8,7 +8,6 @@ import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.CustomButton;
-import Frontend.GUI.HoaDon.HoaDonPanel;
 import Frontend.GUI.KhachHang.FromHienThiKhachHang;
 import Frontend.GUI.Nhaphang.MainHienThiNhapHang;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
@@ -28,7 +27,7 @@ public class Sidebar extends JPanel {
         setBackground(Theme.SECONDARY_COLOR);
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", "[]20[]"));
 
-        String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Hóa đơn", "Phiếu nhập", "Phiếu xuất", "Khuyến mãi",
+        String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Phiếu nhập", "Phiếu xuất", "Khuyến mãi",
                 "Bảo hành", "Nhà cung cấp", "Nhân viên", "Khách hàng", "Phân quyền" };
         for (String item : menuItems)
             add(createMenubtn(item));
@@ -58,9 +57,6 @@ public class Sidebar extends JPanel {
                 case "Bán hàng":
                     parent.setPage(new BanHangPanel());
                     break;
-                case "Hóa đơn":
-                    parent.setPage(new HoaDonPanel());
-                    break;
                 case "Nhập hàng":
                     parent.setPage(new MainHienThiNhapHang());
                     break;
@@ -77,7 +73,6 @@ public class Sidebar extends JPanel {
                 case "Khách hàng":
                     parent.setPage(new FromHienThiKhachHang());
                     break;
-
                 // case "Khuyến mãi":
                 // parent.setPage(new KhuyenMaiPanel());
                 // break;
@@ -105,12 +100,10 @@ public class Sidebar extends JPanel {
                 return "shield-minus";
             case "Nhập hàng":
                 return "shield-plus";
-            case "Hóa đơn":
-                return "ticket";
             case "Phiếu nhập":
                 return "tickets";
             case "Phiếu xuất":
-                return "";
+                return "ticket";
             case "Khuyến mãi":
                 return "ticket-slash";
             case "Bảo hành":
