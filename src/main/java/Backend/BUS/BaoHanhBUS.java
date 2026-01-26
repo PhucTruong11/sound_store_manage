@@ -1,11 +1,11 @@
 package Backend.BUS;
 
-import Backend.DAO.BaohanhDAO;
+import Backend.DAO.BaoHanhDAO;
 import Backend.DTO.BaoHanh;
 import java.util.ArrayList;
 
-public class BaohanhBUS {
-    private final BaohanhDAO bhDAO = new BaohanhDAO();
+public class BaoHanhBUS {
+    private final BaoHanhDAO bhDAO = new BaoHanhDAO();
 
     public ArrayList<BaoHanh> getAllBaoHanh(){
         return bhDAO.getAllBaoHanh();

@@ -1,5 +1,5 @@
 package Backend.DAO;
 
-public class DoitraDAO {
+public class KhuyenMaiDAO {
     
 }

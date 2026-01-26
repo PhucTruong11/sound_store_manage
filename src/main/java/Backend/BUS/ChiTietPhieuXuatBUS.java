@@ -1,0 +1,7 @@
+package Backend.BUS;
+
+import Backend.DAO.ChiTietPhieuXuatDAO;
+import Backend.DTO.ChiTietPhieuXuat;
+import java.util.ArrayList;
+public class ChiTietPhieuXuatBUS {
+}

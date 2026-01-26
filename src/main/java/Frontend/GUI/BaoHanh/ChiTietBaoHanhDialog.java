@@ -5,7 +5,7 @@ import Frontend.Compoent.Theme;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import Backend.DTO.ChiTietBaoHanh;
-import Backend.BUS.ChitietbaohanhBUS;
+import Backend.BUS.ChiTietBaoHanhBUS;
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -15,12 +15,12 @@ public class ChiTietBaoHanhDialog extends JDialog {
     private String maBH;
     private JTable tblDetails;
     private DefaultTableModel model;
-    private ChitietbaohanhBUS chiTietBaoHanhBUS;
+    private ChiTietBaoHanhBUS chiTietBaoHanhBUS;
 
     public ChiTietBaoHanhDialog(JFrame parent, String maBH) {
         super(parent, "Chi tiết bảo hành: " + maBH, true);
         this.maBH = maBH;
-        this.chiTietBaoHanhBUS = new ChitietbaohanhBUS();
+        this.chiTietBaoHanhBUS = new ChiTietBaoHanhBUS();
         setSize(700, 400);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));

@@ -5,7 +5,7 @@ import Backend.DTO.BaoHanh;
 import java.util.ArrayList;
 import java.sql.*;
 
-public class BaohanhDAO {
+public class BaoHanhDAO {
     public ArrayList<BaoHanh> getAllBaoHanh() {
         ArrayList<BaoHanh> list = new ArrayList<>();
         String sql = "SELECT * FROM BaoHanh";
