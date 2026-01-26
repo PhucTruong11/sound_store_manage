@@ -7,7 +7,6 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
     private JTextField txtMa, txtTen, txtPhanTramGiam;
 
     public BaoHanhAddDialog() {
-        // super đã tự gọi initForm() rồi, không cần gọi lại nữa
         super("THÊM BẢO HÀNH", 450, 400);
     }
 

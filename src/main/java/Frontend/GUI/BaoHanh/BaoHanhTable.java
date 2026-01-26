@@ -1,5 +1,7 @@
 package Frontend.GUI.BaoHanh;
 
+import Backend.DTO.BaoHanh;
+import Backend.BUS.BaohanhBUS;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
@@ -15,15 +17,17 @@ public class BaoHanhTable extends JPanel {
     private JTable tbl;
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
+    private BaohanhBUS baoHanhBUS;
 
     public BaoHanhTable() {
+        baoHanhBUS = new BaohanhBUS();
         setLayout(new MigLayout("wrap 1, fill, insets 10", "[grow]", "[]15[grow]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: 20");
 
         initFilterHeader();
         initTable();
-        loadDummyData();
+        loadData();
     }
 
     private void initFilterHeader() {
@@ -43,7 +47,7 @@ public class BaoHanhTable extends JPanel {
     }
 
     private void initTable() {
-        String[] colums = { "STT", "Mã bão hành", "Tên bảo hành", "Phần trăm giảm" };
+        String[] colums = { "STT", "Mã bão hành", "Mã Imei", "Mã phiếu xuất", "Ngày BĐ", "Ngày KT" };
         tblModel = new DefaultTableModel(colums, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -63,9 +67,40 @@ public class BaoHanhTable extends JPanel {
         add(scrollPane, "grow");
     }
 
-    private void loadDummyData() {
-        tblModel.addRow(new Object[] { "1", "BH01", "Stek VN", "5%" });
-        tblModel.addRow(new Object[] { "2", "BH02", "Pro Tech", "6%" });
+    private void loadData() {
+        tblModel.setRowCount(0);
+        ArrayList<BaoHanh> listBaoHanh = baoHanhBUS.getAllBaoHanh();
+
+        int STT = 1;
+        for (BaoHanh bh : listBaoHanh) {
+            Object[] row = {
+                    STT++,
+                    bh.getMaBH(),
+                    bh.getMaImei(),
+                    bh.getMaPhieuXuat(),
+                    bh.getNgayBatDau(),
+                    bh.getNgayKetThuc(),
+            };
+            tblModel.addRow(row);
+        }
+
+        tbl.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Double click
+                    int row = tbl.getSelectedRow();
+                    if (row != -1) {
+                        // Lấy Mã bảo hành ở cột thứ 1 (Index 1)
+                        String maBH = tbl.getValueAt(row, 1).toString();
+
+                        // Mở Dialog
+                        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(BaoHanhTable.this);
+                        ChiTietBaoHanhDialog dialog = new ChiTietBaoHanhDialog(parent, maBH);
+                        dialog.setVisible(true);
+                    }
+                }
+            }
+        });
     }
 
     public JTable getTbl() {

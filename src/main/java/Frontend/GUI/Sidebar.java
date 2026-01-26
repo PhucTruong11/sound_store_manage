@@ -18,6 +18,7 @@ import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
 import Frontend.GUI.BaoHanh.BaoHanhPanel;
 import Frontend.GUI.NhaCungCap.MainHienThiNCC;
 import Frontend.GUI.NhanVien.FromHienThiNV;
+import Frontend.GUI.PhieuXuat.PhieuXuatPanel;
 
 public class Sidebar extends JPanel {
     private MainFrame parent;
@@ -27,7 +28,7 @@ public class Sidebar extends JPanel {
         setBackground(Theme.SECONDARY_COLOR);
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", "[]20[]"));
 
-        String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Hóa đơn", "Phiếu nhập", "Khuyến mãi",
+        String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Hóa đơn", "Phiếu nhập", "Phiếu xuất", "Khuyến mãi",
                 "Bảo hành", "Nhà cung cấp", "Nhân viên", "Khách hàng", "Phân quyền" };
         for (String item : menuItems)
             add(createMenubtn(item));
@@ -65,6 +66,9 @@ public class Sidebar extends JPanel {
                     break;
                 case "Phiếu nhập":
                     parent.setPage(new FromHienThiPhieuNhap());
+                    break;
+                case "Phiếu xuất":
+                    parent.setPage(new PhieuXuatPanel());
                     break;
                 case "Nhân viên":
                     parent.setPage(new FromHienThiNV());
@@ -105,6 +109,8 @@ public class Sidebar extends JPanel {
                 return "ticket";
             case "Phiếu nhập":
                 return "tickets";
+            case "Phiếu xuất":
+                return "";
             case "Khuyến mãi":
                 return "ticket-slash";
             case "Bảo hành":

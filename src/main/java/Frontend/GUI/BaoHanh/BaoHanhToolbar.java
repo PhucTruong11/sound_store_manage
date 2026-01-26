@@ -36,7 +36,6 @@ public class BaoHanhToolbar extends JPanel {
         btnAdd.addActionListener(e -> {
             BaoHanhAddDialog dialog = new BaoHanhAddDialog();
             dialog.setVisible(true);
-            // table.loadData(); // Sau khi đóng Dialog, tải lại bảng để thấy dữ liệu mới
         });
 
         btnFix.addActionListener(e -> {
@@ -48,12 +47,12 @@ public class BaoHanhToolbar extends JPanel {
                 return;
             }
 
-            // Lấy dữ liệu từ các cột (chú ý đúng index cột trong tblModel của bạn)
+            // Lấy dữ liệu từ các cột
             String ma = table.getTbl().getValueAt(selectedRow, 0).toString();
             String ten = table.getTbl().getValueAt(selectedRow, 1).toString();
             String phanTram = table.getTbl().getValueAt(selectedRow, 2).toString();
 
-            // Mở Dialog và truyền dữ liệu qua
+            // Mở Dialog, truyền dữ liệu qua
             BaoHanhFixDialog dialog = new BaoHanhFixDialog(ma, ten, phanTram);
             dialog.setVisible(true);
         });
@@ -72,7 +71,6 @@ public class BaoHanhToolbar extends JPanel {
                     "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
 
             if (opt == JOptionPane.YES_OPTION) {
-                // Gọi BUS.delete() ở đây
                 System.out.println("Đã xóa hàng thứ: " + selectedRow);
                 // table.loadData(); // Cập nhật lại bảng
             }
