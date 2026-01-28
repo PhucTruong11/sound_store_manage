@@ -16,6 +16,10 @@ public class NhapHangSidebar extends JPanel{
     private DefaultTableModel modelNhap;
     private JComboBox<String> cbxNhanVien, cbxNhaCungCap;
 
+    private String currenMa = "";
+    private String currenTen = "";
+    private String currenGia = "";
+
     public NhapHangSidebar() {
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setBackground(Color.WHITE);
@@ -46,13 +50,9 @@ public class NhapHangSidebar extends JPanel{
         lblTenSP.setFont(new Font("Segoe UI", Font.BOLD, 14));
         lblTenSP.setForeground(Theme.PRIMARY_COLOR);
 
-        lblMaSP = new JLabel("Mã: -");
-        lblGia = new JLabel("Giá nhập: 0");
         lblTonKho = new JLabel("Tồn kho hiện tại: 0");
 
         add(lblTenSP);
-        add(lblMaSP, "split 2, growx");
-        add(lblGia);
         add(lblTonKho);
         add(new JSeparator(), "growx, gaptop 5, gapbottom 5");
 
@@ -106,17 +106,14 @@ public class NhapHangSidebar extends JPanel{
     }
 
     private void addProductToTable() {
-        if(lblMaSP.getText().equals("Mã: -")) {
+        if(currenMa.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm từ bảng bên phải!");
             return;
         }
 
-        String ma = lblMaSP.getText();
-        String ten = lblTenSP.getText();
         int sl = (int) spnSoLuongNhap.getValue();
-        String gia = lblGia.getText();
 
-        modelNhap.addRow(new Object[]{ma,ten, sl, gia});
+        modelNhap.addRow(new Object[]{currenMa, currenTen, sl, currenGia});
 
         resetSelection(); // Reset phần chọn sau khi thêm
     }
@@ -129,10 +126,13 @@ public class NhapHangSidebar extends JPanel{
     }
 
     // Các hàm cập nhật thông tin từ bên ngoài
-    public void updateInfo(String ma, String ten, String gia) {
-        lblMaSP.setText("Mã: " + ma);
+    public void updateInfo(String ma, String ten, String gia, String ton) {
+        this.currenMa = ma;
+        this.currenTen = ten;
+        this.currenGia = gia;
+
         lblTenSP.setText(ten);
-        lblGia.setText("Giá: " + gia);
+        lblTonKho.setText("Tồn kho hiện tại: " + ton);
     }
     
 }

@@ -11,24 +11,15 @@ public class NCCFixDialog extends BaseThaoTacDialog{
     private NhaCungCapBUS nccBUS = new NhaCungCapBUS();
 
     public NCCFixDialog(String ma, String ten, String diaChi, String sdt) {
-        // super đã tự gọi initForm() rồi, không cần gọi lại nữa
         super("SỬA NHÀ CUNG CẤP", 450, 350);
 
-        // Đổ dữ liệu cũ vào các ô text
         txtMa.setText(ma);
         txtTen.setText(ten);
         txtDiaChi.setText(diaChi);
         txtSDT.setText(sdt);
 
-        // Không cho sửa mã
         txtMa.setEditable(false);
         txtMa.setFocusable(false);
-
-        // Focus vào ô Tên và đưa con trỏ về cuối để ko bị bôi xanh
-        // SwingUtilities.invokeLater(() -> {
-        //     txtTen.requestFocusInWindow();
-        //     txtTen.setCaretPosition(txtTen.getText().length());
-        // });
     }
 
     @Override

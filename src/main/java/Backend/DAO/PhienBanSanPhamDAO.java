@@ -9,13 +9,15 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
     @Override
     public ArrayList<PhienBanSanPham> selectAll() {
         ArrayList<PhienBanSanPham> list = new ArrayList<>();
-        String sql = "SELECT * FROM PhienBanSP";
+        // JOIN để lấy TenSP từ bảng SanPham dựa trên MaSP
+        String sql = "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
+                     "JOIN SanPham sp ON pb.MaSP = sp.MaSP";
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             
             while (rs.next()) {
-                list.add(new PhienBanSanPham(
+                PhienBanSanPham pbsp = new PhienBanSanPham(
                     rs.getString("MaPhienBan"),
                     rs.getString("MaSP"),
                     rs.getString("MauSac"),
@@ -24,7 +26,10 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
                     rs.getString("KetNoi"),
                     rs.getDouble("GiaNhap"),
                     rs.getDouble("GiaBan"),
-                    rs.getInt("SoLuongTon")));
+                    rs.getInt("SoLuongTon"));
+
+                    pbsp.setTenSP(rs.getString("TenSP"));
+                    list.add(pbsp);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -17,10 +17,11 @@ public class NCCTable extends JPanel{
     private JTable tbl;
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
-    private NhaCungCapBUS nhacungcapBUS;
+    private NhaCungCapBUS nccBUS;
+    private JComboBox<NhaCungCap> cboNCC;
 
     public NCCTable() {
-        nhacungcapBUS = new NhaCungCapBUS();
+        nccBUS = new NhaCungCapBUS();
         setLayout(new MigLayout("wrap 1, fill, insets 10", "[grow]", "[]15[grow]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: 20");
@@ -36,12 +37,23 @@ public class NCCTable extends JPanel{
         JLabel lblTitle = new JLabel("Nhà cung cấp");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
-        JComboBox<String> cboLoc = new JComboBox<>(new String[] {"Tất cả", "Sony Electronics", "JBL Official", "Marshall VN"});
-        cboLoc.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+        cboNCC = new JComboBox<>();
+        loadComboBox();
         
+        cboNCC.addActionListener(e -> {
+            NhaCungCap selected = (NhaCungCap) cboNCC.getSelectedItem();
+            if(selected != null) {
+                if(selected.getMaNCC().equals("All")) {
+                    loadData();
+                } else {
+                    loadDataByFilter(selected.getMaNCC());
+                }    
+            }
+        });
+
+        cboNCC.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
         pnlHeader.add(lblTitle);
-        pnlHeader.add(cboLoc, "w 150!, h 35!");
-        
+        pnlHeader.add(cboNCC, "w 150!, h 35!");
         add(pnlHeader, "growx");
     }
 
@@ -68,7 +80,7 @@ public class NCCTable extends JPanel{
 
     public void loadData() {
         tblModel.setRowCount(0);
-        ArrayList<NhaCungCap> listNCC = nhacungcapBUS.getAllNhaCungCap();
+        ArrayList<NhaCungCap> listNCC = nccBUS.getAllNhaCungCap();
 
         int stt = 1;
         for(NhaCungCap ncc : listNCC) {
@@ -83,7 +95,63 @@ public class NCCTable extends JPanel{
         }
     }
 
+    public void loadDataByFilter(String maNCC) {
+        tblModel.setRowCount(0);
+        ArrayList<NhaCungCap> listNCC = nccBUS.getAllNhaCungCap();
+
+        int stt = 1;
+        for(NhaCungCap ncc : listNCC) {
+            if(ncc.getMaNCC().equals(maNCC)) {
+                 Object[] row = {
+                    stt++,
+                    ncc.getMaNCC(),
+                    ncc.getTenNCC(),
+                    ncc.getDiaChi(),
+                    ncc.getSdt(),
+                };
+                tblModel.addRow(row);
+            }
+        }
+    }
+
     public JTable getTbl() {
         return tbl;
+    }
+
+    public void loadComboBox() {
+        if(cboNCC == null) return;
+        Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại để sau khi nạp lại không bị nhảy
+        cboNCC.removeAllItems(); // Xóa sạch dữ liệu cũ
+        cboNCC.addItem(new NhaCungCap("All", "Tất cả", "", "")); // Thêm lại item mặc định
+        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap(); // Lấy dữ liệu mới nhất từ Database qua BUS
+        for(NhaCungCap ncc : list) {
+            cboNCC.addItem(ncc);
+        }
+
+        if(selected != null) cboNCC.setSelectedItem(selected); // Khôi phục lại lựa chọn trước đó nếu nó vẫn còn tồn tại
+    }
+
+    public void loadDataBySearch(String query) {
+        tblModel.setRowCount(0);
+        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
+
+        int stt = 1;
+        for(NhaCungCap ncc : list) {
+            boolean matchMa = ncc.getMaNCC().toLowerCase().contains(query);
+            boolean matchTen = ncc.getTenNCC().toLowerCase().contains(query);
+            if (matchMa || matchTen) {
+                Object[] row = {
+                    stt++,
+                    ncc.getMaNCC(),
+                    ncc.getTenNCC(),
+                    ncc.getDiaChi(),
+                    ncc.getSdt(),
+                };
+                tblModel.addRow(row);
+            }
+        }
+        if (query.isEmpty()) {
+            cboNCC.setSelectedIndex(0); 
+        }
     }
 }
