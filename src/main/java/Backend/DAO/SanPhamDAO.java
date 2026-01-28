@@ -5,8 +5,9 @@ import Backend.DTO.SanPham;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class SanPhamDAO {
-    public ArrayList<SanPham> getAll() {
+public class SanPhamDAO implements DAOInterface<SanPham> {
+    @Override
+    public ArrayList<SanPham> selectAll() {
         ArrayList<SanPham> list = new ArrayList<>();
         String sql = "SELECT * FROM SanPham WHERE TrangThai = TRUE";
         try (Connection conn = DatabaseHelper.getConnection();
@@ -26,5 +27,25 @@ public class SanPhamDAO {
             }
         } catch (Exception e) { e.printStackTrace(); }
         return list;
+    }
+
+    @Override
+    public SanPham selectById(String id) {
+        return null;
+    }
+
+    @Override
+    public int insert(SanPham sp) {
+        return 0;
+    }
+
+    @Override
+    public int update(SanPham sp) {
+        return 0;
+    }
+
+    @Override
+    public int delete(String id) {
+        return 0;
     }
 }

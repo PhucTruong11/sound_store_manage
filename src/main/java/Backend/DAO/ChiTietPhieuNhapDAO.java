@@ -5,8 +5,27 @@ import Backend.DTO.ChiTietPhieuNhap;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ChiTietPhieuNhapDAO {
-    public ArrayList<ChiTietPhieuNhap> getByMaPhieu(String maPN) {
+public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhap> {
+    @Override
+    public int insert(ArrayList<ChiTietPhieuNhap> list) {
+        int count = 0;
+        String sql = "INSERT INTO ChiTietPhieuNhap VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            for (ChiTietPhieuNhap ct : list) {
+                stmt.setString(1, ct.getMaPhieuNhap());
+                stmt.setString(2, ct.getMaPhienBan());
+                stmt.setInt(3, ct.getSoLuong());
+                stmt.setDouble(4, ct.getDonGia());
+                stmt.setDouble(5, ct.getThanhTien());
+                count += stmt.executeUpdate();
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+        return count;
+    }    
+    
+    @Override
+    public ArrayList<ChiTietPhieuNhap> selectAll(String maPN) {
         ArrayList<ChiTietPhieuNhap> list = new ArrayList<>();
         String sql = """
                     SELECT ct.*, sp.TenSP 
@@ -23,13 +42,12 @@ public class ChiTietPhieuNhapDAO {
 
             while (rs.next()) {
                 ChiTietPhieuNhap ct = new ChiTietPhieuNhap(
-                    rs.getString("MaPhieuNhap"),
-                    rs.getString("MaPhienBan"),
-                    rs.getInt("SoLuong"),
-                    rs.getDouble("DonGia"),
-                    rs.getDouble("ThanhTien")
-                );
-                // ct.setTenSP(rs.getString("TenSP"));
+                    rs.getString(1),
+                    rs.getString(2),
+                    rs.getInt(3),
+                    rs.getDouble(4),
+                    rs.getDouble(5));
+                ct.setTenSP(rs.getString("TenSP"));
                 list.add(ct);
             }
         } catch (Exception e) {
@@ -37,4 +55,10 @@ public class ChiTietPhieuNhapDAO {
         }
         return list;
     }
+
+    @Override
+    public int delete(String id) { return 0; }
+
+    @Override
+    public int update(ArrayList<ChiTietPhieuNhap> t, String pk) { return 0; }
 }

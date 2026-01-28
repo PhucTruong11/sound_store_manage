@@ -1,10 +1,14 @@
 package Frontend.GUI.NhaCungCap;
 
 import javax.swing.*;
+
+import Backend.BUS.NhaCungCapBUS;
+import Backend.DTO.NhaCungCap;
 import Frontend.Compoent.BaseThaoTacDialog;
 
 public class NCCFixDialog extends BaseThaoTacDialog{
     private JTextField txtMa, txtTen, txtDiaChi, txtSDT;
+    private NhaCungCapBUS nccBUS = new NhaCungCapBUS();
 
     public NCCFixDialog(String ma, String ten, String diaChi, String sdt) {
         // super đã tự gọi initForm() rồi, không cần gọi lại nữa
@@ -48,9 +52,10 @@ public class NCCFixDialog extends BaseThaoTacDialog{
 
     @Override
     protected void logicXacNhan() {
-        // TƯƠNG LAI: Kết nối BUS tại đây
-        // nccBUS.update(new NCCDTO(txtMa.getText(), txtTen.getText(), ...));
-        System.out.println("Đã cập nhật: " + txtTen.getText());
-        dispose();
+        NhaCungCap ncc = new NhaCungCap(txtMa.getText(), txtTen.getText(), txtDiaChi.getText(), txtSDT.getText());
+        if(nccBUS.update(ncc)) {
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+            dispose();
+        }
     }
 }

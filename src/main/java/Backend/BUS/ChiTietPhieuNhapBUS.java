@@ -8,6 +8,6 @@ public class ChiTietPhieuNhapBUS {
     private final ChiTietPhieuNhapDAO ctDAO = new ChiTietPhieuNhapDAO();
 
     public ArrayList<ChiTietPhieuNhap> getByMaPhieu(String maPN) {
-        return ctDAO.getByMaPhieu(maPN);
+        return ctDAO.selectAll(maPN);
     }
 }
