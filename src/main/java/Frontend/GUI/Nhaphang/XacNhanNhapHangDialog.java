@@ -61,9 +61,8 @@ public class XacNhanNhapHangDialog extends JDialog{
             String ma = sourceModel.getValueAt(i, 0).toString();
             String ten = sourceModel.getValueAt(i, 1).toString();
             int sl = Integer.parseInt(sourceModel.getValueAt(i, 2).toString());
-            String giaStr = sourceModel.getValueAt(i, 3).toString().replaceAll("[^0-9]", "");
-            double gia = Double.parseDouble(giaStr);
-            
+            String giaRaw = sourceModel.getValueAt(i, 3).toString().replaceAll("[^0-9]", "");
+            double gia = Double.parseDouble(giaRaw);
             double thanhTien = sl * gia;
 
             modelReview.addRow(new Object[]{

@@ -22,7 +22,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
     @Override
     public ArrayList<NhaCungCap> selectAll() {
         ArrayList<NhaCungCap> list = new ArrayList<>();
-        String sql = "SELECT * FROM NhaCungCap";
+        String sql = "SELECT * FROM NhaCungCap ORDER BY TenNCC ASC";
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
@@ -69,7 +69,23 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
 
     @Override
     public NhaCungCap selectById(String id) { 
-        /* Viết SQL Select theo mã */ 
+        String sql = "SELECT * FROM NhaCungCap WHERE MaNCC = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             stmt.setString(1, id);
+             ResultSet rs = stmt.executeQuery();
+
+             if (rs.next()) {
+                return new NhaCungCap(
+                    rs.getString(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getString(4)
+                );
+             }
+        } catch  (Exception e) {
+            e.printStackTrace();
+        }
         return null; 
     }
 }

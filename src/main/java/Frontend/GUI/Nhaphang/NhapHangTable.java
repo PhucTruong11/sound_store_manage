@@ -25,7 +25,7 @@ public class NhapHangTable extends JScrollPane {
     }
 
     private void initTable() {
-        String[] columns = {"STT", "Mã Phiên Bản", "Mã Sản Phẩm", "Màu Sắc", "Giá Nhập", "Số Lượng Tồn"};
+        String[] columns = {"STT", "Mã Phiên Bản", "Tên Sản Phẩm", "Màu Sắc", "Giá Nhập", "Số Lượng Tồn"};
         tblModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -36,15 +36,18 @@ public class NhapHangTable extends JScrollPane {
         tbl = new Table();
         tbl.setModel(tblModel);
 
-        // tbl.getColumnModel().getColumn(0).setPreferredWidth(40);
-        // tbl.getColumnModel().getColumn(0).setMaxWidth(50);
-        // tbl.getColumnModel().getColumn(1).setPreferredWidth(80);
-        // tbl.getColumnModel().getColumn(1).setMaxWidth(90);
-        // tbl.getColumnModel().getColumn(3).setPreferredWidth(100);
-        // tbl.getColumnModel().getColumn(3).setMaxWidth(110);
-        // tbl.getColumnModel().getColumn(5).setPreferredWidth(100);
-        // tbl.getColumnModel().getColumn(6).setPreferredWidth(70);
-        // tbl.getColumnModel().getColumn(6).setMaxWidth(80);
+        tbl.getColumnModel().getColumn(0).setPreferredWidth(60);
+        tbl.getColumnModel().getColumn(0).setMaxWidth(70);
+        tbl.getColumnModel().getColumn(1).setPreferredWidth(110);
+        tbl.getColumnModel().getColumn(1).setMaxWidth(120);
+        tbl.getColumnModel().getColumn(2).setPreferredWidth(200);
+        tbl.getColumnModel().getColumn(2).setMaxWidth(230);
+        tbl.getColumnModel().getColumn(3).setPreferredWidth(150);
+        tbl.getColumnModel().getColumn(3).setMaxWidth(160);
+
+        tbl.getColumnModel().getColumn(4).setPreferredWidth(150);
+        tbl.getColumnModel().getColumn(5).setPreferredWidth(120);
+        tbl.getColumnModel().getColumn(5).setMaxWidth(130);
 
         tbl.addMouseListener(new MouseAdapter() {
             @Override
@@ -52,18 +55,18 @@ public class NhapHangTable extends JScrollPane {
                 int row = tbl.getSelectedRow();
                 if (row == -1) return;
 
-                String ma = tbl.getValueAt(row, 0).toString();
-                String ten = tbl.getValueAt(row, 1).toString();
-                String loai = tbl.getValueAt(row, 2).toString();
-                String hang = tbl.getValueAt(row, 3).toString();
+                String maPB = tbl.getValueAt(row, 1).toString();
+                String tenSP = tbl.getValueAt(row, 2).toString();
+                String mauSP = tbl.getValueAt(row, 3).toString();
                 String gia = tbl.getValueAt(row, 4).toString();
+                String ton = tbl.getValueAt(row, 5).toString();
 
                 // Đẩy dữ liệu sang Sidebar thông qua hàm public
-                sidebar.updateInfo(ma, ten, gia);
+                sidebar.updateInfo(maPB, tenSP, gia, ton);
 
-                if (e.getClickCount() == 2) {
-                    new ChiTietSanPhamDialog(null, ma, ten, gia).setVisible(true);
-                }
+                // if (e.getClickCount() == 2) {
+                //     new ChiTietSanPhamDialog(null, ma, ten, gia).setVisible(true);
+                // }
             }
         });
 
@@ -84,7 +87,7 @@ public class NhapHangTable extends JScrollPane {
            Object[] row = {
             stt++,
             pbsp.getMaPhienBan(),
-            pbsp.getMaSP(),
+            pbsp.getTenSP(),
             pbsp.getMauSac(),
             pbsp.getGiaNhap(),
             pbsp.getSoLuongTon(),

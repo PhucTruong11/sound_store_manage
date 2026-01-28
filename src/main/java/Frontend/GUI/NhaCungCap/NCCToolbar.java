@@ -11,12 +11,8 @@ import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-
 import Backend.BUS.NhaCungCapBUS;
 import Backend.DTO.NhaCungCap;
-
 import java.awt.*;
 
 public class NCCToolbar extends JPanel{
@@ -42,25 +38,19 @@ public class NCCToolbar extends JPanel{
         add(btnDele, "w 95!, h 35!");
         add(btnXuatExcel, "w 105!, h 35!");
 
-        // txtSearch.addActionListener(e -> {
-        //     String key = JOptionPane.showInputDialog(this, "");
-        //     if(key !=  null && !key.isEmpty()) {
-        //         ArrayList<NhaCungCap> list = nccBUS.find(key);
-        //         table.setRowCount(0);
-        //         for(NhaCungCap ncc : list) {
-        //             table.addRow(new Object[] {
-        //                 ncc.getMaNCC(), ncc.getTenNCC(), ncc.getDiaChi(), ncc.getDiaChi()
-        //             });
-        //         }
-        //     } else {
-        //         table.loadData();
-        //     }
-        // });
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                String query = txtSearch.getText().toLowerCase().trim();
+                table.loadDataBySearch(query);
+            }
+        });
 
         btnAdd.addActionListener(e -> {
             NCCAddDialog dialog = new NCCAddDialog();
             dialog.setVisible(true);
-            table.loadData(); // Sau khi đóng Dialog, tải lại bảng để thấy dữ liệu mới
+            table.loadData();
+            table.loadComboBox();
         });
 
         btnFix.addActionListener(e -> {
@@ -76,10 +66,10 @@ public class NCCToolbar extends JPanel{
             String diaChi = table.getTbl().getValueAt(selectedRow, 3).toString();
             String sdt = table.getTbl().getValueAt(selectedRow, 4).toString();
 
-            // Mở Dialog và truyền dữ liệu qua
             NCCFixDialog dialog = new NCCFixDialog(ma, ten, diaChi, sdt);
             dialog.setVisible(true);
             table.loadData();
+            table.loadComboBox();
 
         });
 
@@ -99,6 +89,7 @@ public class NCCToolbar extends JPanel{
                 new NhaCungCapBUS().delete(ma);
                 System.out.println("Đã xóa hàng thứ: " + selectedRow);
                 table.loadData();
+                table.loadComboBox();
             }
         });
     }
