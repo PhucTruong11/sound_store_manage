@@ -1,6 +1,7 @@
 package Frontend.GUI.NhaCungCap;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonDele;
@@ -10,10 +11,18 @@ import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import Backend.BUS.NhaCungCapBUS;
+import Backend.DTO.NhaCungCap;
+
 import java.awt.*;
 
 public class NCCToolbar extends JPanel{
     private NCCTable table;
+    private NCCTable tableModel;
+    private NhaCungCapBUS nccBUS = new NhaCungCapBUS();
 
     public NCCToolbar(NCCTable table) {
         this.table = table;
@@ -33,10 +42,25 @@ public class NCCToolbar extends JPanel{
         add(btnDele, "w 95!, h 35!");
         add(btnXuatExcel, "w 105!, h 35!");
 
+        // txtSearch.addActionListener(e -> {
+        //     String key = JOptionPane.showInputDialog(this, "");
+        //     if(key !=  null && !key.isEmpty()) {
+        //         ArrayList<NhaCungCap> list = nccBUS.find(key);
+        //         table.setRowCount(0);
+        //         for(NhaCungCap ncc : list) {
+        //             table.addRow(new Object[] {
+        //                 ncc.getMaNCC(), ncc.getTenNCC(), ncc.getDiaChi(), ncc.getDiaChi()
+        //             });
+        //         }
+        //     } else {
+        //         table.loadData();
+        //     }
+        // });
+
         btnAdd.addActionListener(e -> {
             NCCAddDialog dialog = new NCCAddDialog();
             dialog.setVisible(true);
-            // table.loadData(); // Sau khi đóng Dialog, tải lại bảng để thấy dữ liệu mới
+            table.loadData(); // Sau khi đóng Dialog, tải lại bảng để thấy dữ liệu mới
         });
 
         btnFix.addActionListener(e -> {
@@ -47,15 +71,16 @@ public class NCCToolbar extends JPanel{
                 return;
             }
 
-            // Lấy dữ liệu từ các cột (chú ý đúng index cột trong tblModel của bạn)
-            String ma = table.getTbl().getValueAt(selectedRow, 0).toString();
-            String ten = table.getTbl().getValueAt(selectedRow, 1).toString();
-            String diaChi = table.getTbl().getValueAt(selectedRow, 2).toString();
-            String sdt = table.getTbl().getValueAt(selectedRow, 3).toString();
+            String ma = table.getTbl().getValueAt(selectedRow, 1).toString();
+            String ten = table.getTbl().getValueAt(selectedRow, 2).toString();
+            String diaChi = table.getTbl().getValueAt(selectedRow, 3).toString();
+            String sdt = table.getTbl().getValueAt(selectedRow, 4).toString();
 
             // Mở Dialog và truyền dữ liệu qua
             NCCFixDialog dialog = new NCCFixDialog(ma, ten, diaChi, sdt);
             dialog.setVisible(true);
+            table.loadData();
+
         });
 
         btnDele.addActionListener(e -> {
@@ -66,15 +91,14 @@ public class NCCToolbar extends JPanel{
                 return;
             }
 
-            String tenNCC = table.getTbl().getValueAt(selectedRow, 1).toString();
+            String ma = table.getTbl().getValueAt(selectedRow, 1).toString();
             int opt = JOptionPane.showConfirmDialog(this, 
-                    "Bạn có chắc muốn xóa nhà cung cấp: " + tenNCC + "?", 
-                    "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-
+                    "Xóa mã: " + ma + "?", 
+                    "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (opt == JOptionPane.YES_OPTION) {
-                // Gọi BUS.delete() ở đây
+                new NhaCungCapBUS().delete(ma);
                 System.out.println("Đã xóa hàng thứ: " + selectedRow);
-                // table.loadData(); // Cập nhật lại bảng
+                table.loadData();
             }
         });
     }

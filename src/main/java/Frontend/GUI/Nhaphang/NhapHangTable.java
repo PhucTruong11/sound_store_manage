@@ -1,7 +1,7 @@
 package Frontend.GUI.Nhaphang;
 
-import Backend.BUS.AmthanhBUS;
-import Backend.DTO.Amthanh;
+import Backend.BUS.PhienBanSanPhamBUS;
+import Backend.DTO.PhienBanSanPham;
 import Frontend.Compoent.Table;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -14,17 +14,18 @@ import java.util.ArrayList;
 public class NhapHangTable extends JScrollPane {
     private JTable tbl;
     private DefaultTableModel tblModel;
-    private AmthanhBUS amthanhBUS = new AmthanhBUS();
+    private PhienBanSanPhamBUS phienbansanphamBUS;
     private NhapHangSidebar sidebar; // Để truyền dữ liệu sang Sidebar khi click
 
     public NhapHangTable(NhapHangSidebar sidebar) {
+        phienbansanphamBUS = new PhienBanSanPhamBUS();
         this.sidebar = sidebar;
         initTable();
         loadData();
     }
 
     private void initTable() {
-        String[] columns = {"STT", "Mã SP", "Tên Sản Phẩm", "Loại", "Tên Hãng", "Đơn Giá", "Tồn Kho"};
+        String[] columns = {"STT", "Mã Phiên Bản", "Mã Sản Phẩm", "Màu Sắc", "Giá Nhập", "Số Lượng Tồn"};
         tblModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -35,15 +36,15 @@ public class NhapHangTable extends JScrollPane {
         tbl = new Table();
         tbl.setModel(tblModel);
 
-        tbl.getColumnModel().getColumn(0).setPreferredWidth(40);
-        tbl.getColumnModel().getColumn(0).setMaxWidth(50);
-        tbl.getColumnModel().getColumn(1).setPreferredWidth(80);
-        tbl.getColumnModel().getColumn(1).setMaxWidth(90);
-        tbl.getColumnModel().getColumn(3).setPreferredWidth(100);
-        tbl.getColumnModel().getColumn(3).setMaxWidth(110);
-        tbl.getColumnModel().getColumn(5).setPreferredWidth(100);
-        tbl.getColumnModel().getColumn(6).setPreferredWidth(70);
-        tbl.getColumnModel().getColumn(6).setMaxWidth(80);
+        // tbl.getColumnModel().getColumn(0).setPreferredWidth(40);
+        // tbl.getColumnModel().getColumn(0).setMaxWidth(50);
+        // tbl.getColumnModel().getColumn(1).setPreferredWidth(80);
+        // tbl.getColumnModel().getColumn(1).setMaxWidth(90);
+        // tbl.getColumnModel().getColumn(3).setPreferredWidth(100);
+        // tbl.getColumnModel().getColumn(3).setMaxWidth(110);
+        // tbl.getColumnModel().getColumn(5).setPreferredWidth(100);
+        // tbl.getColumnModel().getColumn(6).setPreferredWidth(70);
+        // tbl.getColumnModel().getColumn(6).setMaxWidth(80);
 
         tbl.addMouseListener(new MouseAdapter() {
             @Override
@@ -75,12 +76,20 @@ public class NhapHangTable extends JScrollPane {
     }
 
     public void loadData() {
-        ArrayList<Amthanh> list = amthanhBUS.getAllAmthanh();
         tblModel.setRowCount(0);
-        for (Amthanh sp : list) {
-            String formattedPrice = String.format("%,.0f", sp.getGiaBan());
-            Object[] row = {sp.getMaSP(), sp.getTenSP(), formattedPrice, "0"};
-            tblModel.addRow(row);
+        ArrayList<PhienBanSanPham> list = phienbansanphamBUS.getAllPhienBanSanPham();
+        
+        int stt = 1;
+        for (PhienBanSanPham pbsp : list) {
+           Object[] row = {
+            stt++,
+            pbsp.getMaPhienBan(),
+            pbsp.getMaSP(),
+            pbsp.getMauSac(),
+            pbsp.getGiaNhap(),
+            pbsp.getSoLuongTon(),
+           };
+           tblModel.addRow(row);
         }
     }
 }

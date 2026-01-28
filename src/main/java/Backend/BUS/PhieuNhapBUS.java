@@ -8,6 +8,6 @@ public class PhieuNhapBUS {
     private final PhieuNhapDAO phieuNhapDAO = new PhieuNhapDAO();
 
     public ArrayList<PhieuNhap> getAllPhieuNhap() {
-        return phieuNhapDAO.getAllPhieuNhap();
+        return phieuNhapDAO.selectAll();
     }
 }

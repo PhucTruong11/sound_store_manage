@@ -97,7 +97,7 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
             model.addRow(new Object[] {
                 stt++, 
                 ct.getMaPhienBan(), 
-                // ct.getTenSP(), // Tên lấy từ lệnh JOIN ở DAO
+                ct.getTenSP(),
                 ct.getSoLuong(), 
                 df.format(ct.getDonGia()), 
                 df.format(ct.getThanhTien())

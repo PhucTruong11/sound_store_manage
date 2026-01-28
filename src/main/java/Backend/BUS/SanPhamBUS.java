@@ -8,6 +8,6 @@ public class SanPhamBUS {
     private final SanPhamDAO spDAO = new SanPhamDAO();
 
     public ArrayList<SanPham> getAll() {
-        return spDAO.getAll();
+        return spDAO.selectAll();
     }
 }
