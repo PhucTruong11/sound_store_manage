@@ -8,6 +8,13 @@ public class PhieuXuatBUS {
     private final PhieuXuatDAO pxDAO = new PhieuXuatDAO();
 
     public ArrayList<PhieuXuat> getAllPhieuXuat() {
-        return pxDAO.getAllPhieuXuat();
+        return pxDAO.selectAll();
+    }
+
+    public ArrayList<PhieuXuat> search(String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return pxDAO.selectAll();
+        }
+        return pxDAO.search(keyword); 
     }
 }

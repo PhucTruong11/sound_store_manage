@@ -34,6 +34,10 @@ public class BaoHanhToolbar extends JPanel {
         add(btnDele, "w 95!, h 35!");
         add(btnXuatExcel, "w 105!, h 35!");
 
+        btnXuatExcel.addActionListener(e -> {
+            Frontend.Compoent.XuatExcel.xuat(table.getTbl());
+        });
+
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent e) {

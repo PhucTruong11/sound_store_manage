@@ -1,5 +1,17 @@
 package Frontend.GUI.PhieuXuat;
 
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Cell;
+
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
+
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileOutputStream;
+import java.io.File;
 import Backend.BUS.PhieuXuatBUS;
 import Backend.DTO.PhieuXuat;
 import Frontend.Compoent.Table;
@@ -21,7 +33,7 @@ public class PhieuXuatTable extends JScrollPane {
     public PhieuXuatTable() {
         phieuXuatBUS = new PhieuXuatBUS();
         initTable();
-        loadData();
+        loadData("");
         addTableEvents();
     }
 
@@ -45,9 +57,10 @@ public class PhieuXuatTable extends JScrollPane {
         setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
     }
 
-    public void loadData() {
+    // Thêm hàm này vào lớp PhieuXuatTable của bạn
+    public void loadData(String keyword) {
         tblModel.setRowCount(0);
-        ArrayList<PhieuXuat> listPX = phieuXuatBUS.getAllPhieuXuat();
+        ArrayList<PhieuXuat> listPX = phieuXuatBUS.search(keyword);
 
         DecimalFormat df = new DecimalFormat("#,### VNĐ");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -85,6 +98,29 @@ public class PhieuXuatTable extends JScrollPane {
         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
         ChiTietPhieuXuatDialog dialog = new ChiTietPhieuXuatDialog(parentFrame, maPX);
         dialog.setVisible(true);
+    }
+
+    public void xuatExcel() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Chọn đường dẫn lưu file Excel");
+
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            String filePath = chooser.getSelectedFile().getAbsolutePath();
+            if (!filePath.toLowerCase().endsWith(".xlsx"))
+                filePath += ".xlsx";
+
+            try (Workbook workbook = new XSSFWorkbook()) {
+                Sheet sheet = workbook.createSheet("PhieuXuat");
+
+                try (FileOutputStream out = new FileOutputStream(new File(filePath))) {
+                    workbook.write(out);
+                    JOptionPane.showMessageDialog(this, "Xuất file Excel thành công!");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+            }
+        }
     }
 
     public JTable getTable() {
