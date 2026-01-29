@@ -13,7 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class NCCTable extends JPanel{
+public class NCCTable extends JPanel {
     private JTable tbl;
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
@@ -39,15 +39,15 @@ public class NCCTable extends JPanel{
 
         cboNCC = new JComboBox<>();
         loadComboBox();
-        
+
         cboNCC.addActionListener(e -> {
             NhaCungCap selected = (NhaCungCap) cboNCC.getSelectedItem();
-            if(selected != null) {
-                if(selected.getMaNCC().equals("All")) {
+            if (selected != null) {
+                if (selected.getMaNCC().equals("All")) {
                     loadData();
                 } else {
                     loadDataByFilter(selected.getMaNCC());
-                }    
+                }
             }
         });
 
@@ -58,7 +58,7 @@ public class NCCTable extends JPanel{
     }
 
     private void initTable() {
-        String[] colums = {"STT","Mã Nhà cung cấp", "Tên Nhà cung cấp", "Địa chỉ", "SĐT"};
+        String[] colums = { "STT", "Mã Nhà cung cấp", "Tên Nhà cung cấp", "Địa chỉ", "SĐT" };
         tblModel = new DefaultTableModel(colums, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -83,13 +83,13 @@ public class NCCTable extends JPanel{
         ArrayList<NhaCungCap> listNCC = nccBUS.getAllNhaCungCap();
 
         int stt = 1;
-        for(NhaCungCap ncc : listNCC) {
+        for (NhaCungCap ncc : listNCC) {
             Object[] row = {
-                stt++,
-                ncc.getMaNCC(),
-                ncc.getTenNCC(),
-                ncc.getDiaChi(),
-                ncc.getSdt(),
+                    stt++,
+                    ncc.getMaNCC(),
+                    ncc.getTenNCC(),
+                    ncc.getDiaChi(),
+                    ncc.getSdt(),
             };
             tblModel.addRow(row);
         }
@@ -100,14 +100,14 @@ public class NCCTable extends JPanel{
         ArrayList<NhaCungCap> listNCC = nccBUS.getAllNhaCungCap();
 
         int stt = 1;
-        for(NhaCungCap ncc : listNCC) {
-            if(ncc.getMaNCC().equals(maNCC)) {
-                 Object[] row = {
-                    stt++,
-                    ncc.getMaNCC(),
-                    ncc.getTenNCC(),
-                    ncc.getDiaChi(),
-                    ncc.getSdt(),
+        for (NhaCungCap ncc : listNCC) {
+            if (ncc.getMaNCC().equals(maNCC)) {
+                Object[] row = {
+                        stt++,
+                        ncc.getMaNCC(),
+                        ncc.getTenNCC(),
+                        ncc.getDiaChi(),
+                        ncc.getSdt(),
                 };
                 tblModel.addRow(row);
             }
@@ -119,16 +119,19 @@ public class NCCTable extends JPanel{
     }
 
     public void loadComboBox() {
-        if(cboNCC == null) return;
-        Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại để sau khi nạp lại không bị nhảy
+        if (cboNCC == null)
+            return;
+        Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại để sau khi nạp lại không bị
+                                                    // nhảy
         cboNCC.removeAllItems(); // Xóa sạch dữ liệu cũ
         cboNCC.addItem(new NhaCungCap("All", "Tất cả", "", "")); // Thêm lại item mặc định
         ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap(); // Lấy dữ liệu mới nhất từ Database qua BUS
-        for(NhaCungCap ncc : list) {
+        for (NhaCungCap ncc : list) {
             cboNCC.addItem(ncc);
         }
 
-        if(selected != null) cboNCC.setSelectedItem(selected); // Khôi phục lại lựa chọn trước đó nếu nó vẫn còn tồn tại
+        if (selected != null)
+            cboNCC.setSelectedItem(selected); // Khôi phục lại lựa chọn trước đó nếu nó vẫn còn tồn tại
     }
 
     public void loadDataBySearch(String query) {
@@ -136,22 +139,22 @@ public class NCCTable extends JPanel{
         ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
 
         int stt = 1;
-        for(NhaCungCap ncc : list) {
+        for (NhaCungCap ncc : list) {
             boolean matchMa = ncc.getMaNCC().toLowerCase().contains(query);
             boolean matchTen = ncc.getTenNCC().toLowerCase().contains(query);
             if (matchMa || matchTen) {
                 Object[] row = {
-                    stt++,
-                    ncc.getMaNCC(),
-                    ncc.getTenNCC(),
-                    ncc.getDiaChi(),
-                    ncc.getSdt(),
+                        stt++,
+                        ncc.getMaNCC(),
+                        ncc.getTenNCC(),
+                        ncc.getDiaChi(),
+                        ncc.getSdt(),
                 };
                 tblModel.addRow(row);
             }
         }
         if (query.isEmpty()) {
-            cboNCC.setSelectedIndex(0); 
+            cboNCC.setSelectedIndex(0);
         }
     }
 }

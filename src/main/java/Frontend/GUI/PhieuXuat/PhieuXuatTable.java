@@ -86,4 +86,8 @@ public class PhieuXuatTable extends JScrollPane {
         ChiTietPhieuXuatDialog dialog = new ChiTietPhieuXuatDialog(parentFrame, maPX);
         dialog.setVisible(true);
     }
+
+    public JTable getTable() {
+        return tbl;
+    }
 }

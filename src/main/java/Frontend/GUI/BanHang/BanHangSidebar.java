@@ -74,7 +74,7 @@ public class BanHangSidebar extends JPanel {
         tblBan.getColumnModel().getColumn(1).setMinWidth(0);
         tblBan.getColumnModel().getColumn(1).setMaxWidth(0);
         tblBan.getColumnModel().getColumn(1).setPreferredWidth(0);
-        
+
         tblBan.getColumnModel().getColumn(3).setMinWidth(0);
         tblBan.getColumnModel().getColumn(3).setMaxWidth(0);
         tblBan.getColumnModel().getColumn(3).setPreferredWidth(0);

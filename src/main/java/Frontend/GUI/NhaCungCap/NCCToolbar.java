@@ -1,8 +1,6 @@
 package Frontend.GUI.NhaCungCap;
 
 import java.awt.Color;
-import java.util.ArrayList;
-
 import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonDele;
 import Frontend.Compoent.ButtonFix;
