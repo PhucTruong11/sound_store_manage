@@ -86,4 +86,8 @@ public class PhieuNhapTable extends JScrollPane {
         ChiTietHoaDonNhapDialog dialog = new ChiTietHoaDonNhapDialog(parentFrame, maPN);
         dialog.setVisible(true);
     }
+
+    public JTable getTable() {
+        return tbl;
+    }
 }
