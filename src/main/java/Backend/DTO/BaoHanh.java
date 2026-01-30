@@ -9,6 +9,8 @@ public class BaoHanh {
     private String maPhieuXuat;
     private LocalDate ngayBatDau;
     private LocalDate ngayKetThuc;
+    private String tenSP;
+    private String tinhTrang;
 
     public BaoHanh() {
     }
@@ -21,25 +23,68 @@ public class BaoHanh {
         this.ngayKetThuc = ngayKetThuc;
     }
 
-    public String getMaBH() { return maBH; }
-    public void setMaBH(String maBH) { this.maBH = maBH; }
+    public String getMaBH() {
+        return maBH;
+    }
 
-    public String getMaImei() { return maImei; }
-    public void setMaImei(String maImei) { this.maImei = maImei; }
+    public void setMaBH(String maBH) {
+        this.maBH = maBH;
+    }
 
-    public String getMaPhieuXuat() { return maPhieuXuat; }
-    public void setMaPhieuXuat(String maPhieuXuat) { this.maPhieuXuat = maPhieuXuat; }
+    public String getMaImei() {
+        return maImei;
+    }
 
-    public LocalDate getNgayBatDau() { return ngayBatDau; }
-    public void setNgayBatDau(LocalDate ngayBatDau) { this.ngayBatDau = ngayBatDau; }
+    public void setMaImei(String maImei) {
+        this.maImei = maImei;
+    }
 
-    public LocalDate getNgayKetThuc() { return ngayKetThuc; }
-    public void setNgayKetThuc(LocalDate ngayKetThuc) { this.ngayKetThuc = ngayKetThuc; }
+    public String getMaPhieuXuat() {
+        return maPhieuXuat;
+    }
+
+    public void setMaPhieuXuat(String maPhieuXuat) {
+        this.maPhieuXuat = maPhieuXuat;
+    }
+
+    public LocalDate getNgayBatDau() {
+        return ngayBatDau;
+    }
+
+    public void setNgayBatDau(LocalDate ngayBatDau) {
+        this.ngayBatDau = ngayBatDau;
+    }
+
+    public LocalDate getNgayKetThuc() {
+        return ngayKetThuc;
+    }
+
+    public void setNgayKetThuc(LocalDate ngayKetThuc) {
+        this.ngayKetThuc = ngayKetThuc;
+    }
+
+    public String getTenSP() {
+        return tenSP;
+    }
+
+    public void setTenSP(String tenSP) {
+        this.tenSP = tenSP;
+    }
+
+    public String getTinhTrang() {
+        return tinhTrang;
+    }
+
+    public void setTinhTrang(String tinhTrang) {
+        this.tinhTrang = tinhTrang;
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         BaoHanh that = (BaoHanh) obj;
         return Objects.equals(maBH, that.maBH);
     }
@@ -49,9 +94,8 @@ public class BaoHanh {
         return "BaoHanh{" +
                 "maBH='" + maBH + '\'' +
                 ", maImei='" + maImei + '\'' +
-                ", maPhieuXuat='" + maPhieuXuat + '\'' +
-                ", ngayBatDau=" + ngayBatDau +
-                ", ngayKetThuc=" + ngayKetThuc +
+                ", tenSP='" + tenSP + '\'' +
+                ", tinhTrang='" + tinhTrang + '\'' +
                 '}';
     }
 }

@@ -5,15 +5,17 @@ import java.util.Objects;
 public class ChiTietBaoHanh {
     private String maCTBH;
     private String maBH;
+    private String tenSP;
     private String noiDung;
     private String tinhTrang;
 
     public ChiTietBaoHanh() {
     }
 
-    public ChiTietBaoHanh(String maCTBH, String maBH, String noiDung, String tinhTrang) {
+    public ChiTietBaoHanh(String maCTBH, String maBH, String tenSP, String noiDung, String tinhTrang) {
         this.maCTBH = maCTBH;
         this.maBH = maBH;
+        this.tenSP = tenSP;
         this.noiDung = noiDung;
         this.tinhTrang = tinhTrang;
     }
@@ -23,6 +25,9 @@ public class ChiTietBaoHanh {
 
     public String getMaBH() { return maBH; }
     public void setMaBH(String maBH) { this.maBH = maBH; }
+
+    public String getTenSP() { return tenSP; }
+    public void setTenSP(String tenSP) { this.tenSP = tenSP; }
 
     public String getNoiDung() { return noiDung; }
     public void setNoiDung(String noiDung) { this.noiDung = noiDung; }

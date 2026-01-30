@@ -13,8 +13,11 @@ public class PhieuXuatPanel extends JPanel {
         setLayout(new MigLayout("fill, insets 15", "[280!]15[grow, fill]", "[][grow]"));
         setBackground(Theme.BACKGROUND_COLOR);
 
-        toolbar = new PhieuXuatToolbar();
         table = new PhieuXuatTable();
+
+        // BƯỚC 2: Truyền đối tượng table vào toolbar
+        toolbar = new PhieuXuatToolbar(table);
+
         sidebar = new PhieuXuatSidebar(table);
 
         add(toolbar, "span 2, growx, wrap, gapbottom 10");

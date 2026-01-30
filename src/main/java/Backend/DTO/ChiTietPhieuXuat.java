@@ -8,6 +8,8 @@ public class ChiTietPhieuXuat {
     private int soLuong;
     private double donGia;
     private double thanhTien;
+    private String tenSP;
+    private String hinhAnh;
 
     public ChiTietPhieuXuat() {
     }
@@ -20,28 +22,71 @@ public class ChiTietPhieuXuat {
         this.thanhTien = thanhTien;
     }
 
-    public String getMaPhieuXuat() { return maPhieuXuat; }
-    public void setMaPhieuXuat(String maPhieuXuat) { this.maPhieuXuat = maPhieuXuat; }
+    public String getMaPhieuXuat() {
+        return maPhieuXuat;
+    }
 
-    public String getMaPhienBan() { return maPhienBan; }
-    public void setMaPhienBan(String maPhienBan) { this.maPhienBan = maPhienBan; }
+    public void setMaPhieuXuat(String maPhieuXuat) {
+        this.maPhieuXuat = maPhieuXuat;
+    }
 
-    public int getSoLuong() { return soLuong; }
-    public void setSoLuong(int soLuong) { this.soLuong = soLuong; }
+    public String getMaPhienBan() {
+        return maPhienBan;
+    }
 
-    public double getDonGia() { return donGia; }
-    public void setDonGia(double donGia) { this.donGia = donGia; }
+    public void setMaPhienBan(String maPhienBan) {
+        this.maPhienBan = maPhienBan;
+    }
 
-    public double getThanhTien() { return thanhTien; }
-    public void setThanhTien(double thanhTien) { this.thanhTien = thanhTien; }
+    public int getSoLuong() {
+        return soLuong;
+    }
+
+    public void setSoLuong(int soLuong) {
+        this.soLuong = soLuong;
+    }
+
+    public double getDonGia() {
+        return donGia;
+    }
+
+    public void setDonGia(double donGia) {
+        this.donGia = donGia;
+    }
+
+    public double getThanhTien() {
+        return thanhTien;
+    }
+
+    public void setThanhTien(double thanhTien) {
+        this.thanhTien = thanhTien;
+    }
+
+    public String getTenSP() {
+        return tenSP;
+    }
+
+    public void setTenSP(String tenSP) {
+        this.tenSP = tenSP;
+    }
+
+    public String getHinhAnh() {
+        return hinhAnh;
+    }
+
+    public void setHinhAnh(String hinhAnh) {
+        this.hinhAnh = hinhAnh;
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         ChiTietPhieuXuat that = (ChiTietPhieuXuat) obj;
         return Objects.equals(maPhieuXuat, that.maPhieuXuat) &&
-               Objects.equals(maPhienBan, that.maPhienBan);
+                Objects.equals(maPhienBan, that.maPhienBan);
     }
 
     @Override
@@ -52,6 +97,7 @@ public class ChiTietPhieuXuat {
                 ", soLuong=" + soLuong +
                 ", donGia=" + donGia +
                 ", thanhTien=" + thanhTien +
+                ", tenSP='" + tenSP + '\'' +
                 '}';
     }
 }

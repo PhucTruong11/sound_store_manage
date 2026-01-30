@@ -9,6 +9,7 @@ import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import Backend.DTO.ChiTietPhieuXuat;
+import Backend.BUS.ChiTietPhieuXuatBUS;
 
 public class ChiTietPhieuXuatDialog extends JDialog {
     private String maPX;
@@ -16,16 +17,20 @@ public class ChiTietPhieuXuatDialog extends JDialog {
     private DefaultTableModel model;
     private JLabel lblImage;
     private JTextArea txtImeiList;
+    private ChiTietPhieuXuatBUS chiTietPhieuXuatBUS;
+    private ArrayList<ChiTietPhieuXuat> listChiTietPhieuXuat;
 
     public ChiTietPhieuXuatDialog(JFrame parent, String maPX) {
         super(parent, "Chi tiết phiếu xuất: " + maPX, true);
         this.maPX = maPX;
+        this.chiTietPhieuXuatBUS = new ChiTietPhieuXuatBUS();
         setSize(1000, 600);
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(Color.WHITE);
 
         initComponents();
+        addEvents();
         loadData();
     }
 
@@ -76,9 +81,46 @@ public class ChiTietPhieuXuatDialog extends JDialog {
         add(pnlMain, BorderLayout.CENTER);
     }
 
+    private void addEvents() {
+        tblDetails.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int row = tblDetails.getSelectedRow();
+                if (row != -1) {
+                    // Lấy đối tượng sản phẩm tại dòng được chọn
+                    ChiTietPhieuXuat ct = listChiTietPhieuXuat.get(row);
+
+                    // Hiển thị ảnh dựa trên tên file lưu trong DTO
+                    if (ct.getHinhAnh() != null && !ct.getHinhAnh().isEmpty()) {
+                        loadProductImage(ct.getHinhAnh());
+                    } else {
+                        lblImage.setIcon(null);
+                        lblImage.setText("Không có ảnh");
+                    }
+
+                    // (Tùy chọn) Hiển thị thông tin IMEI kèm theo
+                    txtImeiList.setText("Danh sách IMEI của sản phẩm: " + ct.getTenSP());
+                }
+            }
+        });
+    }
+
     private void loadData() {
         model.setRowCount(0);
         DecimalFormat df = new DecimalFormat("#,### VNĐ");
+        listChiTietPhieuXuat = chiTietPhieuXuatBUS.getAllChiTietPhieuXuat(maPX);
+
+        int STT = 1;
+        for (ChiTietPhieuXuat ctpx : listChiTietPhieuXuat) {
+            Object[] row = {
+                    STT++,
+                    ctpx.getMaPhienBan(), // Đưa Mã Phiên Bản vào đây (đúng với tiêu đề cột 2)
+                    ctpx.getTenSP(),
+                    ctpx.getSoLuong(),
+                    df.format(ctpx.getDonGia()),
+                    df.format(ctpx.getThanhTien()),
+            };
+            model.addRow(row);
+        }
     }
 
     private void loadProductImage(String imgName) {

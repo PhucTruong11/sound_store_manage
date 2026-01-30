@@ -55,11 +55,6 @@ public class PhieuXuat {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(maPhieuXuat);
-    }
-
-    @Override
     public String toString() {
         return "PhieuXuat{" + "maPhieuXuat=" + maPhieuXuat + ", tongTien=" + tongTien + ", trangThai=" + trangThai + '}';
     }

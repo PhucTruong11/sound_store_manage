@@ -1,49 +1,72 @@
 package Frontend.GUI.BaoHanh;
 
 import javax.swing.*;
+import Backend.BUS.BaoHanhBUS;
+import Backend.DTO.BaoHanh;
 import Frontend.Compoent.BaseThaoTacDialog;
+import net.miginfocom.swing.MigLayout;
+import java.time.LocalDate;
 
 public class BaoHanhFixDialog extends BaseThaoTacDialog {
-    private JTextField txtMa, txtTen, txtPhanTramGiam;
+    private JTextField txtMaBH, txtImei, txtMaPX;
+    private JSpinner spnNgayBD, spnNgayKT;
+    private BaoHanhBUS bhBUS = new BaoHanhBUS();
 
-    public BaoHanhFixDialog(String ma, String ten, String phanTram) {
-        super("SỬA BẢO HÀNH", 450, 500);
+    public BaoHanhFixDialog(String ma, String imei, String maPX) {
+        super("SỬA PHIẾU BẢO HÀNH", 450, 500);
 
-        txtMa.setText(ma);
-        txtTen.setText(ten);
-        txtPhanTramGiam.setText(phanTram);
+        txtMaBH.setText(ma);
+        txtImei.setText(imei);
+        txtMaPX.setText(maPX);
 
-        // Không cho sửa mã
-        txtMa.setEditable(false);
-        txtMa.setFocusable(false);
+        txtMaBH.setEditable(false);
+        txtMaBH.setFocusable(false);
 
-        // Focus vào ô Tên và đưa con trỏ về cuối để ko bị bôi xanh
         SwingUtilities.invokeLater(() -> {
-            txtTen.requestFocusInWindow();
-            txtTen.setCaretPosition(txtTen.getText().length());
+            txtImei.requestFocusInWindow();
         });
     }
 
     @Override
     protected void initForm() {
+        pnlContent.removeAll();
+        pnlContent.setLayout(new MigLayout("wrap 2, fillx, insets 30", "[100!]20[grow]", "[]20[]20[]20[]20[]"));
+
         pnlContent.add(new JLabel("Mã bảo hành:"));
-        txtMa = new JTextField();
-        pnlContent.add(txtMa, "growx, h 35!");
+        txtMaBH = new JTextField();
+        pnlContent.add(txtMaBH, "growx, h 35!");
 
-        pnlContent.add(new JLabel("Tên bảo hành:"));
-        txtTen = new JTextField();
-        pnlContent.add(txtTen, "growx, h 35!");
+        pnlContent.add(new JLabel("Mã Imei:"));
+        txtImei = new JTextField();
+        pnlContent.add(txtImei, "growx, h 35!");
 
-        pnlContent.add(new JLabel("Phần trăm giảm:"));
-        txtPhanTramGiam = new JTextField();
-        pnlContent.add(txtPhanTramGiam, "growx, h 35!");
+        pnlContent.add(new JLabel("Mã phiếu xuất:"));
+        txtMaPX = new JTextField();
+        pnlContent.add(txtMaPX, "growx, h 35!");
+
+        pnlContent.add(new JLabel("Ngày bắt đầu:"));
+        spnNgayBD = new JSpinner(new SpinnerDateModel());
+        spnNgayBD.setEditor(new JSpinner.DateEditor(spnNgayBD, "dd/MM/yyyy"));
+        pnlContent.add(spnNgayBD, "growx, h 35!");
+
+        pnlContent.add(new JLabel("Ngày kết thúc:"));
+        spnNgayKT = new JSpinner(new SpinnerDateModel());
+        spnNgayKT.setEditor(new JSpinner.DateEditor(spnNgayKT, "dd/MM/yyyy"));
+        pnlContent.add(spnNgayKT, "growx, h 35!");
     }
 
     @Override
     protected void logicXacNhan() {
-        // TƯƠNG LAI: Kết nối BUS tại đây
-        // nccBUS.update(new NCCDTO(txtMa.getText(), txtTen.getText(), ...));
-        System.out.println("Đã cập nhật: " + txtTen.getText());
-        dispose();
+        LocalDate ngayBD = LocalDate.parse(new java.text.SimpleDateFormat("yyyy-MM-dd").format(spnNgayBD.getValue()));
+        LocalDate ngayKT = LocalDate.parse(new java.text.SimpleDateFormat("yyyy-MM-dd").format(spnNgayKT.getValue()));
+
+        BaoHanh bh = new BaoHanh(txtMaBH.getText(), txtImei.getText(), txtMaPX.getText(), ngayBD, ngayKT);
+
+        if (bhBUS.update(bh)) {
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại! Vui lòng kiểm tra Mã Imei hoặc Phiếu xuất.");
+        }
     }
 }
