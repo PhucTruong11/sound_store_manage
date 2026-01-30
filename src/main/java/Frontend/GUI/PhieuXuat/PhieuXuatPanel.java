@@ -18,7 +18,7 @@ public class PhieuXuatPanel extends JPanel {
         // BƯỚC 2: Truyền đối tượng table vào toolbar
         toolbar = new PhieuXuatToolbar(table);
 
-        sidebar = new PhieuXuatSidebar(table);
+        sidebar = new PhieuXuatSidebar();
 
         add(toolbar, "span 2, growx, wrap, gapbottom 10");
         add(sidebar, "w 280!, growy, cell 0 1");

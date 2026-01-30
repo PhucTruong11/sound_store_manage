@@ -10,12 +10,9 @@ import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import Backend.BUS.NhaCungCapBUS;
-import Backend.DTO.NhaCungCap;
-import java.awt.*;
 
 public class NCCToolbar extends JPanel{
     private NCCTable table;
-    private NCCTable tableModel;
     private NhaCungCapBUS nccBUS = new NhaCungCapBUS();
 
     public NCCToolbar(NCCTable table) {
@@ -35,6 +32,10 @@ public class NCCToolbar extends JPanel{
         add(btnFix, "w 95!, h 35!");
         add(btnDele, "w 95!, h 35!");
         add(btnXuatExcel, "w 105!, h 35!");
+
+        btnXuatExcel.addActionListener(e -> {
+            Frontend.Compoent.XuatExcel.xuat(table.getTbl());
+        });
 
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override

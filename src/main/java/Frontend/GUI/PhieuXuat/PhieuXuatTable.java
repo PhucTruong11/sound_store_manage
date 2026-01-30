@@ -2,11 +2,11 @@ package Frontend.GUI.PhieuXuat;
 
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Cell;
+// import org.apache.poi.ss.usermodel.Row;
+// import org.apache.poi.ss.usermodel.Cell;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
+// import org.apache.poi.ss.usermodel.CellStyle;
+// import org.apache.poi.ss.usermodel.Font;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -36,7 +36,6 @@ public class PhieuXuatTable extends JScrollPane {
         initTable();
         loadData("");
         addTableEvents();
-
     }
 
     private void initTable() {
@@ -133,28 +132,28 @@ public class PhieuXuatTable extends JScrollPane {
         }
     }
 
-    public void xuatExcel() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setDialogTitle("Chọn đường dẫn lưu file Excel");
+    // public void xuatExcel() {
+    //     JFileChooser chooser = new JFileChooser();
+    //     chooser.setDialogTitle("Chọn đường dẫn lưu file Excel");
 
-        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            String filePath = chooser.getSelectedFile().getAbsolutePath();
-            if (!filePath.toLowerCase().endsWith(".xlsx"))
-                filePath += ".xlsx";
+    //     if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+    //         String filePath = chooser.getSelectedFile().getAbsolutePath();
+    //         if (!filePath.toLowerCase().endsWith(".xlsx"))
+    //             filePath += ".xlsx";
 
-            try (Workbook workbook = new XSSFWorkbook()) {
-                Sheet sheet = workbook.createSheet("PhieuXuat");
+    //         try (Workbook workbook = new XSSFWorkbook()) {
+    //             Sheet sheet = workbook.createSheet("PhieuXuat");
 
-                try (FileOutputStream out = new FileOutputStream(new File(filePath))) {
-                    workbook.write(out);
-                    JOptionPane.showMessageDialog(this, "Xuất file Excel thành công!");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
-            }
-        }
-    }
+    //             try (FileOutputStream out = new FileOutputStream(new File(filePath))) {
+    //                 workbook.write(out);
+    //                 JOptionPane.showMessageDialog(this, "Xuất file Excel thành công!");
+    //             }
+    //         } catch (Exception e) {
+    //             e.printStackTrace();
+    //             JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
+    //         }
+    //     }
+    // }
 
     public JTable getTable() {
         return tbl;

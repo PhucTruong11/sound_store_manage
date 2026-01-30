@@ -13,8 +13,8 @@ public class FromHienThiPhieuNhap extends JPanel{
         setLayout(new MigLayout("fill, insets 15", "[280!]15[grow, fill]", "[][grow]"));
         setBackground(Theme.BACKGROUND_COLOR);
 
-        toolbar = new PhieuNhapToolbar();
         table = new PhieuNhapTable();
+        toolbar = new PhieuNhapToolbar(table);
         sidebar = new PhieuNhapSidebar(table);
 
         add(toolbar, "span 2, growx, wrap, gapbottom 10");

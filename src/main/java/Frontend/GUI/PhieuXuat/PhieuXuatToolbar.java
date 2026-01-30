@@ -6,9 +6,9 @@ import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.ButtonXuatExcel;
 import Frontend.Compoent.ButtonXuatPdf;
 import Frontend.Compoent.SearchTextField;
-import Frontend.Compoent.Theme;
-import Frontend.Compoent.XuatExcel;
-import Frontend.Compoent.XuatPDF;
+// import Frontend.Compoent.Theme;
+// import Frontend.Compoent.XuatExcel;
+// import Frontend.Compoent.XuatPDF;
 
 public class PhieuXuatToolbar extends JPanel {
     public PhieuXuatToolbar(PhieuXuatTable table) {
@@ -33,7 +33,7 @@ public class PhieuXuatToolbar extends JPanel {
         ButtonXuatExcel btnExcel = new ButtonXuatExcel("Xuất EXCEL");
 
         btnExcel.addActionListener(e -> {
-            XuatExcel.xuat(table.getTable());
+            Frontend.Compoent.XuatExcel.xuat(table.getTable());
         });
 
         add(txtSearch, "growx, h 35!");
