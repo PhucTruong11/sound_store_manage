@@ -231,8 +231,7 @@ CREATE TABLE ChiTietBaoHanh (
     MaBH VARCHAR(20), 
     NoiDung TEXT, 
     TinhTrang VARCHAR(50) DEFAULT 'Còn bảo hành',
-    FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH)
-
+    -- FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH)
     FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH) ON DELETE CASCADE
 );
 
@@ -386,7 +385,9 @@ INSERT INTO PhienBanSP (MaPhienBan, MaSP, MauSac, CongSuat, Pin, KetNoi, GiaNhap
 -- --------------------------------------------------------
 
 INSERT INTO NhaCungCap VALUES 
-('NCC01', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333');
+('NCC01', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333089'),
+('NCC02', 'B&O', 'Q7, TP.HCM', '0961254087'),
+('NCC03', 'Bose', 'Hà Nội', '0991299099');
 
 INSERT INTO PhieuNhap (MaPhieuNhap, MaNV, MaNCC) VALUES 
 ('PN01', 'NV01', 'NCC01');
@@ -415,9 +416,9 @@ INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES
 
 UPDATE ChiTietSP 
 SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
-WHERE MaImei = '111222333';
-SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
-WHERE MaImei IN ('444555666', '777888999');
+WHERE MaImei IN ('111222333', '444555666', '777888999');
+-- SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
+-- WHERE MaImei IN ('444555666', '777888999');
 
 -- cái này để có thêm bảo hành vào cái sản phẩm
 INSERT IGNORE INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, TongTien) VALUES 
