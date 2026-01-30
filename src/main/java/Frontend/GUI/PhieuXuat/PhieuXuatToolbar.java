@@ -8,22 +8,28 @@ import Frontend.Compoent.ButtonXuatPdf;
 import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.XuatExcel;
+import Frontend.Compoent.XuatPDF;
 
 public class PhieuXuatToolbar extends JPanel {
     public PhieuXuatToolbar(PhieuXuatTable table) {
         setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]"));
         setBackground(Color.WHITE);
 
-        SearchTextField txtSearch = new SearchTextField("Tìm phiếu xuất hàng..."); // Sửa lại text cho đúng
+        SearchTextField txtSearch = new SearchTextField("Tìm phiếu xuất hàng..."); 
 
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent e) {
                 String keyword = txtSearch.getText().trim();
-                table.loadData(keyword); // Gọi hàm loadData có tham số của bảng
+                table.loadData(keyword); 
             }
         });
         ButtonXuatPdf btnPdf = new ButtonXuatPdf("Xuất PDF");
+
+        btnPdf.addActionListener(e -> {
+            Frontend.Compoent.XuatPDF.xuat(table.getTable(), "DANH SACH PHIEU XUAT HANG");
+        });
+
         ButtonXuatExcel btnExcel = new ButtonXuatExcel("Xuất EXCEL");
 
         btnExcel.addActionListener(e -> {
