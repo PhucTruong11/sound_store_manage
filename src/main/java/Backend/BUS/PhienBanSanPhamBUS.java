@@ -10,4 +10,8 @@ public class PhienBanSanPhamBUS {
     public ArrayList<PhienBanSanPham> getAllPhienBanSanPham() {
         return phienbansanphamDAO.selectAll();
     }
+
+    public ArrayList<PhienBanSanPham> getByNCC(String ma) {
+        return phienbansanphamDAO.selectByNCC(ma);
+    }
 }

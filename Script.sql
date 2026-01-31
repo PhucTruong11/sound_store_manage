@@ -231,7 +231,6 @@ CREATE TABLE ChiTietBaoHanh (
     MaBH VARCHAR(20), 
     NoiDung TEXT, 
     TinhTrang VARCHAR(50) DEFAULT 'Còn bảo hành',
-    -- FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH)
     FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH) ON DELETE CASCADE
 );
 
@@ -417,8 +416,6 @@ INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES
 UPDATE ChiTietSP 
 SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
 WHERE MaImei IN ('111222333', '444555666', '777888999');
--- SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
--- WHERE MaImei IN ('444555666', '777888999');
 
 -- cái này để có thêm bảo hành vào cái sản phẩm
 INSERT IGNORE INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, TongTien) VALUES 
@@ -431,3 +428,13 @@ INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc) VALUES
 INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES 
 ('CTBH01', 'BH01', 'Loa bị rè bass', 'Đang sửa chữa');
 
+
+CREATE TABLE NCC_SanPham (
+    MaNCC VARCHAR(20),
+    MaSP VARCHAR(20),
+    PRIMARY KEY (MaNCC, MaSP),
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
+);
+
+INSERT INTO NCC_SanPham VALUES ('NCC01', 'SP01');

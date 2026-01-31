@@ -91,4 +91,20 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
         }
         return null;
     }
+
+    public String generateMaNCC() {
+        String sql = "SELECT MaNCC FROM NhaCungCap ORDER BY CAST(SUBSTRING(MaNCC, 4) AS UNSIGNED) DESC LIMIT 1";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if(rs.next()) {
+                String lastMa = rs.getString("MaNCC");
+                int num = Integer.parseInt(lastMa.substring(3));
+                return String.format("NCC%03d", num + 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "NCC000";
+    }
 }

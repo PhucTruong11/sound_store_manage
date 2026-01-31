@@ -13,9 +13,10 @@ public class MainHienThiNhapHang extends JPanel {
         setLayout(new MigLayout("fill, insets 15", "[280!]15[grow, fill]", "[][grow]"));
         setBackground(Theme.BACKGROUND_COLOR);
 
+        table = new NhapHangTable(null);
+        sidebar = new NhapHangSidebar(table);
+        table.setSidebar(sidebar);
         toolbar = new NhapHangToolbar();
-        sidebar = new NhapHangSidebar();
-        table = new NhapHangTable(sidebar); // Truyền sidebar vào table để chúng "nói chuyện" với nhau
 
         add(toolbar, "span 2, growx, wrap, gapbottom 10");
         add(sidebar, "w 280!, growy, cell 0 1");

@@ -1,9 +1,6 @@
 package Frontend.GUI.Nhaphang;
 
 import Frontend.Compoent.SearchTextField;
-import Frontend.Compoent.ButtonAdd;
-import Frontend.Compoent.ButtonDele;
-import Frontend.Compoent.ButtonFix;
 import Frontend.Compoent.ButtonNhapExcel;
 import Frontend.Compoent.ButtonXuatExcel;
 import net.miginfocom.swing.MigLayout;

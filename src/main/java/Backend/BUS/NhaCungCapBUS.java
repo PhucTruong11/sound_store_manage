@@ -11,6 +11,10 @@ public class NhaCungCapBUS {
         return nccDAO.selectAll();
     }
 
+    public String getNewMaNCC() {
+        return nccDAO.generateMaNCC();
+    }
+ 
     public boolean add(NhaCungCap ncc) {
         // Thêm kiểm tra mã NCC đã tồn tại hay chưa
         return nccDAO.insert(ncc) > 0;
