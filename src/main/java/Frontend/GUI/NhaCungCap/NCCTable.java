@@ -9,8 +9,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class NCCTable extends JPanel {
@@ -121,8 +119,7 @@ public class NCCTable extends JPanel {
     public void loadComboBox() {
         if (cboNCC == null)
             return;
-        Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại để sau khi nạp lại không bị
-                                                    // nhảy
+        Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại để sau khi nạp lại không nhảy
         cboNCC.removeAllItems(); // Xóa sạch dữ liệu cũ
         cboNCC.addItem(new NhaCungCap("All", "Tất cả", "", "")); // Thêm lại item mặc định
         ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap(); // Lấy dữ liệu mới nhất từ Database qua BUS

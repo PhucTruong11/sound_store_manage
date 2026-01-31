@@ -6,8 +6,15 @@ import Frontend.Compoent.Table;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+
+import Backend.BUS.PhieuNhapBUS;
+import Backend.DTO.ChiTietPhieuNhap;
+import Backend.DTO.PhieuNhap;
+import Backend.BUS.ChiTietPhieuNhapBUS;
+
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class XacNhanNhapHangDialog extends JDialog{
     private JTable tblReview;
@@ -31,7 +38,7 @@ public class XacNhanNhapHangDialog extends JDialog{
         lblTitle.setForeground(Theme.PRIMARY_COLOR);
         add(lblTitle, "center, wrap, gapbottom 15");
 
-        String[] cols = {"STT", "Mã SP", "Tên Sản Phẩm", "SL", "Đơn Giá", "Thành Tiền"};
+        String[] cols = {"STT", "Mã Phiên Bản", "Tên Sản Phẩm", "SL", "Đơn Giá", "Thành Tiền"};
         modelReview = new DefaultTableModel(cols, 0);
 
         Table tblReview = new Table();
@@ -101,28 +108,42 @@ public class XacNhanNhapHangDialog extends JDialog{
         
         CustomButton btnXacNhan = new CustomButton("XÁC NHẬN & XUẤT HÓA ĐƠN", Theme.ACCENT_COLOR);
         btnXacNhan.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Nhập hàng thành công!");
-            dispose();
+            try {
+                PhieuNhapBUS pnBUS = new PhieuNhapBUS();
+                ChiTietPhieuNhapBUS ctpnBUS = new ChiTietPhieuNhapBUS();
+
+                String maPN = pnBUS.getNewMaPhieu(); //Lấy mã phiếu nhập mới tự động
+
+                // Tạo đối tượng PhieuNhap (Mã NV, Mã NCC lấy từ logic của bạn)
+                PhieuNhap phieuNhap = new PhieuNhap(maPN, null, "NV01", "NCC01", 0.0, true);
+
+                // Chuyển dữ liệu từ bảng Review sang danh sách ChiTietPhieuNhap
+                ArrayList<ChiTietPhieuNhap> dsChiTiet = new ArrayList<>();
+                for(int i = 0; i < modelReview.getRowCount(); i++) {
+                    String maPB = modelReview.getValueAt(i, 1).toString();
+                    int sl = Integer.parseInt(modelReview.getValueAt(i, 3).toString());
+                    String giaStr = modelReview.getValueAt(i, 4).toString().replaceAll("[^0-9]", "");
+                    double gia = Double.parseDouble(giaStr);
+
+                    // Trigger trg_CalcThanhTienNhap sẽ tính ThanhTien
+                    dsChiTiet.add(new ChiTietPhieuNhap(maPN, maPB, sl, gia, 0.0));
+                }
+
+                // Gọi BUS để thực hiện lưu (Thanh toán)
+                if(pnBUS.thanhToan(phieuNhap, dsChiTiet)) {
+                    JOptionPane.showMessageDialog(this, "Nhập hàng thành công! Mã phiếu: " + maPN);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Lỗi khi lưu dữ liệu vào hệ thống!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Dữ liệu không hợp lệ: " + ex.getMessage());
+            }
         });
 
         pnlButtons.add(btnHuy);
         pnlButtons.add(btnXacNhan);
-
-        // btnXacNhan.addActionListener(e -> {
-        //     1. Tạo đối tượng PhieuNhapDTO (Mã PN tự tăng, Mã NV, Mã NCC, Tổng tiền, Ngày lập)
-            
-        //     2. Duyệt modelReview để tạo danh sách ArrayList<ChiTietPhieuNhapDTO>
-        //     Mỗi ChiTiet gồm: MaPN, MaSP, SoLuong, DonGia.
-            
-        //     3. Gọi PhieuNhapBUS.insert(phieuNhap, listChiTiet)
-        //     Logic BUS phải thực hiện 3 việc:
-        //       - Lưu vào bảng PhieuNhap.
-        //       - Lưu vào bảng ChiTietPhieuNhap.
-        //       - TĂNG số lượng tồn kho của Sản phẩm trong bảng SanPham.
-            
-        //     JOptionPane.showMessageDialog(this, "Nhập hàng thành công và đã cập nhật tồn kho!");
-        //     dispose();
-        // });
 
         add(pnlButtons, "right");
     }

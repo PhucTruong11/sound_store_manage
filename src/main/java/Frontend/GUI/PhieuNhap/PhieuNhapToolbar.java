@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PhieuNhapToolbar extends JPanel{
-    // private PhieuNhapTable table;
     public PhieuNhapToolbar(PhieuNhapTable table) {
         setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]"));
         setBackground(Color.WHITE);

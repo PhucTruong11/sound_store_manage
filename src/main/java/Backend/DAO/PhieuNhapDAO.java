@@ -72,19 +72,15 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
     @Override
     public int delete(String id) { throw new UnsupportedOperationException("Không được xóa phiếu!"); }
 
-    
-    // TẠO MÃ PHIẾU NHẬP TỰ ĐỘNG
     public String generateMaPhieuNhap() {
-        String sql = "SELECT MaPhieuNhap FROM PhieuNhap ORDER BY MaPhieuNhap DESC LIMIT 1";
+        String sql = "SELECT MaPhieuNhap FROM PhieuNhap ORDER BY CAST(SUBSTRING(MaPhieuNhap, 3) AS UNSIGNED) DESC LIMIT 1";
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 String lastMa = rs.getString("MaPhieuNhap");
-                int num = Integer.parseInt(lastMa.replaceAll("[^0-9]", "")); 
+                int num = Integer.parseInt(lastMa.substring(2)); 
                 return String.format("PN%03d", num + 1);
-            } else {
-                return "PN001";
             }
         } catch (Exception e) {
             e.printStackTrace();

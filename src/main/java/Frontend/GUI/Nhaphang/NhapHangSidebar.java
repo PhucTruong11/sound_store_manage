@@ -3,24 +3,30 @@ package Frontend.GUI.Nhaphang;
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import Backend.BUS.NhaCungCapBUS;
+import Backend.DTO.NhaCungCap;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class NhapHangSidebar extends JPanel{
     private JLabel lblTenSP, lblMaSP, lblGia, lblTonKho;
     private JSpinner spnSoLuongNhap;
     private JTable tblNhap;
     private DefaultTableModel modelNhap;
-    private JComboBox<String> cbxNhanVien, cbxNhaCungCap;
+    private JComboBox<String> cbxNhanVien;
+    private JComboBox<NhaCungCap> cbxNhaCungCap;
 
     private String currenMa = "";
     private String currenTen = "";
     private String currenGia = "";
 
-    public NhapHangSidebar() {
+    private NhapHangTable table;
+
+    public NhapHangSidebar(NhapHangTable table) {
+        this.table = table;
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(280, 0));
@@ -39,9 +45,29 @@ public class NhapHangSidebar extends JPanel{
         add(cbxNhanVien, "h 30!");
 
         add(new JLabel("Nhà cung cấp:"));
-        cbxNhaCungCap = new JComboBox<>(new String[] {"Tất cả", "Sony Electronics", "JBL Official", "Marshall VN"});
-        add(cbxNhaCungCap, "h 30!");
+        cbxNhaCungCap = new JComboBox<>();
+        
+        // Load dữ liệu NCC vào ComboBox
+        NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
 
+        DefaultComboBoxModel<NhaCungCap> model = new DefaultComboBoxModel<>();
+        model.addElement(new NhaCungCap("All", "Tất cả", "", ""));
+
+        for(NhaCungCap ncc : list) {
+            model.addElement(ncc);
+        }
+        cbxNhaCungCap.setModel(model);
+
+        // Sự kiện: Khi chọn NCC khác, bảng chính sẽ load lại
+        cbxNhaCungCap.addActionListener(e -> {
+            NhaCungCap selected = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
+            if(selected != null) {
+                table.loadDataByNCC(selected.getMaNCC());
+            }
+        });
+
+        add(cbxNhaCungCap, "h 30!");
         add(new JSeparator(), "gaptop 5, gapbottom 5");
     }
 
@@ -119,18 +145,18 @@ public class NhapHangSidebar extends JPanel{
     }
 
     private void resetSelection() {
-        lblMaSP.setText("Mã: -");
+        currenMa = "";
+        currenTen = "";
+        currenGia = "";
         lblTenSP.setText("Chưa chọn sản phẩm");
-        lblGia.setText("Giá nhập: 0");
+        lblTonKho.setText("Tồn kho hiện tại: 0");
         spnSoLuongNhap.setValue(1);
     }
 
-    // Các hàm cập nhật thông tin từ bên ngoài
     public void updateInfo(String ma, String ten, String gia, String ton) {
         this.currenMa = ma;
         this.currenTen = ten;
         this.currenGia = gia;
-
         lblTenSP.setText(ten);
         lblTonKho.setText("Tồn kho hiện tại: " + ton);
     }
