@@ -73,9 +73,9 @@ public class Sidebar extends JPanel {
                 case "Khách hàng":
                     parent.setPage(new FromHienThiKhachHang());
                     break;
-                // case "Khuyến mãi":
-                // parent.setPage(new KhuyenMaiPanel());
-                // break;
+                case "Khuyến mãi":
+                parent.setPage(new KhuyenMaiPanel());
+                break;
                 case "Bảo hành":
                     parent.setPage(new BaoHanhPanel());
                     break;
