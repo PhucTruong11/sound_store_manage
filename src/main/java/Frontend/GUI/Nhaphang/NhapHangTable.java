@@ -9,19 +9,25 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class NhapHangTable extends JScrollPane {
     private JTable tbl;
     private DefaultTableModel tblModel;
     private PhienBanSanPhamBUS phienbansanphamBUS;
-    private NhapHangSidebar sidebar; // Để truyền dữ liệu sang Sidebar khi click
+    private NhapHangSidebar sidebar;
 
     public NhapHangTable(NhapHangSidebar sidebar) {
         phienbansanphamBUS = new PhienBanSanPhamBUS();
         this.sidebar = sidebar;
         initTable();
         loadData();
+    }
+
+    public void setSidebar(NhapHangSidebar sidebar) {
+        this.sidebar = sidebar;
     }
 
     private void initTable() {
@@ -44,7 +50,6 @@ public class NhapHangTable extends JScrollPane {
         tbl.getColumnModel().getColumn(2).setMaxWidth(230);
         tbl.getColumnModel().getColumn(3).setPreferredWidth(150);
         tbl.getColumnModel().getColumn(3).setMaxWidth(160);
-
         tbl.getColumnModel().getColumn(4).setPreferredWidth(150);
         tbl.getColumnModel().getColumn(5).setPreferredWidth(120);
         tbl.getColumnModel().getColumn(5).setMaxWidth(130);
@@ -81,6 +86,8 @@ public class NhapHangTable extends JScrollPane {
     public void loadData() {
         tblModel.setRowCount(0);
         ArrayList<PhienBanSanPham> list = phienbansanphamBUS.getAllPhienBanSanPham();
+
+        DecimalFormat df = new DecimalFormat("#, ###");
         
         int stt = 1;
         for (PhienBanSanPham pbsp : list) {
@@ -89,10 +96,38 @@ public class NhapHangTable extends JScrollPane {
             pbsp.getMaPhienBan(),
             pbsp.getTenSP(),
             pbsp.getMauSac(),
-            pbsp.getGiaNhap(),
+            df.format(pbsp.getGiaNhap()),
             pbsp.getSoLuongTon(),
            };
            tblModel.addRow(row);
+        }
+    }
+
+
+    // Gọi hàm từ PhienBanSanPhamBUS
+    public void loadDataByNCC(String maNCC) {
+        tblModel.setRowCount(0);
+        ArrayList<PhienBanSanPham> list;
+
+        if(maNCC.equals("All")) {
+            list = phienbansanphamBUS.getAllPhienBanSanPham();
+        } else {
+            list = phienbansanphamBUS.getByNCC(maNCC);
+        }
+
+        DecimalFormat df = new DecimalFormat("#, ###");
+
+        int stt = 1;
+        for(PhienBanSanPham pbsp : list) {
+            Object[] row = {
+                stt++,
+                pbsp.getMaPhienBan(),
+                pbsp.getTenSP(),
+                pbsp.getMauSac(),
+                df.format(pbsp.getGiaNhap()),
+                pbsp.getSoLuongTon(),
+            };
+            tblModel.addRow(row);
         }
     }
 }

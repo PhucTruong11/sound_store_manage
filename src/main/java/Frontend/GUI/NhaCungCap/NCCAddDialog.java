@@ -1,7 +1,6 @@
 package Frontend.GUI.NhaCungCap;
 
 import javax.swing.*;
-
 import Backend.BUS.NhaCungCapBUS;
 import Backend.DTO.NhaCungCap;
 import Frontend.Compoent.BaseThaoTacDialog;
@@ -11,8 +10,18 @@ public class NCCAddDialog extends BaseThaoTacDialog{
     private NhaCungCapBUS nccBUS = new NhaCungCapBUS();
 
     public NCCAddDialog() {
-        // super đã tự gọi initForm() rồi, không cần gọi lại nữa
         super("THÊM NHÀ CUNG CẤP", 450, 350);
+        
+        // Tự động lấy và điền mã mới
+        String newMa = nccBUS.getNewMaNCC();
+        txtMa.setText(newMa);
+
+        txtMa.setEditable(false);
+        txtMa.setFocusable(false);
+
+        SwingUtilities.invokeLater(() -> {
+            txtTen.requestFocusInWindow();
+        });
     }
 
     @Override

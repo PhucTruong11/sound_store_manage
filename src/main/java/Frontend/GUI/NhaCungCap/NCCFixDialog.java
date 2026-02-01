@@ -1,7 +1,6 @@
 package Frontend.GUI.NhaCungCap;
 
 import javax.swing.*;
-
 import Backend.BUS.NhaCungCapBUS;
 import Backend.DTO.NhaCungCap;
 import Frontend.Compoent.BaseThaoTacDialog;
