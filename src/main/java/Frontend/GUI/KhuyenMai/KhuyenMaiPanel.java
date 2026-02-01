@@ -2,7 +2,6 @@ package Frontend.GUI.KhuyenMai;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 
@@ -11,79 +10,81 @@ public class KhuyenMaiPanel extends JPanel {
     private DefaultTableModel model;
 
     public KhuyenMaiPanel() {
-        // [250!] éo cột trái rộng 250px, [fill] cột phải tự giãn. gapx 10 giúp chúng sát nhau.
-        setLayout(new MigLayout("fill, insets 10, gapx 10", "[250!]0[fill]", "[fill]"));
+        // Sử dụng nền xám nhạt giống các ảnh bạn gửi
         setBackground(new Color(242, 244, 246));
+        // Layout chính dồn lên top
+        setLayout(new MigLayout("fillx, insets 20, gapy 20", "[fill]", "[]"));
 
-        // --- BÊN TRÁI: BỘ LỌC ---
-        JPanel pnlFilter = new JPanel(new MigLayout("wrap 1, fillx, insets 15", "[fill]", "[]15[]5[]15[]5[]"));
-        pnlFilter.setBackground(Color.WHITE);
-        pnlFilter.setBorder(BorderFactory.createLineBorder(new Color(210, 210, 210)));
+        initComponents();
+    }
 
-        JLabel lblTitle = new JLabel("BỘ LỌC");
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        pnlFilter.add(lblTitle);
+    private void initComponents() {
+        // --- 1. THANH CÔNG CỤ (SEARCH & FILTER) ---
+        // Bo góc và đổ màu trắng giống image_50dd00.png
+        JPanel pnlToolBar = new JPanel(new MigLayout("insets 10, fillx", "[grow]10[]10[]10[]", "[]"));
+        pnlToolBar.setBackground(Color.WHITE);
+        pnlToolBar.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
+
+        JTextField txtSearch = new JTextField(" Tìm kiếm thiết bị bảo hành (IMEI, Mã BH)..."); // Text mẫu giống ảnh
+        txtSearch.setForeground(Color.GRAY);
         
-        pnlFilter.add(new JLabel("Loại khuyến mãi:"), "gaptop 10");
-        pnlFilter.add(new JComboBox<>(new String[]{"Tất cả", "Giảm theo %", "Giảm theo tiền"}), "h 35!");
+        // Các nút chức năng với màu sắc chuẩn theo ảnh bạn gửi
+        JButton btnAdd = createStyledButton("+ Thêm", new Color(46, 204, 113));
+        JButton btnEdit = createStyledButton("Sửa", new Color(241, 196, 15));
+        JButton btnDelete = createStyledButton("Xóa", new Color(231, 76, 60));
+        JButton btnExport = createStyledButton("Xuất Excel", new Color(149, 165, 166));
 
-        pnlFilter.add(new JLabel("Trạng thái:"), "gaptop 10");
-        pnlFilter.add(new JComboBox<>(new String[]{"Tất cả", "Đang diễn ra", "Đã kết thúc"}), "h 35!");
+        pnlToolBar.add(txtSearch, "h 40!, growx");
+        pnlToolBar.add(btnAdd, "h 40!, w 80!");
+        pnlToolBar.add(btnEdit, "h 40!, w 80!");
+        pnlToolBar.add(btnDelete, "h 40!, w 80!");
+        pnlToolBar.add(btnExport, "h 40!, w 100!");
 
-        JButton btnReset = new JButton("Làm mới bộ lọc");
-        btnReset.setFocusPainted(false);
-        pnlFilter.add(btnReset, "gaptop 20, h 35!");
+        // --- 2. BẢNG DỮ LIỆU (CARD VIEW) ---
+        JPanel pnlTableCard = new JPanel(new MigLayout("fill, insets 15", "[fill]", "[]10[grow]"));
+        pnlTableCard.setBackground(Color.WHITE);
+        pnlTableCard.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
 
-        add(pnlFilter, "growy");
-
-        // --- BÊN PHẢI: NỘI DUNG CHÍNH ---
-        JPanel pnlRight = new JPanel(new MigLayout("fill, wrap 1, insets 0", "[fill]", "[]10[fill]"));
-        pnlRight.setOpaque(false);
-
-        // Thanh công cụ: ép thanh search 300px, push để đẩy các nút về bên phải
-        JPanel pnlToolbar = new JPanel(new MigLayout("insets 0", "[300!]10[]push[]", "[]"));
-        pnlToolbar.setOpaque(false);
-
-        JTextField txtSearch = new JTextField(" Tìm kiếm mã...");
-        JButton btnExport = new JButton("Xuất Excel");
-        JButton btnAdd = new JButton("+ TẠO MỚI");
-        btnAdd.setBackground(new Color(40, 167, 69));
-        btnAdd.setForeground(Color.WHITE);
-        btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 13));
-
-        pnlToolbar.add(txtSearch, "h 40!");
-        pnlToolbar.add(btnExport, "h 40!");
-        pnlToolbar.add(btnAdd, "h 40!");
-
-        // Bảng dữ liệu
-        String[] cols = {"STT", "Mã KM", "Tên Chương Trình", "Giá Trị", "Bắt Đầu", "Kết Thúc", "Trạng Thái"};
-        model = new DefaultTableModel(new Object[][]{
-            {"1", "KM01", "Khai Xuân", "10%", "01/01", "15/01", "Đang chạy"},
-            {"2", "KM02", "Hè Về", "20%", "01/06", "30/06", "Sắp tới"}
-        }, cols);
+        JLabel lblTitle = new JLabel("Danh sách Khuyến mãi");
+        lblTitle.setFont(new Font("SansSerif", Font.BOLD, 14));
         
+        String[] cols = {"STT", "Mã KM", "Tên Chương Trình", "Giá Trị", "Bắt Đầu", " Kết Thúc", "Trạng Thái"};
+        model = new DefaultTableModel(cols, 0);
         table = new JTable(model);
         styleTable();
-        
+
         JScrollPane sp = new JScrollPane(table);
-        sp.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+        sp.setBorder(BorderFactory.createEmptyBorder());
+        sp.getViewport().setBackground(Color.WHITE);
 
-        pnlRight.add(pnlToolbar);
-        pnlRight.add(sp);
+        pnlTableCard.add(lblTitle, "wrap");
+        pnlTableCard.add(sp, "grow, h 600!"); // Fix chiều cao để không bị giãn quá đà
 
-        add(pnlRight);
+        // Add vào Panel chính
+        add(pnlToolBar, "wrap");
+        add(pnlTableCard);
+    }
+
+    private JButton createStyledButton(String text, Color bg) {
+        JButton btn = new JButton(text);
+        btn.setBackground(bg);
+        btn.setForeground(Color.WHITE);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setFont(new Font("SansSerif", Font.BOLD, 12));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return btn;
     }
 
     private void styleTable() {
-        table.setRowHeight(35);
-        table.getTableHeader().setBackground(new Color(52, 58, 64));
-        table.getTableHeader().setForeground(Color.WHITE);
-        table.getTableHeader().setPreferredSize(new Dimension(0, 35));
+        table.setRowHeight(40);
+        table.setSelectionBackground(new Color(232, 242, 252));
+        table.setShowVerticalLines(false);
+        table.setGridColor(new Color(245, 245, 245));
         
-        // Căn giữa STT và Trạng thái
-        DefaultTableCellRenderer center = new DefaultTableCellRenderer();
-        center.setHorizontalAlignment(JLabel.CENTER);
-        table.getColumnModel().getColumn(0).setCellRenderer(center);
-        table.getColumnModel().getColumn(6).setCellRenderer(center);
+        table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 12));
+        table.getTableHeader().setBackground(new Color(52, 73, 94)); // Màu Header đậm giống các ảnh
+        table.getTableHeader().setForeground(Color.WHITE);
+        table.getTableHeader().setPreferredSize(new Dimension(0, 40));
     }
 }
