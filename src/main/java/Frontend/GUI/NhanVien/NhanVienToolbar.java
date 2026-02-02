@@ -4,20 +4,20 @@ import java.awt.Color;
 import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonDele;
 import Frontend.Compoent.ButtonFix;
-import Frontend.Compoent.ButtonRefresh;
 import Frontend.Compoent.ButtonXuatExcel;
-import Frontend.Compoent.ButtonXuatPdf;
 import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
+import Backend.BUS.NhanVienBUS;
 
 public class NhanVienToolbar extends JPanel {
     private NhanVienTable table;
+    private NhanVienBUS nvBUS = new NhanVienBUS();
 
     public NhanVienToolbar(NhanVienTable table) {
         this.table = table;
-        setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]10[]10[]"));
+        setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]10[]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
@@ -33,12 +33,62 @@ public class NhanVienToolbar extends JPanel {
         add(btnDele, "w 95!, h 35!");
         add(btnXuatExcel, "w 105!, h 35!");
 
+        btnXuatExcel.addActionListener(e -> {
+            Frontend.Compoent.XuatExcel.xuat(table.getTbl());
+        });
+
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                String query = txtSearch.getText().toLowerCase().trim();
+                table.loadDataBySearch(query);
+            }
+        });
+
         btnAdd.addActionListener(e -> {
             NhanVienAddDialog dialog = new NhanVienAddDialog();
             dialog.setVisible(true);
-            table.loadDataFromMySQL();
+            table.loadData();
+            table.loadComboBox();
         });
 
-        //btnRefresh.addActionListener(e -> table.loadDataFromMySQL());
+        btnFix.addActionListener(e -> {
+            int selectedRow = table.getTbl().getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 hàng để sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            String ma = table.getTbl().getValueAt(selectedRow, 1).toString();
+            String ten = table.getTbl().getValueAt(selectedRow, 2).toString();
+            String sdt = table.getTbl().getValueAt(selectedRow, 3).toString();
+            String diaChi = table.getTbl().getValueAt(selectedRow, 4).toString();
+            String chucVu = table.getTbl().getValueAt(selectedRow, 5).toString();
+            String email = table.getTbl().getValueAt(selectedRow, 6).toString();
+            double luong = Double.parseDouble(table.getTbl().getValueAt(selectedRow, 7).toString());
+
+            NhanVienFixDialog dialog = new NhanVienFixDialog(ma, ten, sdt, diaChi, chucVu, email, luong);
+            dialog.setVisible(true);
+            table.loadData();
+            table.loadComboBox();
+        });
+
+        btnDele.addActionListener(e -> {
+            int selectedRow = table.getTbl().getSelectedRow();
+            if (selectedRow == -1) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!");
+                return;
+            }
+
+            String ma = table.getTbl().getValueAt(selectedRow, 1).toString();
+            int opt = JOptionPane.showConfirmDialog(this,
+                    "Xóa nhân viên: " + ma + "?",
+                    "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (opt == JOptionPane.YES_OPTION) {
+                nvBUS.delete(ma);
+                table.loadData();
+                table.loadComboBox();
+            }
+        });
     }
 }

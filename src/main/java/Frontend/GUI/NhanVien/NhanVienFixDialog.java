@@ -5,23 +5,24 @@ import Backend.BUS.NhanVienBUS;
 import Backend.DTO.NhanVien;
 import Frontend.Compoent.BaseThaoTacDialog;
 
-public class NhanVienAddDialog extends BaseThaoTacDialog {
+public class NhanVienFixDialog extends BaseThaoTacDialog {
     private JTextField txtMa, txtTen, txtSDT, txtDiaChi, txtChucVu, txtEmail, txtLuong;
     private NhanVienBUS nvBUS = new NhanVienBUS();
 
-    public NhanVienAddDialog() {
-        super("THÊM NHÂN VIÊN", 500, 450);
+    public NhanVienFixDialog(String ma, String ten, String sdt, String diaChi,
+                             String chucVu, String email, double luong) {
+        super("SỬA NHÂN VIÊN", 500, 450);
 
-        // Tự động lấy và điền mã mới
-        String newMa = nvBUS.getNewMa();
-        txtMa.setText(newMa);
+        txtMa.setText(ma);
+        txtTen.setText(ten);
+        txtSDT.setText(sdt);
+        txtDiaChi.setText(diaChi);
+        txtChucVu.setText(chucVu);
+        txtEmail.setText(email);
+        txtLuong.setText(String.valueOf(luong));
 
         txtMa.setEditable(false);
         txtMa.setFocusable(false);
-
-        SwingUtilities.invokeLater(() -> {
-            txtTen.requestFocusInWindow();
-        });
     }
 
     @Override
@@ -69,11 +70,11 @@ public class NhanVienAddDialog extends BaseThaoTacDialog {
                     luong,
                     true
             );
-            if (nvBUS.add(nv)) {
-                JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công!");
+            if (nvBUS.update(nv)) {
+                JOptionPane.showMessageDialog(this, "Cập nhật nhân viên thành công!");
                 dispose();
             } else {
-                JOptionPane.showMessageDialog(this, "Thêm nhân viên thất bại!");
+                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Lương phải là số!");
