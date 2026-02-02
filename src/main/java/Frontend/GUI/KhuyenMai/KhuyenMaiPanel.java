@@ -10,7 +10,6 @@ public class KhuyenMaiPanel extends JPanel {
     private DefaultTableModel model;
 
     public KhuyenMaiPanel() {
-        // Sử dụng nền xám nhạt giống các ảnh bạn gửi
         setBackground(new Color(242, 244, 246));
         // Layout chính dồn lên top
         setLayout(new MigLayout("fillx, insets 20, gapy 20", "[fill]", "[]"));
@@ -20,7 +19,6 @@ public class KhuyenMaiPanel extends JPanel {
 
     private void initComponents() {
         // --- 1. THANH CÔNG CỤ (SEARCH & FILTER) ---
-        // Bo góc và đổ màu trắng giống image_50dd00.png
         JPanel pnlToolBar = new JPanel(new MigLayout("insets 10, fillx", "[grow]10[]10[]10[]", "[]"));
         pnlToolBar.setBackground(Color.WHITE);
         pnlToolBar.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
@@ -28,7 +26,6 @@ public class KhuyenMaiPanel extends JPanel {
         JTextField txtSearch = new JTextField(" Tìm kiếm thiết bị bảo hành (IMEI, Mã BH)..."); // Text mẫu giống ảnh
         txtSearch.setForeground(Color.GRAY);
         
-        // Các nút chức năng với màu sắc chuẩn theo ảnh bạn gửi
         JButton btnAdd = createStyledButton("+ Thêm", new Color(46, 204, 113));
         JButton btnEdit = createStyledButton("Sửa", new Color(241, 196, 15));
         JButton btnDelete = createStyledButton("Xóa", new Color(231, 76, 60));
