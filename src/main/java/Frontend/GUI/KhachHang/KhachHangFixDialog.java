@@ -5,23 +5,20 @@ import Backend.BUS.KhachHangBUS;
 import Backend.DTO.KhachHang;
 import Frontend.Compoent.BaseThaoTacDialog;
 
-public class KhachHangAddDialog extends BaseThaoTacDialog {
+public class KhachHangFixDialog extends BaseThaoTacDialog {
     private JTextField txtMa, txtTen, txtSDT, txtDiaChi;
     private KhachHangBUS khBUS = new KhachHangBUS();
 
-    public KhachHangAddDialog() {
-        super("THÊM KHÁCH HÀNG", 450, 350);
+    public KhachHangFixDialog(String ma, String ten, String sdt, String diaChi) {
+        super("SỬA KHÁCH HÀNG", 450, 350);
 
-        // Tự động lấy và điền mã mới
-        String newMa = khBUS.getNewMa();
-        txtMa.setText(newMa);
+        txtMa.setText(ma);
+        txtTen.setText(ten);
+        txtSDT.setText(sdt);
+        txtDiaChi.setText(diaChi);
 
         txtMa.setEditable(false);
         txtMa.setFocusable(false);
-
-        SwingUtilities.invokeLater(() -> {
-            txtTen.requestFocusInWindow();
-        });
     }
 
     @Override
@@ -52,11 +49,11 @@ public class KhachHangAddDialog extends BaseThaoTacDialog {
                 txtDiaChi.getText(),
                 true
         );
-        if (khBUS.add(kh)) {
-            JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công!");
+        if (khBUS.update(kh)) {
+            JOptionPane.showMessageDialog(this, "Cập nhật khách hàng thành công!");
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại!");
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
         }
     }
 }
