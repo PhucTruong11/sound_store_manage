@@ -12,15 +12,17 @@ public class PhieuXuatSidebar extends JPanel {
     private JDateChooser dateTo;
     private JTextField txtMinPrice, txtMaxPrice;
     private JComboBox<String> cbNhanVien, cbNhaCungCap;
+    private PhieuXuatTable tblPhieuXuat;
 
-    public PhieuXuatSidebar() {
+    public PhieuXuatSidebar(PhieuXuatTable tblPhieuXuat) {
+        this.tblPhieuXuat = tblPhieuXuat;
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setPreferredSize(new Dimension(280, 0));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
         initNhanVienNhap();
-        initNhaCungCap();
+        initKhachHang();
         initDate();
         initPrice();
     }
@@ -31,8 +33,8 @@ public class PhieuXuatSidebar extends JPanel {
         add(cbNhanVien, "h 35!");
     }
 
-    private void initNhaCungCap() {
-        add(new JLabel("Nhà cung cấp"), "gaptop 10");
+    private void initKhachHang() {
+        add(new JLabel("Khách hàng"), "gaptop 10");
         cbNhaCungCap = new JComboBox<>(new String[] { "Tất cả", "Sony Electronics", "JBL Official", "Marshall VN" });
         add(cbNhaCungCap, "h 35!");
     }

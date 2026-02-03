@@ -27,14 +27,13 @@ public class DatabaseHelper {
                 // Lấy file db.properties trong src/main/resources
                 InputStream is = DatabaseHelper.class
                         .getClassLoader()
-                        .getResourceAsStream("db.properties")
-        ) {
+                        .getResourceAsStream("db.properties")) {
             Properties props = new Properties();
             props.load(is);
 
             DB_URL = props.getProperty("db.url");
-            USER   = props.getProperty("db.user");
-            PASS   = props.getProperty("db.pass");
+            USER = props.getProperty("db.user");
+            PASS = props.getProperty("db.pass");
 
         } catch (Exception e) {
             System.out.println("❌ Không đọc được file db.properties");

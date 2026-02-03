@@ -13,7 +13,7 @@ public class BanHangToolbar extends JPanel {
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
-        SearchTextField txtSearch = new SearchTextField("Tìm kiếm hóa đơn...");
+        SearchTextField txtSearch = new SearchTextField("Tìm kiếm sản phẩm...");
         add(txtSearch, "growx, h 35!");
 
         String[] loaiSP = { "Tất cả sản phẩm", "Loa", "Tai nghe", "Phụ kiện" };

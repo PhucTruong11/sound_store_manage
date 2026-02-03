@@ -43,7 +43,7 @@ public class ChiTietPhieuXuatDialog extends JDialog {
         pnlHeader.add(lblTitle);
         add(pnlHeader, BorderLayout.NORTH);
 
-        JPanel pnlMain = new JPanel(new MigLayout("fill, insets 15", "[grow]15[350!]", "[grow]"));
+        JPanel pnlMain = new JPanel(new MigLayout("fill, insets 15", "[grow]15[300!]", "[grow]"));
         pnlMain.setBackground(Color.WHITE);
 
         String[] columns = { "STT", "Mã Phiên Bản", "Tên Sản Phẩm", "Số lượng", "Đơn giá", "Thành tiền" };
@@ -55,6 +55,8 @@ public class ChiTietPhieuXuatDialog extends JDialog {
         };
         tblDetails = new Table();
         tblDetails.setModel(model);
+
+        JScrollPane scrollPane = new JScrollPane(tblDetails);
         pnlMain.add(new JScrollPane(tblDetails), "grow");
 
         JPanel pnlPreview = new JPanel(new MigLayout("wrap 1, fillx, insets 15", "[center]", "[]10[grow]10[]"));
@@ -71,9 +73,10 @@ public class ChiTietPhieuXuatDialog extends JDialog {
         txtImeiList = new JTextArea(8, 20);
         txtImeiList.setEditable(false);
         txtImeiList.setLineWrap(true);
-        txtImeiList.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        txtImeiList.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        JScrollPane scrollImei = new JScrollPane(txtImeiList);
 
-        pnlPreview.add(lblImage, "w 280!, h 250!");
+        pnlPreview.add(lblImage, "w 250!, h 200!");
         pnlPreview.add(lblImeiTitle, "left, gaptop 20");
         pnlPreview.add(new JScrollPane(txtImeiList), "growx, h 180!");
 
@@ -86,10 +89,8 @@ public class ChiTietPhieuXuatDialog extends JDialog {
             if (!e.getValueIsAdjusting()) {
                 int row = tblDetails.getSelectedRow();
                 if (row != -1) {
-                    // Lấy đối tượng sản phẩm tại dòng được chọn
                     ChiTietPhieuXuat ct = listChiTietPhieuXuat.get(row);
 
-                    // Hiển thị ảnh dựa trên tên file lưu trong DTO
                     if (ct.getHinhAnh() != null && !ct.getHinhAnh().isEmpty()) {
                         loadProductImage(ct.getHinhAnh());
                     } else {
@@ -97,7 +98,6 @@ public class ChiTietPhieuXuatDialog extends JDialog {
                         lblImage.setText("Không có ảnh");
                     }
 
-                    // (Tùy chọn) Hiển thị thông tin IMEI kèm theo
                     txtImeiList.setText("Danh sách IMEI của sản phẩm: " + ct.getTenSP());
                 }
             }
@@ -113,7 +113,7 @@ public class ChiTietPhieuXuatDialog extends JDialog {
         for (ChiTietPhieuXuat ctpx : listChiTietPhieuXuat) {
             Object[] row = {
                     STT++,
-                    ctpx.getMaPhienBan(), // Đưa Mã Phiên Bản vào đây (đúng với tiêu đề cột 2)
+                    ctpx.getMaPhienBan(), 
                     ctpx.getTenSP(),
                     ctpx.getSoLuong(),
                     df.format(ctpx.getDonGia()),

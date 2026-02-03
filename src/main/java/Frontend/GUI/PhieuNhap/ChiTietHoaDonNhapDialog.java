@@ -41,7 +41,7 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
         pnlHeader.add(lblTitle);
         add(pnlHeader, BorderLayout.NORTH);
 
-        JPanel pnlMain = new JPanel(new MigLayout("fill, insets 10", "[grow]10[300!]", "[grow]"));
+        JPanel pnlMain = new JPanel(new MigLayout("fill, insets 15", "[grow]15[300!]", "[grow]"));
         pnlMain.setBackground(Color.WHITE);
 
         String[] columns = { "STT", "Mã Phiên Bản", "Tên Sản Phẩm", "Số lượng", "Đơn giá", "Thành tiền" };
