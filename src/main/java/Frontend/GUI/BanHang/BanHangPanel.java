@@ -12,7 +12,7 @@ public class BanHangPanel extends JPanel {
     private PaginationPanel pagination;
 
     public BanHangPanel() {
-        setLayout(new MigLayout("fill, insets 15","[280!]15[grow, fill]", "[][grow][]")); 
+        setLayout(new MigLayout("fill, insets 15", "[280!]15[grow, fill]", "[][grow][]"));
         setBackground(Theme.BACKGROUND_COLOR);
 
         toolbar = new BanHangToolbar();

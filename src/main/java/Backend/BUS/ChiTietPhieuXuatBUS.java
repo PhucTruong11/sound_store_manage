@@ -8,6 +8,6 @@ public class ChiTietPhieuXuatBUS {
     private final ChiTietPhieuXuatDAO ctpxDAO = new ChiTietPhieuXuatDAO();
 
     public ArrayList<ChiTietPhieuXuat> getAllChiTietPhieuXuat(String maPX) {
-        return ctpxDAO.getAllChiTietPhieuXuat(maPX);
+        return ctpxDAO.selectAll(maPX);
     }
 }

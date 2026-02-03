@@ -27,7 +27,7 @@ class InfoPanel extends JPanel {
                 ImageIcon icon = new ImageIcon(imgURL);
                 Image scaled = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
                 lblImg.setIcon(new ImageIcon(scaled));
-                lblImg.setText(""); 
+                lblImg.setText("");
             } else {
                 System.err.println("Không tìm thấy: images/product/marshall.jpg" + imgPath);
                 lblImg.setText("Không tìm thấy file");
@@ -54,11 +54,6 @@ class InfoPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (sidebar != null) {
                     sidebar.updateInfo(maSP, tenSP, gia);
-                }
-                if (e.getClickCount() == 2) {
-                    JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(InfoPanel.this);
-                    ChiTietSanPhamDialog dialog = new ChiTietSanPhamDialog(parent, maSP, tenSP, gia, imgPath);
-                    dialog.setVisible(true);
                 }
             }
         });

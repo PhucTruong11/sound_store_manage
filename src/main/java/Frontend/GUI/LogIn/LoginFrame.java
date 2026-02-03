@@ -106,7 +106,7 @@ public class LoginFrame extends JFrame {
         }
 
         // MOCK: đăng nhập thành công nếu username = admin / password = 123
-        if (username.equals("admin") && password.equals("123")) {
+        if (username.equals("admin") && password.equals("123456")) {
             JOptionPane.showMessageDialog(this,
                     "Đăng nhập thành công");
 
@@ -121,4 +121,3 @@ public class LoginFrame extends JFrame {
         }
     }
 }
-

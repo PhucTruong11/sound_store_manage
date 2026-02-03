@@ -8,11 +8,12 @@ public class ChiTietBaoHanhBUS {
     private final ChiTietBaoHanhDAO ctbhDAO = new ChiTietBaoHanhDAO();
 
     public ArrayList<ChiTietBaoHanh> getAllChiTietBaoHanh(String maBH) {
-        return ctbhDAO.selectByMaBH(maBH);
+        return ctbhDAO.selectAll(maBH);
     }
 
     public boolean add(ChiTietBaoHanh ctbh) {
-        return ctbhDAO.insert(ctbh) > 0;
+        ArrayList<ChiTietBaoHanh> list = new ArrayList<>();
+        return ctbhDAO.insert(list) > 0;
     }
 
     public boolean update(ChiTietBaoHanh ctbh) {
@@ -24,6 +25,6 @@ public class ChiTietBaoHanhBUS {
     }
 
     public boolean deleteAllByMaBH(String maBH) {
-        return ctbhDAO.deleteAllByMaBH(maBH) >= 0;
+        return ctbhDAO.delete(maBH) >= 0;
     }
 }
