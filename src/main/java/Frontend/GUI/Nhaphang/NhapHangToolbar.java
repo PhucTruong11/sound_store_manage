@@ -15,11 +15,12 @@ public class NhapHangToolbar extends JPanel{
         setOpaque(false);
 
         SearchTextField txtSearch = new SearchTextField("Tìm kiếm tên SP, mã SP...");
-        ButtonNhapExcel btnNhapExcel = new ButtonNhapExcel("Nhập Excel");
-        ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
-
         add(txtSearch, "growx, h 35!");
-        add(btnNhapExcel, "w 105!, h 35!");
-        add(btnXuatExcel, "w 105!, h 35!");
+
+        String[] loaiSP = { "Tất cả sản phẩm", "Loa", "Tai nghe", "Phụ kiện" };
+        JComboBox<String> cbFilter = new JComboBox<>(loaiSP);
+        cbFilter.setPreferredSize(new Dimension(200, 35));
+        cbFilter.putClientProperty("FlatLaf.style", "arc: 10");
+        add(cbFilter, "w 200!");
     }
 }

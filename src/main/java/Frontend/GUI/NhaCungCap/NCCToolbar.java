@@ -85,10 +85,11 @@ public class NCCToolbar extends JPanel{
                     "Xóa mã: " + ma + "?", 
                     "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (opt == JOptionPane.YES_OPTION) {
-                new NhaCungCapBUS().delete(ma);
-                System.out.println("Đã xóa hàng thứ: " + selectedRow);
-                table.loadData();
-                table.loadComboBox();
+                if(nccBUS.delete(ma)) {
+                    table.loadData();
+                    table.loadComboBox();
+                    JOptionPane.showMessageDialog(this, "Đã xóa thành công!");
+                }
             }
         });
     }

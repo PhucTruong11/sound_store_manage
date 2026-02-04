@@ -146,7 +146,8 @@ CREATE TABLE NhaCungCap (
     MaNCC VARCHAR(20) PRIMARY KEY, 
     TenNCC VARCHAR(100), 
     DiaChi VARCHAR(255), 
-    Sdt VARCHAR(20) 
+    Sdt VARCHAR(20),
+    TrangThai BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE PhieuNhap (
@@ -183,7 +184,8 @@ CREATE TABLE KhuyenMai (
     DieuKienGiam DOUBLE,  -- Giá trị đơn tối thiểu
     PhanTramGiam DOUBLE, 
     NgayBatDau DATE, 
-    NgayKetThuc DATE 
+    NgayKetThuc DATE,
+    TrangThai BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE PhieuXuat (
@@ -222,6 +224,7 @@ CREATE TABLE BaoHanh (
     MaPhieuXuat VARCHAR(20), 
     NgayBatDau DATE DEFAULT CURRENT_DATE,
     NgayKetThuc DATE,
+    TrangThai BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (MaImei) REFERENCES ChiTietSP(MaImei),
     FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat)
 );
@@ -383,7 +386,7 @@ INSERT INTO PhienBanSP (MaPhienBan, MaSP, MauSac, CongSuat, Pin, KetNoi, GiaNhap
 
 -- --------------------------------------------------------
 
-INSERT INTO NhaCungCap VALUES 
+INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt) VALUES 
 ('NCC01', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333089'),
 ('NCC02', 'B&O', 'Q7, TP.HCM', '0961254087'),
 ('NCC03', 'Bose', 'Hà Nội', '0991299099');
@@ -404,7 +407,7 @@ INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES
 
 -- --------------------------------------------------------
 
-INSERT INTO KhuyenMai VALUES 
+INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc) VALUES 
 ('KM01', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31');
 
 INSERT INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, MaKM) VALUES 
