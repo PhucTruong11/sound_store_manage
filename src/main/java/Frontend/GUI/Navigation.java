@@ -20,7 +20,7 @@ public class Navigation extends JPanel{
         lblLogo.setForeground(Color.WHITE);
         add(lblLogo, "left, ay center");
 
-        //SEARCH
+        // SEARCH
         JLabel lblCart = new JLabel();
         lblCart.setIcon(new FlatSVGIcon("images/icon/shopping-cart.svg", 22, 22));
         SearchTextField txtSearch = new SearchTextField("Tìm kiếm thứ bạn cần...");

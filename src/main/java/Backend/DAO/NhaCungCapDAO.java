@@ -8,7 +8,8 @@ import java.util.ArrayList;
 public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
     @Override
     public int insert(NhaCungCap ncc) {
-        String sql = "INSERT INTO NhaCungCap VALUES (?, ?, ?, ?)";
+        // Luôn mặc định TrangThai = TRUE khi thêm mới
+        String sql = "INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt, TrangThai) VALUES (?, ?, ?, ?, TRUE)";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, ncc.getMaNCC());
@@ -25,7 +26,7 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
     @Override
     public ArrayList<NhaCungCap> selectAll() {
         ArrayList<NhaCungCap> list = new ArrayList<>();
-        String sql = "SELECT * FROM NhaCungCap ORDER BY TenNCC ASC";
+        String sql = "SELECT * FROM NhaCungCap WHERE TrangThai = TRUE ORDER BY TenNCC DESC";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()) {
@@ -34,7 +35,8 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
                         rs.getString(1),
                         rs.getString(2),
                         rs.getString(3),
-                        rs.getString(4)));
+                        rs.getString(4),
+                        rs.getBoolean(5)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,7 +62,8 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
 
     @Override
     public int delete(String id) {
-        String sql = "DELETE FROM NhaCungCap WHERE MaNCC = ?";
+        // SET TrangThai về FALSE để ẩn trong GUI
+        String sql = "UPDATE NhaCungCap SET TrangThai = FAlSE WHERE MaNCC = ?";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, id);
@@ -81,10 +84,11 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
 
             if (rs.next()) {
                 return new NhaCungCap(
-                        rs.getString(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getString(4));
+                        rs.getString("MaNCC"),
+                        rs.getString("TenNCC"),
+                        rs.getString("DiaChi"),
+                        rs.getString("Sdt"),
+                        rs.getBoolean("TrangThai"));
             }
         } catch (Exception e) {
             e.printStackTrace();
