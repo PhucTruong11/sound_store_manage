@@ -14,6 +14,10 @@ public class PhieuNhapBUS {
         return pnDAO.selectAll();
     }
 
+    public ArrayList<PhieuNhap> getByNCC(String maNCC) {
+        return pnDAO.selectByNCC(maNCC);
+    }
+
     public String getNewMaPhieu() {
         return pnDAO.generateMaPhieuNhap();
     }

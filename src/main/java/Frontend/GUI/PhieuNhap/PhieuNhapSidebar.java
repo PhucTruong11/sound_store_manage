@@ -1,19 +1,30 @@
 package Frontend.GUI.PhieuNhap;
 
 import Frontend.Compoent.Theme;
+import Frontend.GUI.Nhaphang.NhapHangTable;
+
 import com.toedter.calendar.JDateChooser;
+
+import Backend.BUS.NhaCungCapBUS;
+import Backend.DTO.NhaCungCap;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class PhieuNhapSidebar extends JPanel{
     private JDateChooser dateFrom;
     private JDateChooser dateTo;
     private JTextField txtMinPrice, txtMaxPrice;
-    private JComboBox<String> cboNhanVien, cboNhaCungCap;
+    private JComboBox<String> cbxNhanVien;
+    private JComboBox<NhaCungCap> cbxNhaCungCap;
+
+    private PhieuNhapTable table;
 
     public PhieuNhapSidebar(PhieuNhapTable table) {
+        this.table = table;
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setPreferredSize(new Dimension(280, 0));
         setBackground(Color.WHITE);
@@ -27,14 +38,33 @@ public class PhieuNhapSidebar extends JPanel{
 
     private void initNhanVienNhap() {
         add(new JLabel("Nhân viên nhập"), "gaptop 10");
-        cboNhanVien = new JComboBox<>(new String[] { "Tất cả", "Phuc truong", "Van Nam" });
-        add(cboNhanVien, "h 35!");
+        cbxNhanVien = new JComboBox<>(new String[] { "Tất cả", "Phuc truong", "Van Nam" });
+        add(cbxNhanVien, "h 35!");
     }
 
     private void initNhaCungCap() {
         add(new JLabel("Nhà cung cấp"), "gaptop 10");
-        cboNhaCungCap = new JComboBox<>(new String[] { "Tất cả", "Sony Electronics", "JBL Official", "Marshall VN" });
-        add(cboNhaCungCap, "h 35!");
+        cbxNhaCungCap = new JComboBox<>();
+
+        NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
+
+        DefaultComboBoxModel<NhaCungCap> model = new DefaultComboBoxModel<>();
+        model.addElement(new NhaCungCap("All", "Tất cả", " ", ""));
+
+        for(NhaCungCap ncc : list) {
+            model.addElement(ncc);
+        }
+        cbxNhaCungCap.setModel(model);
+
+        cbxNhaCungCap.addActionListener(e -> {
+            NhaCungCap selected = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
+            if(selected != null) {
+                table.loadDataByNCC(selected.getMaNCC());
+            }
+        });
+
+        add(cbxNhaCungCap, "h 35!");
     }
 
     private void initDate() {

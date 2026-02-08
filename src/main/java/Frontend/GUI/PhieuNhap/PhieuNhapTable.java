@@ -46,8 +46,16 @@ public class PhieuNhapTable extends JScrollPane {
         setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
     }
 
+    // public void filter(String maNCC, Date from, Date to, String minStr, String maxStr) {
+    //     long min = minStr.isEmpty() ? 0 : Long.parseLong(minStr.replaceAll("[^0-9]", ""));
+    //     long max = maxStr.isEmpty() ? 0 : Long.parseLong(maxStr.replaceAll("[^0-9]", ""));
+
+    //     tblModel.setRowCount(0);
+    //     ArrayList<PhieuNhap> list = phieuNhapBUS.getF
+    // }
+
     public void loadData() {
-        tblModel.setRowCount(0); // Xóa dữ liệu cũ trên bảng
+        tblModel.setRowCount(0);
         ArrayList<PhieuNhap> listPN = phieuNhapBUS.getAllPhieuNhap();
 
         DecimalFormat df = new DecimalFormat("#, ###");
@@ -57,6 +65,32 @@ public class PhieuNhapTable extends JScrollPane {
         for(PhieuNhap pn :listPN) {
             Object[] row = {
                 stt++,
+                pn.getmaPhieuNhap(),
+                sdf.format(pn.getngayNhap()),
+                pn.getmaNV(),
+                df.format(pn.getTongTien())
+            };
+            tblModel.addRow(row);
+        }
+    }
+
+    public void loadDataByNCC(String maPN) {
+        tblModel.setRowCount(0);
+        ArrayList<PhieuNhap> list;
+
+        if(maPN.equals("All")) {
+            list = phieuNhapBUS.getAllPhieuNhap();
+        } else {
+            list = phieuNhapBUS.getByNCC(maPN);
+        }
+
+        DecimalFormat df = new DecimalFormat("#, ###");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+        int stt = 1;
+        for(PhieuNhap pn : list) {
+            Object[] row = {
+                 stt++,
                 pn.getmaPhieuNhap(),
                 sdf.format(pn.getngayNhap()),
                 pn.getmaNV(),

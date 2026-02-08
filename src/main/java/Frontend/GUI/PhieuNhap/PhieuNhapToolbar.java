@@ -9,7 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PhieuNhapToolbar extends JPanel{
+    private PhieuNhapTable table;
+
     public PhieuNhapToolbar(PhieuNhapTable table) {
+        this.table = table;
         setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC );
