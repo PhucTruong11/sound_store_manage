@@ -1,5 +1,5 @@
 package Frontend.GUI.SanPham;
-
+import Backend.BUS.SanPhamBUS;
 import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonXuatExcel;
 import Frontend.Compoent.ButtonRefresh;
@@ -13,6 +13,7 @@ import java.awt.event.KeyEvent;
 import net.miginfocom.swing.MigLayout;
 
 public class SanPhamToolbar extends JPanel {
+    SanPhamBUS spBUS=new SanPhamBUS();
     private QuanlyamthanhPanel parentPanel;
     private SearchTextField txtSearch;
     public SanPhamToolbar(QuanlyamthanhPanel parentPanel) {
@@ -52,29 +53,34 @@ public class SanPhamToolbar extends JPanel {
             dialog.setVisible(true);
             parentPanel.loadData();
         });
+
         btnFix.addActionListener(e -> {
-            // Lấy bảng thông qua parentPanel
+            //Lấy bảng và dòng đang chọn
             JTable tbl = parentPanel.getTable().getTable();
             int selectedRow = tbl.getSelectedRow();
-
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 hàng để sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 hàng để sửa", "Thông báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             String ma = tbl.getValueAt(selectedRow, 1).toString();
             String ten = tbl.getValueAt(selectedRow, 2).toString();
-            String gia = tbl.getValueAt(selectedRow, 3).toString();
-            String sl = tbl.getValueAt(selectedRow, 4).toString();
+            String sl = tbl.getValueAt(selectedRow, 3).toString();
+            String maLoai = tbl.getValueAt(selectedRow, 4).toString();
+            String maHang = tbl.getValueAt(selectedRow, 5).toString();
+            String mota = tbl.getValueAt(selectedRow, 6).toString();
+            String baohanh = tbl.getValueAt(selectedRow, 7).toString();
 
+            //Mở Dialog Sửa và truyền dữ liệu vào
             JFrame frameCha = (JFrame) SwingUtilities.getWindowAncestor(this);
-            SuaSanPhamDialog dialog = new SuaSanPhamDialog(frameCha, ma, ten, gia, sl);
+            SuaSanPhamDialog dialog = new SuaSanPhamDialog(frameCha, ma, ten, sl, maLoai, maHang, mota, baohanh);
             dialog.setVisible(true);
+
             if (dialog.isSuccess()) {
-                parentPanel.loadData();
+                //parentPanel.loadData();
             }
         });
-
+        
         btnDele.addActionListener(e -> {
             JTable tbl = parentPanel.getTable().getTable();
             int selectedRow = tbl.getSelectedRow();
@@ -83,13 +89,16 @@ public class SanPhamToolbar extends JPanel {
                 JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!");
                 return;
             }
-            String tenSP = tbl.getValueAt(selectedRow, 2).toString();
+            String maSP = tbl.getValueAt(selectedRow, 1).toString();
             int opt = JOptionPane.showConfirmDialog(this, 
-                    "Bạn có chắc muốn xóa: " + tenSP + "?", 
+                    "Bạn có chắc muốn xóa: " + maSP + "?", 
                     "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
 
             if (opt == JOptionPane.YES_OPTION) {
-                System.out.println("Đã xóa sản phẩm "+tenSP);
+                if(spBUS.delete(maSP)){
+                System.out.println("Xóa thành công");
+                parentPanel.loadData();
+                }
             }
         });
 

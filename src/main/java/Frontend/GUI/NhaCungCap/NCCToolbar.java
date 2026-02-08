@@ -81,9 +81,7 @@ public class NCCToolbar extends JPanel{
             }
 
             String ma = table.getTbl().getValueAt(selectedRow, 1).toString();
-            int opt = JOptionPane.showConfirmDialog(this, 
-                    "Xóa mã: " + ma + "?", 
-                    "Xác nhận", JOptionPane.YES_NO_OPTION);
+            int opt = JOptionPane.showConfirmDialog(this, "Xóa mã: " + ma + "?", "Xác nhận", JOptionPane.YES_NO_OPTION);
             if (opt == JOptionPane.YES_OPTION) {
                 if(nccBUS.delete(ma)) {
                     table.loadData();

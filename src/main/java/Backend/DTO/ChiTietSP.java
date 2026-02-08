@@ -8,16 +8,18 @@ public class ChiTietSP {
     private String maPhieuNhap;
     private String maPhieuXuat;
     private String tinhTrang;
+    private boolean trangThai;
 
     public ChiTietSP() {
     }
 
-    public ChiTietSP(String maImei, String maPhienBan, String maPhieuNhap, String maPhieuXuat, String tinhTrang) {
+    public ChiTietSP(String maImei, String maPhienBan, String maPhieuNhap, String maPhieuXuat, String tinhTrang,boolean trangThai) {
         this.maImei = maImei;
         this.maPhienBan = maPhienBan;
         this.maPhieuNhap = maPhieuNhap;
         this.maPhieuXuat = maPhieuXuat;
         this.tinhTrang = tinhTrang;
+        this.trangThai=trangThai;
     }
 
     public String getMaImei() { return maImei; }
@@ -35,6 +37,9 @@ public class ChiTietSP {
     public String getTinhTrang() { return tinhTrang; }
     public void setTinhTrang(String tinhTrang) { this.tinhTrang = tinhTrang; }
 
+    public boolean isTrangThai() {return trangThai;}
+    public void setTrangThai(boolean trangThai) {this.trangThai = trangThai;}
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -51,6 +56,7 @@ public class ChiTietSP {
                 ", maPhieuNhap='" + maPhieuNhap + '\'' +
                 ", maPhieuXuat='" + maPhieuXuat + '\'' +
                 ", tinhTrang='" + tinhTrang + '\'' +
+                ", trangThai=" + trangThai +
                 '}';
     }
 }
