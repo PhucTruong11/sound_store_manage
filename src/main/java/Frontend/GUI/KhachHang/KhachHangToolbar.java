@@ -41,7 +41,7 @@ public class KhachHangToolbar extends JPanel {
             @Override
             public void keyReleased(java.awt.event.KeyEvent e) {
                 String query = txtSearch.getText().toLowerCase().trim();
-                table.loadDataBySearch(query);
+                // table.loadDataBySearch(query);
             }
         });
 
@@ -49,7 +49,7 @@ public class KhachHangToolbar extends JPanel {
             KhachHangAddDialog dialog = new KhachHangAddDialog();
             dialog.setVisible(true);
             table.loadData();
-            table.loadComboBox();
+            // table.loadComboBox();
         });
 
         btnFix.addActionListener(e -> {
@@ -59,15 +59,17 @@ public class KhachHangToolbar extends JPanel {
                 return;
             }
 
-            String ma = table.getTbl().getValueAt(selectedRow, 1).toString();
-            String ten = table.getTbl().getValueAt(selectedRow, 2).toString();
-            String sdt = table.getTbl().getValueAt(selectedRow, 3).toString();
-            String diaChi = table.getTbl().getValueAt(selectedRow, 4).toString();
+            int row = table.getTbl().convertRowIndexToModel(selectedRow);
+
+            String ma = table.getTbl().getValueAt(row, 1).toString();
+            String ten = table.getTbl().getValueAt(row, 2).toString();
+            String sdt = table.getTbl().getValueAt(row, 3).toString();
+            String diaChi = table.getTbl().getValueAt(row, 4).toString();
 
             KhachHangFixDialog dialog = new KhachHangFixDialog(ma, ten, sdt, diaChi);
             dialog.setVisible(true);
             table.loadData();
-            table.loadComboBox();
+            // table.loadComboBox();
         });
 
         btnDele.addActionListener(e -> {
@@ -84,7 +86,13 @@ public class KhachHangToolbar extends JPanel {
             if (opt == JOptionPane.YES_OPTION) {
                 khBUS.delete(ma);
                 table.loadData();
-                table.loadComboBox();
+                // table.loadComboBox();
+            }
+        });
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                table.filterByKeyword(txtSearch.getText());
             }
         });
     }

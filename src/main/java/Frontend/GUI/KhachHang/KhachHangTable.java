@@ -8,6 +8,7 @@ import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,7 +18,9 @@ public class KhachHangTable extends JPanel {
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
     private KhachHangBUS khBUS;
-    private JComboBox<KhachHang> cboKH;
+    // private JComboBox<KhachHang> cboKH;
+    private JComboBox<String> cboSort;
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public KhachHangTable() {
         khBUS = new KhachHangBUS();
@@ -36,23 +39,61 @@ public class KhachHangTable extends JPanel {
         JLabel lblTitle = new JLabel("Khách hàng");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
-        cboKH = new JComboBox<>();
-        loadComboBox();
+        // cboKH = new JComboBox<>();
+        // loadComboBox();
 
-        cboKH.addActionListener(e -> {
-            KhachHang selected = (KhachHang) cboKH.getSelectedItem();
-            if (selected != null) {
-                if (selected.getId().equals("All")) {
-                    loadData();
-                } else {
-                    loadDataByFilter(selected.getId());
-                }
-            }
+        // cboKH.addActionListener(e -> {
+        //     KhachHang selected = (KhachHang) cboKH.getSelectedItem();
+        //     if (selected != null) {
+        //         if (selected.getId().equals("All")) {
+        //             loadData();
+        //         } else {
+        //             loadDataByFilter(selected.getId());
+        //         }
+        //     }
+        // });
+
+        // cboKH.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+        // pnlHeader.add(lblTitle);
+        // pnlHeader.add(cboKH, "w 150!, h 35!");
+        // add(pnlHeader, "growx");
+        cboSort = new JComboBox<>(new String[]{
+                "Mặc định",
+                "Tên A - Z",
+                "Tên Z - A"
         });
 
-        cboKH.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+    cboSort.addActionListener(e -> {
+    int colTen = 2; // cột "Tên KH"
+
+        switch (cboSort.getSelectedIndex()) {
+            case 0: // Mặc định
+                sorter.setSortKeys(null);
+                break;
+
+            case 1: // A - Z
+                sorter.setSortKeys(
+                    java.util.List.of(
+                        new RowSorter.SortKey(colTen, SortOrder.ASCENDING)
+                    )
+                );
+                break;
+
+            case 2: // Z - A
+                sorter.setSortKeys(
+                    java.util.List.of(
+                        new RowSorter.SortKey(colTen, SortOrder.DESCENDING)
+                    )
+                );
+                break;
+        }
+    });
+
+
+        cboSort.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+
         pnlHeader.add(lblTitle);
-        pnlHeader.add(cboKH, "w 150!, h 35!");
+        pnlHeader.add(cboSort, "w 150!, h 35!");
         add(pnlHeader, "growx");
     }
 
@@ -65,6 +106,9 @@ public class KhachHangTable extends JPanel {
 
         tbl = new Table();
         tbl.setModel(tblModel);
+
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -112,28 +156,71 @@ public class KhachHangTable extends JPanel {
     }
 
     public JTable getTbl() { return tbl; }
-
-    public void loadComboBox() {
-        if (cboKH == null) return;
-        Object selected = cboKH.getSelectedItem();
-        cboKH.removeAllItems();
-        cboKH.addItem(new KhachHang("All", "Tất cả", "", "", true));
-        ArrayList<KhachHang> list = khBUS.getAllKhachHang();
-        for (KhachHang kh : list) {
-            cboKH.addItem(kh);
+        public void filterByKeyword(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            sorter.setRowFilter(null); // reset
+            return;
         }
-        if (selected != null) cboKH.setSelectedItem(selected);
-    }
 
-    public void loadDataBySearch(String query) {
+        String text = keyword.toLowerCase();
+
+        sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                String ma = entry.getStringValue(1).toLowerCase();   // Mã NV
+                String ten = entry.getStringValue(2).toLowerCase();  // Tên NV
+                String sdt = entry.getStringValue(3).toLowerCase();  // SĐT
+
+                return ma.contains(text)
+                    || ten.contains(text)
+                    || sdt.contains(text);
+            }
+        });
+    }
+    // public void loadComboBox() {
+    //     if (cboKH == null) return;
+    //     Object selected = cboKH.getSelectedItem();
+    //     cboKH.removeAllItems();
+    //     cboKH.addItem(new KhachHang("All", "Tất cả", "", "", true));
+    //     ArrayList<KhachHang> list = khBUS.getAllKhachHang();
+    //     for (KhachHang kh : list) {
+    //         cboKH.addItem(kh);
+    //     }
+    //     if (selected != null) cboKH.setSelectedItem(selected);
+    // }
+
+    // public void loadDataBySearch(String query) {
+    //     tblModel.setRowCount(0);
+    //     ArrayList<KhachHang> list = khBUS.getAllKhachHang();
+
+    //     int stt = 1;
+    //     for (KhachHang kh : list) {
+    //         boolean matchMa = kh.getId().toLowerCase().contains(query.toLowerCase());
+    //         boolean matchTen = kh.getHoTen().toLowerCase().contains(query.toLowerCase());
+    //         if (matchMa || matchTen) {
+    //             Object[] row = {
+    //                     stt++,
+    //                     kh.getId(),
+    //                     kh.getHoTen(),
+    //                     kh.getSdt(),
+    //                     kh.getDiaChi()
+    //             };
+    //             tblModel.addRow(row);
+    //         }
+    //     }
+    //     if (query.isEmpty()) cboKH.setSelectedIndex(0);
+    // }
+    public void loadDataByAdvancedFilter(String ma, String ten, String diaChi, String sdt){
         tblModel.setRowCount(0);
         ArrayList<KhachHang> list = khBUS.getAllKhachHang();
 
         int stt = 1;
         for (KhachHang kh : list) {
-            boolean matchMa = kh.getId().toLowerCase().contains(query.toLowerCase());
-            boolean matchTen = kh.getHoTen().toLowerCase().contains(query.toLowerCase());
-            if (matchMa || matchTen) {
+            boolean matchMa = kh.getId().toLowerCase().contains(ma.toLowerCase());
+            boolean matchTen = kh.getHoTen().toLowerCase().contains(ten.toLowerCase());
+            boolean matchDiaChi = kh.getDiaChi().toLowerCase().contains(diaChi.toLowerCase());
+            boolean matchSDT = kh.getSdt().toLowerCase().contains(sdt.toLowerCase());
+            if (matchMa && matchTen && matchDiaChi && matchSDT) {
                 Object[] row = {
                         stt++,
                         kh.getId(),
@@ -144,6 +231,5 @@ public class KhachHangTable extends JPanel {
                 tblModel.addRow(row);
             }
         }
-        if (query.isEmpty()) cboKH.setSelectedIndex(0);
     }
 }

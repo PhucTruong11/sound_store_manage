@@ -14,6 +14,11 @@ public class KhachHang extends ConNguoi {
         this.trangThai = trangThai;
     }
 
+    public KhachHang(String id, String hoTen, String sdt, String diaChi) {
+        super(id, hoTen, sdt, diaChi);
+        this.trangThai = true;
+    }
+
     public boolean isTrangThai() {
         return trangThai;
     }

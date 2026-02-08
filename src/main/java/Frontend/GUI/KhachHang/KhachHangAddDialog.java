@@ -8,6 +8,7 @@ import Frontend.Compoent.BaseThaoTacDialog;
 public class KhachHangAddDialog extends BaseThaoTacDialog {
     private JTextField txtMa, txtTen, txtSDT, txtDiaChi;
     private KhachHangBUS khBUS = new KhachHangBUS();
+    private KhachHangTable parentTable;
 
     public KhachHangAddDialog() {
         super("THÊM KHÁCH HÀNG", 450, 350);
