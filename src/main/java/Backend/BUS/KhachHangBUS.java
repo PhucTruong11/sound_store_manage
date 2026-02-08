@@ -11,7 +11,7 @@ public class KhachHangBUS {
         return khDAO.selectAll();
     }
     public String getNewMa() {
-        return khDAO.generateMa();
+        return khDAO.generateMaKH();
     }
 
     public boolean add(KhachHang kh) {
