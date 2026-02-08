@@ -19,6 +19,13 @@ public class NhanVien extends ConNguoi {
         this.luong = luong;
         this.trangThai = trangThai;
     }
+    public NhanVien(String id, String hoTen, String sdt, String diaChi, String chucVu, String email, double luong) {
+        super(id, hoTen, sdt, diaChi);
+        this.chucVu =chucVu;
+        this.email = email;
+        this.luong = luong;
+        this.trangThai = true;
+    }
 
     public String getChucVu() { return chucVu; }
     public void setChucVu(String chucVu) { this.chucVu = chucVu; }

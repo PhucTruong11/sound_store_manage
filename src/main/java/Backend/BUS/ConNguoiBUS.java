@@ -20,7 +20,7 @@ public class ConNguoiBUS {
         return conNguoiDAO.update(cn) > 0;
     }
 
-    public boolean delete(String id) {
-        return conNguoiDAO.delete(id) > 0;
-    }
+    // public boolean delete(String id) {
+    //     return conNguoiDAO.delete(id) > 0;
+    // }
 }

@@ -12,7 +12,7 @@ public class NhanVienBUS {
     }
 
     public String getNewMa() {
-        return nhanVienDAO.generateMa();
+        return nhanVienDAO.generateMaNV();
     }
 
     public boolean add(NhanVien nv) {

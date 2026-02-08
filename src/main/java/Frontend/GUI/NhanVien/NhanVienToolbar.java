@@ -37,19 +37,19 @@ public class NhanVienToolbar extends JPanel {
             Frontend.Compoent.XuatExcel.xuat(table.getTbl());
         });
 
-        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyReleased(java.awt.event.KeyEvent e) {
-                String query = txtSearch.getText().toLowerCase().trim();
-                table.loadDataBySearch(query);
-            }
-        });
+        // txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+        //     @Override
+        //     public void keyReleased(java.awt.event.KeyEvent e) {
+        //         String query = txtSearch.getText().toLowerCase().trim();
+        //         // table.loadDataBySearch(query);
+        //     }
+        // });
 
         btnAdd.addActionListener(e -> {
             NhanVienAddDialog dialog = new NhanVienAddDialog();
             dialog.setVisible(true);
             table.loadData();
-            table.loadComboBox();
+            // table.loadComboBox();
         });
 
         btnFix.addActionListener(e -> {
@@ -70,7 +70,7 @@ public class NhanVienToolbar extends JPanel {
             NhanVienFixDialog dialog = new NhanVienFixDialog(ma, ten, sdt, diaChi, chucVu, email, luong);
             dialog.setVisible(true);
             table.loadData();
-            table.loadComboBox();
+            // table.loadComboBox();
         });
 
         btnDele.addActionListener(e -> {
@@ -87,8 +87,15 @@ public class NhanVienToolbar extends JPanel {
             if (opt == JOptionPane.YES_OPTION) {
                 nvBUS.delete(ma);
                 table.loadData();
-                table.loadComboBox();
+                // table.loadComboBox();
             }
         });
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                table.filterByKeyword(txtSearch.getText());
+            }
+        });
+
     }
 }
