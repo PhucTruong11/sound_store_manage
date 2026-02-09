@@ -14,6 +14,7 @@ public class PhienBanSanPham {
     private int soLuongTon;
     private String tenSP;
     private boolean trangThai;
+    private String hinhAnh;
 
     public PhienBanSanPham() {
     }
@@ -31,6 +32,22 @@ public class PhienBanSanPham {
         this.giaBan = giaBan;
         this.soLuongTon = soLuongTon;
         this.trangThai = trangThai;
+    }
+
+     public PhienBanSanPham(String maPhienBan, String maSP, String mauSac,
+            String congSuat, String pin, String ketNoi,
+            double giaNhap, double giaBan, int soLuongTon, boolean trangThai, String hinhAnh) {
+        this.maPhienBan = maPhienBan;
+        this.maSP = maSP;
+        this.mauSac = mauSac;
+        this.congSuat = congSuat;
+        this.pin = pin;
+        this.ketNoi = ketNoi;
+        this.giaNhap = giaNhap;
+        this.giaBan = giaBan;
+        this.soLuongTon = soLuongTon;
+        this.trangThai = trangThai;
+        this.hinhAnh = hinhAnh;
     }
 
     // Getters & Setters

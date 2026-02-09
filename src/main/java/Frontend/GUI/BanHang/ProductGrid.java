@@ -1,7 +1,10 @@
 package Frontend.GUI.BanHang;
 
 import javax.swing.*;
+
+import Backend.BUS.PhienBanSanPhamBUS;
 import Backend.BUS.SanPhamBUS;
+import Backend.DTO.PhienBanSanPham;
 import Backend.DTO.SanPham;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;

@@ -102,6 +102,7 @@ CREATE TABLE SanPham (
     MoTa TEXT,
     ThoiGianBaoHanh INT DEFAULT 12, -- Tháng
     TrangThai BOOLEAN DEFAULT TRUE,
+    HinhAnh VARCHAR(255),
     FOREIGN KEY (MaLoai) REFERENCES LoaiSP(MaLoai),
     FOREIGN KEY (MaHang) REFERENCES HangSX(MaHang)
 );
@@ -408,8 +409,8 @@ INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES
 ('111222333', 'PB01', 'PN01', 'Trong kho'),
 ('444555666', 'PB01', 'PN01', 'Trong kho'),
 ('123123123', 'PB02', 'PN01', 'Trong kho'),
-('456456456', 'PB02', 'PN01', 'Trong kho');
-
+('456456456', 'PB02', 'PN01', 'Trong kho'),
+('777888999', 'PB02', 'PN01', 'Đã bán');
 -- --------------------------------------------------------
 
 INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc) VALUES 
