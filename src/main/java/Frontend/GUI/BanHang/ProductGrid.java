@@ -26,16 +26,21 @@ public class ProductGrid extends JPanel {
 
         add(scrollPane, BorderLayout.CENTER);
 
-        loadData(1, sidebar);
+        loadData(sidebar);
     }
 
-    public void loadData(int page, BanHangSidebar sidebar) {
+    public void loadData(BanHangSidebar sidebar) {
         mainPanel.removeAll();
-        for (int i = 1; i <= 9; i++) {
-            String ma = "SP" + page + i;
-            String ten = "Sản phẩm trang " + page + " số " + i;
-            String gia = "10.500.000";
-            String anh = "";
+
+        PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
+
+        ArrayList<PhienBanSanPham> list = pbBUS.getAllPhienBanSanPham();
+
+        for (PhienBanSanPham pb : list) {
+            String ma = pb.getMaPhienBan();
+            String ten = pb.getTenSP();
+            String gia = String.format("%,.0f", pb.getGiaBan());
+            String anh = pb.getHinhAnh();
 
             InfoPanel card = new InfoPanel(ma, ten, gia, anh, sidebar);
             mainPanel.add(card);

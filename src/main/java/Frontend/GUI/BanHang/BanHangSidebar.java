@@ -22,6 +22,7 @@ public class BanHangSidebar extends JPanel {
     private String currentGia = "";
     private JLabel lblKhachHang;
     private String maKHSelected = "";
+    private String currentMauSac = "";
 
     public BanHangSidebar() {
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
@@ -119,7 +120,7 @@ public class BanHangSidebar extends JPanel {
             }
 
             JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-            XacNhanNhapHangDialog dialog = new XacNhanNhapHangDialog(parent, modelBan);
+            XacNhanBanHangDialog dialog = new XacNhanBanHangDialog(parent, modelBan, maKHSelected, null);
             dialog.setVisible(true);
         });
         add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");

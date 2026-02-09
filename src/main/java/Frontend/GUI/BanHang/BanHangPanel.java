@@ -20,7 +20,7 @@ public class BanHangPanel extends JPanel {
         productGrid = new ProductGrid(sidebar);
 
         pagination = new PaginationPanel(5, n -> {
-            productGrid.loadData(n, sidebar);
+            productGrid.loadData(sidebar);
         });
 
         add(toolbar, "span 2, growx, wrap, gapbottom 10");

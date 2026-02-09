@@ -122,6 +122,9 @@ public class PhienBanSanPham {
         this.trangThai = trangThai;
     }
 
+    public String getHinhAnh() { return hinhAnh; }
+    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
