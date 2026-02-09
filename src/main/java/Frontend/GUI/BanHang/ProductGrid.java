@@ -1,15 +1,15 @@
 package Frontend.GUI.BanHang;
 
 import javax.swing.*;
-import Backend.BUS.AmthanhBUS;
-import Backend.DTO.Amthanh;
+import Backend.BUS.SanPhamBUS;
+import Backend.DTO.SanPham;
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import java.util.ArrayList;
 
 public class ProductGrid extends JPanel {
     private JPanel mainPanel;
-    private AmthanhBUS amthanhBUS = new AmthanhBUS();
+    private SanPhamBUS spBUS = new SanPhamBUS();
 
     public ProductGrid(BanHangSidebar sidebar) {
         setLayout(new BorderLayout());

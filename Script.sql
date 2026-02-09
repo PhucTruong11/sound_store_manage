@@ -99,7 +99,6 @@ CREATE TABLE SanPham (
     TenSP VARCHAR(100) NOT NULL,
     MaLoai VARCHAR(20),
     MaHang VARCHAR(20),
-    HinhAnh VARCHAR(255),
     MoTa TEXT,
     ThoiGianBaoHanh INT DEFAULT 12, -- Tháng
     TrangThai BOOLEAN DEFAULT TRUE,
@@ -121,6 +120,7 @@ CREATE TABLE PhienBanSP (
     GiaNhap DOUBLE,
     GiaBan DOUBLE,
     SoLuongTon INT DEFAULT 0,
+    TrangThai BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
 );
 
@@ -133,6 +133,7 @@ CREATE TABLE ChiTietSP (
     MaPhieuNhap VARCHAR(20),
     MaPhieuXuat VARCHAR(20),
     TinhTrang VARCHAR(50) DEFAULT 'Trong kho', -- Đã bán, Bảo hành
+    TrangThai BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (MaPhienBan) REFERENCES PhienBanSP(MaPhienBan)
 );
 
@@ -308,6 +309,8 @@ BEGIN
     WHERE MaPhieuXuat = NEW.MaPhieuXuat;
 END//
 
+
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -375,14 +378,13 @@ INSERT INTO HangSX VALUES
 ('H01', 'Marshall', 'Anh'),
 ('H02', 'Sony', 'Nhật');
 
-INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, HinhAnh, MoTa, ThoiGianBaoHanh) VALUES 
-('SP01', 'Marshall Stanmore III', 'L01', 'H01', 'stanmore3.jpg', 'Loa decor cực đẹp', 12),
-('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'sony_xm5.jpg', 'Chống ồn đỉnh cao', 12);
+INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, MoTa, ThoiGianBaoHanh) VALUES 
+('SP01', 'Marshall Stanmore III', 'L01', 'H01', 'Loa decor cực đẹp', 12),
+('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'Chống ồn đỉnh cao', 12);
 
 INSERT INTO PhienBanSP (MaPhienBan, MaSP, MauSac, CongSuat, Pin, KetNoi, GiaNhap, GiaBan, SoLuongTon) VALUES 
-('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 0),
-('PB02', 'SP01', 'Đen (Black)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 0),
-('PB03', 'SP02', 'Bạc (Silver)', 'N/A', '30 Giờ', 'Bluetooth, 3.5mm', 6000000, 8490000, 0);
+('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 2),
+('PB02', 'SP01', 'Đen (Black)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 2);
 
 -- --------------------------------------------------------
 
@@ -401,7 +403,6 @@ INSERT INTO ChiTietPhieuNhap (MaPhieuNhap, MaPhienBan, SoLuong, DonGia) VALUES
 INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
 ('111222333', 'PB01', 'PN01', 'Trong kho'),
 ('444555666', 'PB01', 'PN01', 'Trong kho'),
-('777888999', 'PB01', 'PN01', 'Trong kho'),
 ('123123123', 'PB02', 'PN01', 'Trong kho'),
 ('456456456', 'PB02', 'PN01', 'Trong kho');
 

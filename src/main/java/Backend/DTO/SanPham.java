@@ -5,21 +5,21 @@ import java.util.Objects;
 public class SanPham {
     private String maSP;
     private String tenSP;
+    private int soLuong;
     private String maLoai;
     private String maHang;
-    private String hinhAnh;
     private String moTa;
     private int thoiGianBaoHanh;
     private boolean trangThai;
 
     public SanPham() {}
 
-    public SanPham(String maSP, String tenSP, String maLoai, String maHang, String hinhAnh, String moTa, int thoiGianBaoHanh, boolean trangThai) {
+    public SanPham(String maSP, String tenSP, int soLuong, String maLoai, String maHang, String moTa, int thoiGianBaoHanh, boolean trangThai) {
         this.maSP = maSP;
         this.tenSP = tenSP;
+        this.soLuong=soLuong;
         this.maLoai = maLoai;
         this.maHang = maHang;
-        this.hinhAnh = hinhAnh;
         this.moTa = moTa;
         this.thoiGianBaoHanh = thoiGianBaoHanh;
         this.trangThai = trangThai;
@@ -57,14 +57,6 @@ public class SanPham {
         this.maHang = maHang;
     }
 
-    public String getHinhAnh() {
-        return hinhAnh;
-    }
-
-    public void setHinhAnh(String hinhAnh) {
-        this.hinhAnh = hinhAnh;
-    }
-
     public String getMoTa() {
         return moTa;
     }
@@ -89,6 +81,9 @@ public class SanPham {
         this.trangThai = trangThai;
     }
 
+    public int getSoLuong() { return soLuong; }
+    public void setSoLuong(int soLuong) { this.soLuong = soLuong; }
+
     @Override
     public boolean equals(Object obj) {
         if(this == obj) return true;
@@ -99,8 +94,7 @@ public class SanPham {
 
     @Override
     public String toString() {
-        return "SanPham [maSP=" + maSP + ", tenSP=" + tenSP + ", maLoai=" + maLoai + ", maHang=" + maHang + ", hinhAnh="
-                + hinhAnh + ", moTa=" + moTa + ", thoiGianBaoHanh=" + thoiGianBaoHanh + ", trangThai=" + trangThai
+        return "SanPham [maSP=" + maSP + ", tenSP=" + tenSP + ", maLoai=" + maLoai + ", maHang=" + maHang + ", moTa=" + moTa + ", thoiGianBaoHanh=" + thoiGianBaoHanh + ", trangThai=" + trangThai
                 + "]";
     }
 
