@@ -2,14 +2,13 @@ package Frontend.GUI.SanPham;
 
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
-import Backend.DTO.Amthanh;    
+import Backend.DTO.SanPham;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class SanPhamTable extends JPanel {
@@ -35,24 +34,24 @@ public class SanPhamTable extends JPanel {
         JLabel lblTitle = new JLabel("Sản Phẩm");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
         // Phân loại
-        cboPhanLoai = new JComboBox<>(new String[]{"Tất cả", "Loa", "Tai nghe", "Phụ kiện"});
+        cboPhanLoai = new JComboBox<>(new String[] { "Tất cả", "Loa", "Tai nghe", "Phụ kiện" });
         cboPhanLoai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         cboPhanLoai.setBackground(Color.WHITE);
         cboPhanLoai.setFocusable(false);
         cboPhanLoai.setPreferredSize(new Dimension(130, 30));
 
         pnlHeader.add(lblTitle);
-        pnlHeader.add(cboPhanLoai,"w 150!,h 35!");
+        pnlHeader.add(cboPhanLoai, "w 150!,h 35!");
         add(pnlHeader, "growx");
     }
 
     private void initTable() {
-        String[] columns = {"STT", "Mã SP", "Tên Sản Phẩm", "Đơn Giá (VNĐ)", "Số Lượng"};
-        
+        String[] columns = { "STT", "Mã SP", "Tên Sản Phẩm", "Số Lượng", "Mã Loại", "Mã Hãng","Mô Tả","Thời Gian Bảo Hành" };
+
         tblModel = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; 
+                return false;
             }
         };
 
@@ -62,32 +61,27 @@ public class SanPhamTable extends JPanel {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tbl.setDefaultRenderer(Object.class, centerRenderer);
-        
+
         scrollPane = new JScrollPane(tbl);
         scrollPane.setBorder(null);
         add(scrollPane, "grow");
     }
 
     // Hiển thị dữ liệu
-    public void showData(ArrayList<Amthanh> list) {
+    public void showData(ArrayList<SanPham> list) {
         tblModel.setRowCount(0);
-        
+
         int stt = 1;
-        DecimalFormat formatter = new DecimalFormat("###,###");
-        
-        for (Amthanh sp : list) {
-            tblModel.addRow(new Object[]{
-                stt++,sp.getMaSP(),sp.getTenSP(),formatter.format(sp.getGiaBan()),
-                sp.getSoLuong()
+        //DecimalFormat formatter = new DecimalFormat("###,###");
+
+        for (SanPham sp : list) {
+            tblModel.addRow(new Object[] {
+                    stt++, sp.getMaSP(), sp.getTenSP(),sp.getSoLuong(),sp.getMaLoai(),sp.getMaHang(),sp.getMoTa(),sp.getThoiGianBaoHanh()
             });
         }
     }
 
-    public JTable getTable() {
-        return tbl;
-    }
+    public JTable getTable() {return tbl;}
 
-    public JComboBox<String> getComboBox() {
-        return cboPhanLoai;
-    }
+    public JComboBox<String> getComboBox() {return cboPhanLoai;}
 }
