@@ -14,4 +14,8 @@ public class PhienBanSanPhamBUS {
     public ArrayList<PhienBanSanPham> getByNCC(String ma) {
         return phienbansanphamDAO.selectByNCC(ma);
     }
+
+    public ArrayList<PhienBanSanPham> getByMaSP(String maSP) {
+        return phienbansanphamDAO.selectByMaSP(maSP);
+    }
 }

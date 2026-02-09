@@ -10,26 +10,28 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
     public ArrayList<PhienBanSanPham> selectAll() {
         ArrayList<PhienBanSanPham> list = new ArrayList<>();
         // JOIN để lấy TenSP từ bảng SanPham dựa trên MaSP
-        String sql = "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
-                     "JOIN SanPham sp ON pb.MaSP = sp.MaSP";
+        String sql = "SELECT pb.*, sp.TenSP, sp.HinhAnh FROM PhienBanSP pb " +
+                "JOIN SanPham sp ON pb.MaSP = sp.MaSP";
         try (Connection conn = DatabaseHelper.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-            
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
                 PhienBanSanPham pbsp = new PhienBanSanPham(
-                    rs.getString("MaPhienBan"),
-                    rs.getString("MaSP"),
-                    rs.getString("MauSac"),
-                    rs.getString("CongSuat"),
-                    rs.getString("Pin"),
-                    rs.getString("KetNoi"),
-                    rs.getDouble("GiaNhap"),
-                    rs.getDouble("GiaBan"),
-                    rs.getInt("SoLuongTon"));
+                        rs.getString("MaPhienBan"),
+                        rs.getString("MaSP"),
+                        rs.getString("MauSac"),
+                        rs.getString("CongSuat"),
+                        rs.getString("Pin"),
+                        rs.getString("KetNoi"),
+                        rs.getDouble("GiaNhap"),
+                        rs.getDouble("GiaBan"),
+                        rs.getInt("SoLuongTon"));
 
-                    pbsp.setTenSP(rs.getString("TenSP"));
-                    list.add(pbsp);
+                pbsp.setTenSP(rs.getString("TenSP"));
+                pbsp.setHinhAnh(rs.getString("HinhAnh"));
+
+                list.add(pbsp);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,21 +43,20 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
     public PhienBanSanPham selectById(String maPhienBan) {
         String sql = "SELECT * FROM PhienBanSP WHERE MaPhienBan = ?";
         try (Connection conn = DatabaseHelper.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maPhienBan);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return new PhienBanSanPham(
-                    rs.getString("MaPhienBan"),
-                    rs.getString("MaSP"),
-                    rs.getString("MauSac"),
-                    rs.getString("CongSuat"),
-                    rs.getString("Pin"),
-                    rs.getString("KetNoi"),
-                    rs.getDouble("GiaNhap"),
-                    rs.getDouble("GiaBan"),
-                    rs.getInt("SoLuongTon")
-                );
+                        rs.getString("MaPhienBan"),
+                        rs.getString("MaSP"),
+                        rs.getString("MauSac"),
+                        rs.getString("CongSuat"),
+                        rs.getString("Pin"),
+                        rs.getString("KetNoi"),
+                        rs.getDouble("GiaNhap"),
+                        rs.getDouble("GiaBan"),
+                        rs.getInt("SoLuongTon"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,28 +82,50 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
     // Chọn theo nhà cung cấp
     public ArrayList<PhienBanSanPham> selectByNCC(String maNCC) {
         ArrayList<PhienBanSanPham> list = new ArrayList<>();
-        String sql =  "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
-                 "JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
-                 "JOIN NCC_SanPham ncc_sp ON sp.MaSP = ncc_sp.MaSP " +
-                 "WHERE ncc_sp.MaNCC = ?";
+        String sql = "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
+                "JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
+                "JOIN NCC_SanPham ncc_sp ON sp.MaSP = ncc_sp.MaSP " +
+                "WHERE ncc_sp.MaNCC = ?";
 
         try (Connection conn = DatabaseHelper.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maNCC);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 PhienBanSanPham pb = new PhienBanSanPham(
-                    rs.getString("MaPhienBan"),
-                    rs.getString("MaSP"),
-                    rs.getString("MauSac"),
-                    rs.getString("CongSuat"),
-                    rs.getString("Pin"),
-                    rs.getString("KetNoi"),
-                    rs.getDouble("GiaNhap"),
-                    rs.getDouble("GiaBan"),
-                    rs.getInt("SoLuongTon"));
-                    pb.setTenSP(rs.getString("TenSP"));
-                    list.add(pb);
+                        rs.getString("MaPhienBan"),
+                        rs.getString("MaSP"),
+                        rs.getString("MauSac"),
+                        rs.getString("CongSuat"),
+                        rs.getString("Pin"),
+                        rs.getString("KetNoi"),
+                        rs.getDouble("GiaNhap"),
+                        rs.getDouble("GiaBan"),
+                        rs.getInt("SoLuongTon"));
+                pb.setTenSP(rs.getString("TenSP"));
+                list.add(pb);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Trong PhienBanSanPhamDAO.java
+    public ArrayList<PhienBanSanPham> selectByMaSP(String maSP) {
+        ArrayList<PhienBanSanPham> list = new ArrayList<>();
+        String sql = "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
+                "JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
+                "WHERE pb.MaSP = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maSP);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                PhienBanSanPham pb = new PhienBanSanPham(/* nạp dữ liệu như selectAll */);
+                pb.setTenSP(rs.getString("TenSP"));
+                pb.setMauSac(rs.getString("MauSac")); // Quan trọng để hiện menu chọn màu
+                list.add(pb);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -30,7 +30,10 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
     @Override
     public ArrayList<BaoHanh> selectAll() {
         ArrayList<BaoHanh> list = new ArrayList<>();
-        String sql = "SELECT * FROM BaoHanh ORDER BY NgayBatDau DESC";
+        String sql = "SELECT bh.*, " +
+                "(SELECT TinhTrang FROM ChiTietBaoHanh WHERE MaBH = bh.MaBH ORDER BY MaCTBH DESC LIMIT 1) AS TinhTrang "
+                +
+                "FROM BaoHanh bh ORDER BY bh.NgayBatDau DESC";
 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
@@ -41,14 +44,9 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
                 bh.setMaBH(rs.getString("MaBH"));
                 bh.setMaImei(rs.getString("MaImei"));
                 bh.setMaPhieuXuat(rs.getString("MaPhieuXuat"));
-
-                Date bd = rs.getDate("NgayBatDau");
-                if (bd != null)
-                    bh.setNgayBatDau(bd.toLocalDate());
-
-                Date kt = rs.getDate("NgayKetThuc");
-                if (kt != null)
-                    bh.setNgayKetThuc(kt.toLocalDate());
+                bh.setNgayBatDau(rs.getDate("NgayBatDau").toLocalDate());
+                bh.setNgayKetThuc(rs.getDate("NgayKetThuc").toLocalDate());
+                bh.setTinhTrang(rs.getString("TinhTrang"));
 
                 list.add(bh);
             }
@@ -111,10 +109,11 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
         return null;
     }
 
-    // Phương thức bổ sung để lấy thông tin chi tiết cho hiển thị
     public ArrayList<BaoHanh> selectAllWithDetails() {
         ArrayList<BaoHanh> list = new ArrayList<>();
-        String sql = "SELECT bh.*, sp.TenSP " +
+        String sql = "SELECT bh.*, sp.TenSP, " +
+                "(SELECT TinhTrang FROM ChiTietBaoHanh WHERE MaBH = bh.MaBH ORDER BY MaCTBH DESC LIMIT 1) AS TinhTrang "
+                +
                 "FROM BaoHanh bh " +
                 "LEFT JOIN ChiTietSP ctsp ON bh.MaImei = ctsp.MaImei " +
                 "LEFT JOIN PhienBanSP pb ON ctsp.MaPhienBan = pb.MaPhienBan " +
@@ -140,6 +139,7 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
                     bh.setNgayKetThuc(kt.toLocalDate());
 
                 bh.setTenSP(rs.getString("TenSP"));
+                bh.setTinhTrang(rs.getString("TinhTrang"));
 
                 list.add(bh);
             }
@@ -149,7 +149,6 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
         return list;
     }
 
-    // Kiểm tra Imei có tồn tại không
     public boolean checkImeiExists(String maImei) {
         String sql = "SELECT COUNT(*) FROM ChiTietSP WHERE MaImei = ?";
         try (Connection conn = DatabaseHelper.getConnection();

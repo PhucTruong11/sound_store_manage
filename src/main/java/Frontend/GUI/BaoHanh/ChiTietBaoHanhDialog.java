@@ -25,7 +25,7 @@ public class ChiTietBaoHanhDialog extends JDialog {
         super(parent, "Chi tiết bảo hành: " + maBH, true);
         this.maBH = maBH;
         this.chiTietBaoHanhBUS = new ChiTietBaoHanhBUS();
-        setSize(850, 450); // Tăng chiều rộng để chứa thêm cột Tên SP
+        setSize(850, 450); 
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
         getContentPane().setBackground(Color.WHITE);
@@ -46,7 +46,6 @@ public class ChiTietBaoHanhDialog extends JDialog {
         JPanel pnlMain = new JPanel(new MigLayout("fill, insets 20", "[grow]", "[grow]"));
         pnlMain.setBackground(Color.WHITE);
 
-        // Đã sửa lỗi thiếu dấu phẩy và thêm cột Tên SP
         String[] columns = { "STT", "Mã CTBH", "Mã BH", "Tên sản phẩm", "Nội dung", "Tình trạng" };
         model = new DefaultTableModel(columns, 0) {
             @Override
@@ -58,7 +57,6 @@ public class ChiTietBaoHanhDialog extends JDialog {
         tblDetails = new Table();
         tblDetails.setModel(model);
 
-        // Căn giữa dữ liệu bảng cho chuyên nghiệp
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblDetails.setDefaultRenderer(Object.class, centerRenderer);
@@ -79,9 +77,9 @@ public class ChiTietBaoHanhDialog extends JDialog {
                     STT++,
                     ctbh.getMaCTBH(),
                     ctbh.getMaBH(),
-                    ctbh.getTenSP(), // Phải đảm bảo DTO ChiTietBaoHanh có hàm getTenSP()
+                    ctbh.getTenSP(), 
                     ctbh.getNoiDung(),
-                    ctbh.getTinhTrang() // Đây là cột tình trạng bạn muốn hiển thị
+                    ctbh.getTinhTrang() 
             };
             model.addRow(row);
         }

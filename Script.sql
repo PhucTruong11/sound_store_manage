@@ -222,9 +222,10 @@ CREATE TABLE BaoHanh (
     MaBH VARCHAR(20) PRIMARY KEY, 
     MaImei VARCHAR(50), 
     MaPhieuXuat VARCHAR(20), 
-    NgayBatDau DATE DEFAULT CURRENT_DATE,
+    NgayBatDau DATE DEFAULT (CURRENT_DATE),
     NgayKetThuc DATE,
-    TrangThai BOOLEAN DEFAULT TRUE,
+    TinhTrang VARCHAR(50) DEFAULT 'Đang sửa chữa', 
+    TrangThai BOOLEAN DEFAULT TRUE, 
     FOREIGN KEY (MaImei) REFERENCES ChiTietSP(MaImei),
     FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat)
 );
@@ -233,7 +234,7 @@ CREATE TABLE ChiTietBaoHanh (
     MaCTBH VARCHAR(20) PRIMARY KEY, 
     MaBH VARCHAR(20), 
     NoiDung TEXT, 
-    TinhTrang VARCHAR(50) DEFAULT 'Còn bảo hành',
+    TinhTrang VARCHAR(50) DEFAULT 'Đang sửa chữa',
     FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH) ON DELETE CASCADE
 );
 
@@ -380,10 +381,13 @@ INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, HinhAnh, MoTa, ThoiGianBaoHanh
 ('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'sony_xm5.jpg', 'Chống ồn đỉnh cao', 12);
 
 INSERT INTO PhienBanSP (MaPhienBan, MaSP, MauSac, CongSuat, Pin, KetNoi, GiaNhap, GiaBan, SoLuongTon) VALUES 
-('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 0),
-('PB02', 'SP01', 'Đen (Black)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 0),
-('PB03', 'SP02', 'Bạc (Silver)', 'N/A', '30 Giờ', 'Bluetooth, 3.5mm', 6000000, 8490000, 0);
+('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 10),
+('PB02', 'SP01', 'Đen (Black)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 10),
+('PB03', 'SP02', 'Bạc (Silver)', 'N/A', '30 Giờ', 'Bluetooth, 3.5mm', 6000000, 8490000, 10);
 
+-- Chạy lệnh này trong MySQL để sửa tên ảnh
+UPDATE SanPham SET HinhAnh = 'marshall.jpg' WHERE MaSP = 'SP01';
+UPDATE SanPham SET HinhAnh = 'sony xm5.jpg' WHERE MaSP = 'SP02';
 -- --------------------------------------------------------
 
 INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt) VALUES 
@@ -425,11 +429,17 @@ INSERT IGNORE INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, TongTien) VALUES
 ('PX01', 'NV01', 'KH01', 8550000);
 -- --------------------------------------------------------
 
-INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc) VALUES 
-('BH01', '111222333', 'PX01', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH));
+INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc, TinhTrang) VALUES 
+('BH01', '111222333', 'PX01', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH), 'Đang sửa chữa'),
+('BH02', '444555666', 'PX01', '2026-01-10', '2027-01-10', 'Đã trả máy'),
+('BH03', '777888999', 'PX01', '2026-02-05', '2027-02-05', 'Đang sửa chữa');
+
 
 INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES 
-('CTBH01', 'BH01', 'Loa bị rè bass', 'Đang sửa chữa');
+('CTBH01', 'BH01', 'Loa bị rè bass', 'Đang sửa chữa'),
+('CTBH02', 'BH02', 'Lỗi kết nối Bluetooth chập chờn', 'Đã trả máy'),
+('CTBH03', 'BH02', 'Vệ sinh chân sạc miễn phí', 'Đã trả máy'),
+('CTBH04', 'BH03', 'Hỏng pin - Sạc không vào điện', 'Đang sửa chữa');
 
 
 CREATE TABLE NCC_SanPham (

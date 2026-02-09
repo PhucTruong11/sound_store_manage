@@ -5,33 +5,16 @@ import Backend.DTO.KhachHang;
 import java.sql.*;
 import java.util.ArrayList;
 
-<<<<<<< Updated upstream
-public class KhachHangDAO {
-
-    public ArrayList<KhachHang> selectAll() {
-        ArrayList<KhachHang> list = new ArrayList<>();
-        String sql = "SELECT c.ID, c.HoTen, c.SDT, c.DiaChi, k.TrangThai " +
-                "FROM ConNguoi c JOIN KhachHang k ON c.ID = k.ID";
-        try (Connection conn = DatabaseHelper.getConnection();
-<<<<<<< HEAD
-                Statement st = conn.createStatement();
-                ResultSet rs = st.executeQuery(sql)) {
-=======
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-=======
 public class KhachHangDAO implements DAOInterface<KhachHang> {
 
     public ArrayList<KhachHang> selectAll() {
         ArrayList<KhachHang> list = new ArrayList<>();
         String sql = "SELECT c.ID, c.HoTen, c.SDT, c.DiaChi, k.TrangThai " +
-                     "FROM ConNguoi c JOIN KhachHang k ON c.ID = k.ID " +
-                     "WHERE k.TrangThai = TRUE";
+                "FROM ConNguoi c JOIN KhachHang k ON c.ID = k.ID " +
+                "WHERE k.TrangThai = TRUE";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement st = conn.prepareStatement(sql);
                 ResultSet rs = st.executeQuery()) {
->>>>>>> Stashed changes
->>>>>>> 0f2bda6b2036b485fe7c4a1c21857db2d0b06473
             while (rs.next()) {
                 list.add(new KhachHang(
                         rs.getString("ID"),
@@ -54,21 +37,10 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, kh.getId());
             return ps.executeUpdate();
-<<<<<<< HEAD
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-=======
-<<<<<<< Updated upstream
-        } catch (Exception e) { e.printStackTrace(); }
->>>>>>> 0f2bda6b2036b485fe7c4a1c21857db2d0b06473
-        return 0;
-=======
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
->>>>>>> Stashed changes
     }
 
     public int update(KhachHang kh) {
@@ -76,20 +48,6 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
         new ConNguoiDAO().update(kh);
         String sql = "UPDATE KhachHang SET WHERE ID=?";
         try (Connection conn = DatabaseHelper.getConnection();
-<<<<<<< HEAD
-                PreparedStatement ps = conn.prepareStatement(sql)) {
-=======
-<<<<<<< Updated upstream
-             PreparedStatement ps = conn.prepareStatement(sql)) {
->>>>>>> 0f2bda6b2036b485fe7c4a1c21857db2d0b06473
-            ps.setBoolean(1, kh.isTrangThai());
-            ps.setString(2, kh.getId());
-            return ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-=======
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, kh.getId());
             return ps.executeUpdate();
@@ -97,7 +55,6 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
             e.printStackTrace();
             return 0;
         }
->>>>>>> Stashed changes
     }
 
     public int delete(String id) {
@@ -105,22 +62,6 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, id);
-<<<<<<< Updated upstream
-            int rows = ps.executeUpdate();
-            // Xóa luôn bên ConNguoi
-            new ConNguoiDAO().delete(id);
-            return rows;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-<<<<<<< HEAD
-
-    public String generateMa() {
-=======
-        public String generateMa() {
-=======
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,8 +70,6 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
     }
 
     public String generateMaKH() {
->>>>>>> Stashed changes
->>>>>>> 0f2bda6b2036b485fe7c4a1c21857db2d0b06473
         String sql = "SELECT ID FROM KhachHang ORDER BY CAST(SUBSTRING(ID, 4) AS UNSIGNED) DESC LIMIT 1";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
@@ -138,7 +77,7 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
             if (rs.next()) {
                 String lastMa = rs.getString("ID");
                 int num = Integer.parseInt(lastMa.substring(3));
-                return String.format("KH%02d", num + 1);
+                return String.format("KH%03d", num + 1);
             }
         } catch (Exception e) {
             e.printStackTrace();

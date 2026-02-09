@@ -13,6 +13,7 @@ public class PhienBanSanPham {
     private double giaBan;
     private int soLuongTon;
     private String tenSP;
+    private String hinhAnh; 
 
     public PhienBanSanPham() {
     }
@@ -61,6 +62,9 @@ public class PhienBanSanPham {
 
     public String getTenSP() { return tenSP; }
     public void setTenSP(String tenSP) { this.tenSP = tenSP; }
+
+    public String getHinhAnh() { return hinhAnh; }
+    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
 
     @Override
     public boolean equals(Object obj) {

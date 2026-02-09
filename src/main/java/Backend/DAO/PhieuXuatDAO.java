@@ -1,6 +1,7 @@
 package Backend.DAO;
 
 import Backend.DatabaseHelper;
+import Backend.DTO.ChiTietPhieuXuat;
 import Backend.DTO.PhieuXuat;
 import java.util.ArrayList;
 import java.sql.*;
@@ -95,7 +96,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             if (rs.next()) {
                 String lastMa = rs.getString("MaPhieuXuat");
                 int num = Integer.parseInt(lastMa.substring(2));
-                return String.format("PX%03d", num + 1);
+                return String.format("PX%02d", num + 1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,5 +130,47 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public boolean thanhToan(PhieuXuat px, ArrayList<ChiTietPhieuXuat> dsChiTiet) {
+        Connection conn = null;
+        try {
+            conn = DatabaseHelper.getConnection();
+            conn.setAutoCommit(false); // Bật chế độ giao dịch (Transaction)
+
+            // 1. Chèn vào bảng PhieuXuat
+            String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien) VALUES (?, ?, ?, ?, ?, ?)";
+            PreparedStatement pstPX = conn.prepareStatement(sqlPX);
+            pstPX.setString(1, px.getMaPhieuXuat());
+            pstPX.setTimestamp(2, px.getNgayXuat());
+            pstPX.setString(3, px.getMaNV());
+            pstPX.setString(4, px.getMaKH());
+            pstPX.setString(5, px.getMaKM());
+            pstPX.setDouble(6, px.getTongTien());
+            pstPX.executeUpdate();
+
+            // 2. Chèn danh sách món hàng vào ChiTietPhieuXuat
+            String sqlCT = "INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES (?, ?, ?, ?)";
+            PreparedStatement pstCT = conn.prepareStatement(sqlCT);
+            for (ChiTietPhieuXuat ct : dsChiTiet) {
+                pstCT.setString(1, ct.getMaPhieuXuat());
+                pstCT.setString(2, ct.getMaPhienBan());
+                pstCT.setInt(3, ct.getSoLuong());
+                pstCT.setDouble(4, ct.getDonGia());
+                pstCT.addBatch();
+            }
+            pstCT.executeBatch();
+
+            conn.commit(); // Hoàn tất giao dịch
+            return true;
+        } catch (Exception e) {
+            if (conn != null)
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                } // Lỗi thì hoàn tác
+            e.printStackTrace();
+            return false;
+        }
     }
 }
