@@ -21,11 +21,10 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
                         rs.getString("HoTen"),
                         rs.getString("SDT"),
                         rs.getString("DiaChi"),
-                        rs.getBoolean("TrangThai")));
+                        rs.getBoolean("TrangThai")
+                ));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
         return list;
     }
 
@@ -34,7 +33,7 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
         new ConNguoiDAO().insert(kh);
         String sql = "INSERT INTO KhachHang(ID, TrangThai) VALUES(?,TRUE)";
         try (Connection conn = DatabaseHelper.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, kh.getId());
             return ps.executeUpdate();
         } catch (Exception e) {
@@ -60,7 +59,7 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
     public int delete(String id) {
         String sql = "UPDATE KhachHang SET TrangThai=FALSE WHERE ID=?";
         try (Connection conn = DatabaseHelper.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)) {
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, id);
             return ps.executeUpdate();
         } catch (Exception e) {
@@ -72,9 +71,9 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
     public String generateMaKH() {
         String sql = "SELECT ID FROM KhachHang ORDER BY CAST(SUBSTRING(ID, 4) AS UNSIGNED) DESC LIMIT 1";
         try (Connection conn = DatabaseHelper.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql);
-                ResultSet rs = stmt.executeQuery()) {
-            if (rs.next()) {
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            if(rs.next()) {
                 String lastMa = rs.getString("ID");
                 int num = Integer.parseInt(lastMa.substring(3));
                 return String.format("KH%03d", num + 1);
