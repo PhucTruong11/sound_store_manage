@@ -14,13 +14,14 @@ public class PhienBanSanPham {
     private int soLuongTon;
     private String tenSP;
     private boolean trangThai;
+    private String hinhAnh;
 
     public PhienBanSanPham() {
     }
 
     public PhienBanSanPham(String maPhienBan, String maSP, String mauSac,
             String congSuat, String pin, String ketNoi,
-            double giaNhap, double giaBan, int soLuongTon, boolean trangThai) {
+            double giaNhap, double giaBan, int soLuongTon, boolean trangThai, String hinhAnh) {
         this.maPhienBan = maPhienBan;
         this.maSP = maSP;
         this.mauSac = mauSac;
@@ -31,6 +32,7 @@ public class PhienBanSanPham {
         this.giaBan = giaBan;
         this.soLuongTon = soLuongTon;
         this.trangThai = trangThai;
+        this.hinhAnh = hinhAnh;
     }
 
     // Getters & Setters
@@ -122,8 +124,13 @@ public class PhienBanSanPham {
         this.trangThai = trangThai;
     }
 
-    public String getHinhAnh() { return hinhAnh; }
-    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
+    public String getHinhAnh() {
+        return hinhAnh;
+    }
+
+    public void setHinhAnh(String hinhAnh) {
+        this.hinhAnh = hinhAnh;
+    }
 
     @Override
     public boolean equals(Object obj) {
