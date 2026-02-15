@@ -9,36 +9,38 @@ import java.sql.ResultSet;
 
 public class TaiKhoanDAO {
 
-    public TaiKhoan login(String username, String passwordHash) {
-
+    public TaiKhoan login(String username, String password) {
         TaiKhoan tk = null;
 
+        // Câu lệnh SQL khớp chính xác với bảng TaiKhoan trong file SQL của bạn
         String sql = """
-            SELECT u.id, u.username, u.password_hash, u.role, u.status, u.connguoi_id
-            FROM Users u
-            WHERE u.username = ? AND u.password_hash = ? AND u.status = 1
+            SELECT TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai
+            FROM TaiKhoan
+            WHERE TenDangNhap = ? AND MatKhau = ? AND TrangThai = 1
         """;
 
         try (
-                Connection con = DatabaseHelper.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)
+            Connection con = DatabaseHelper.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql)
         ) {
             ps.setString(1, username);
-            ps.setString(2, passwordHash);
+            ps.setString(2, password); // Nếu sau này dùng BCrypt, logic này sẽ thay đổi một chút
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
                 tk = new TaiKhoan();
-                tk.setId(rs.getInt("id"));
-                tk.setUsername(rs.getString("username"));
-                tk.setPasswordHash(rs.getString("password_hash"));
-                tk.setRole(rs.getString("role"));
-                tk.setStatus(rs.getInt("status"));
-                tk.setConNguoiId(rs.getString("connguoi_id"));
+                // Gán dữ liệu dựa trên tên cột trong Database của bạn
+                tk.setUsername(rs.getString("TenDangNhap"));
+                tk.setPassword(rs.getString("MatKhau"));
+                tk.setMaNV(rs.getString("MaNV"));
+                tk.setMaNhomQuyen(rs.getString("MaNhomQuyen"));
+                // Chuyển đổi Boolean từ DB sang int/boolean tùy vào DTO của bạn
+                tk.setStatus(rs.getBoolean("TrangThai") ? 1 : 0);
             }
 
         } catch (Exception e) {
+            System.err.println("Lỗi đăng nhập: " + e.getMessage());
             e.printStackTrace();
         }
 
