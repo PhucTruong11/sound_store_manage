@@ -122,6 +122,7 @@ CREATE TABLE PhienBanSP (
     GiaBan DOUBLE,
     SoLuongTon INT DEFAULT 0,
     TrangThai BOOLEAN DEFAULT TRUE,
+    HinhAnh VARCHAR(255),
     FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
 );
 
@@ -378,19 +379,32 @@ INSERT INTO LoaiSP VALUES
 
 INSERT INTO HangSX VALUES 
 ('H01', 'Marshall', 'Anh'),
-('H02', 'Sony', 'Nhật');
+('H02', 'Sony', 'Nhật'),
+('H03', 'JBL', 'Mỹ');
 
-INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, MoTa, ThoiGianBaoHanh) VALUES 
-('SP01', 'Marshall Stanmore III', 'L01', 'H01', 'Loa decor cực đẹp', 12),
-('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'Chống ồn đỉnh cao', 12);
+INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, MoTa, ThoiGianBaoHanh, TrangThai, HinhAnh) VALUES 
+('SP01', 'Marshall Stanmore III', 'L01', 'H01', 'Loa decor cực đẹp', 12, TRUE, 'marshall.jpg'),
+('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'Chống ồn đỉnh cao', 12, TRUE, 'sony_xm5.jpg'),
+('SP03', 'JBL Boombox 3', 'L01', 'H03', 'Loa di động công suất lớn, kháng nước IP67', 12, TRUE, 'jbl_boombox3.jpg'),
+('SP04', 'Marshall Emberton II', 'L01', 'H01', 'Loa cầm tay nhỏ gọn, pin 30h', 12, TRUE, 'marshall_emberton_2.jpg'),
+('SP05', 'Marshall Middleton', 'L01', 'H01', 'Loa Bluetooth 4 loa cực mạnh', 12, TRUE, 'marshall_middleton.jpg'),
+('SP06', 'Sony SRS-XE300', 'L01', 'H02', 'Loa chống nước, âm thanh rộng', 12, TRUE, 'sony_xe300.jpg'),
+('SP07', 'Sony WH-CH720N', 'L02', 'H02', 'Tai nghe chống ồn giá rẻ', 12, TRUE, 'sony_ch720n.jpg'),
+('SP08', 'JBL Charge 5', 'L01', 'H03', 'Loa Bluetooth kiêm sạc dự phòng', 12, TRUE, 'jbl_charge5.jpg'),
+('SP09', 'JBL PartyBox Encore', 'L01', 'H03', 'Loa kèm 2 Micro hát karaoke', 12, TRUE, 'jbl_encore.jpg'),
+('SP10', 'JBL Flip 6', 'L01', 'H03', 'Loa di động âm thanh 2 đường tiếng', 12, TRUE, 'jbl_flip6.jpg');
 
-INSERT INTO PhienBanSP (MaPhienBan, MaSP, MauSac, CongSuat, Pin, KetNoi, GiaNhap, GiaBan, SoLuongTon) VALUES 
-('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 2),
-('PB02', 'SP01', 'Đen (Black)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 2);
-
--- Chạy lệnh này trong MySQL để sửa tên ảnh
-UPDATE SanPham SET HinhAnh = 'marshall.jpg' WHERE MaSP = 'SP01';
-UPDATE SanPham SET HinhAnh = 'sony xm5.jpg' WHERE MaSP = 'SP02';
+INSERT INTO PhienBanSP VALUES 
+('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 2, TRUE, 'marshall.jpg'),
+('PB02', 'SP02', 'Đen (Black)', 'N/A', '30h', 'Bluetooth 5.2', 7000000, 9500000, 2, TRUE, 'sony_xm5.jpg'),
+('PB03', 'SP03', 'Đen (Black)', '180W', '24h', 'Bluetooth 5.3', 8500000, 11900000, 5, TRUE, 'jbl_boombox3.jpg'),
+('PB04', 'SP04', 'Đen Brass', '20W', '30h', 'Bluetooth 5.1', 3200000, 4500000, 10, TRUE, 'marshall_emberton_2.jpg'),
+('PB05', 'SP05', 'Đen (Black)', '60W', '20h', 'Bluetooth 5.1', 6500000, 8500000, 5, TRUE, 'marshall_middleton.jpg'),
+('PB06', 'SP06', 'Xám (Grey)', '30W', '24h', 'Bluetooth 5.2', 2800000, 3900000, 8, TRUE, 'sony_xe300.jpg'),
+('PB07', 'SP07', 'Xanh (Blue)', 'N/A', '35h', 'Bluetooth 5.2', 1800000, 2500000, 15, TRUE, 'sony_ch720n.jpg'),
+('PB08', 'SP08', 'Đen (Black)', '40W', '20h', 'Bluetooth 5.1', 3000000, 3900000, 12, TRUE, 'jbl_charge5.jpg'),
+('PB09', 'SP09', 'Đen (Black)', '100W', '10h', 'Bluetooth 5.1', 5800000, 7500000, 4, TRUE, 'jbl_encore.jpg'),
+('PB10', 'SP10', 'Đỏ (Red)', '20W', '12h', 'Bluetooth 5.1', 2200000, 2900000, 20, TRUE, 'jbl_flip6.jpg');
 -- --------------------------------------------------------
 
 INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt) VALUES 
@@ -408,6 +422,7 @@ INSERT INTO ChiTietPhieuNhap (MaPhieuNhap, MaPhienBan, SoLuong, DonGia) VALUES
 INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
 ('111222333', 'PB01', 'PN01', 'Trong kho'),
 ('444555666', 'PB01', 'PN01', 'Trong kho'),
+('777888999', 'PB01', 'PN01', 'Trong kho'), 
 ('123123123', 'PB02', 'PN01', 'Trong kho'),
 ('456456456', 'PB02', 'PN01', 'Trong kho'),
 ('777888999', 'PB02', 'PN01', 'Đã bán');
@@ -452,4 +467,8 @@ CREATE TABLE NCC_SanPham (
     FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
 );
 
-INSERT INTO NCC_SanPham VALUES ('NCC01', 'SP01');
+INSERT INTO NCC_SanPham VALUES ('NCC01', 'SP01'), 
+('NCC03', 'SP03'),('NCC01', 'SP04'), ('NCC01', 'SP05'), 
+('NCC02', 'SP06'), ('NCC02', 'SP07'), ('NCC03', 'SP08'), 
+('NCC03', 'SP09'), ('NCC03', 'SP10');
+
