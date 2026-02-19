@@ -424,8 +424,8 @@ INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES
 ('444555666', 'PB01', 'PN01', 'Trong kho'),
 ('777888999', 'PB01', 'PN01', 'Trong kho'), 
 ('123123123', 'PB02', 'PN01', 'Trong kho'),
-('456456456', 'PB02', 'PN01', 'Trong kho');
-
+('456456456', 'PB02', 'PN01', 'Trong kho'),
+('777888999', 'PB02', 'PN01', 'Đã bán');
 -- --------------------------------------------------------
 
 INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc) VALUES 
