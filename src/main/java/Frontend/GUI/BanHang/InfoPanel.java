@@ -25,6 +25,13 @@ class InfoPanel extends JPanel {
         setBackground(Color.WHITE);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        this.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10) // Padding 10px mỗi bên là vừa đẹp
+        ));
+
+        this.putClientProperty("FlatLaf.style", "arc: 15");
+
         JLabel lblImg = new JLabel();
         try {
             String fullPath = "images/product/" + imgPath;

@@ -22,17 +22,37 @@ public class PhieuXuatBUS {
         return pxDAO.search(keyword);
     }
 
+    public ArrayList<PhieuXuat> selectAll() {
+        return pxDAO.selectAll();
+    }
+
     public String getNewMaPhieu() {
         return pxDAO.generateMaPhieuXuat();
     }
 
     public boolean thanhToan(PhieuXuat px, ArrayList<ChiTietPhieuXuat> dsCT) {
-        // Insert phiếu nhập
-        if (pxDAO.insert(px) > 0) {
-            // Insert danh sách chi tiết
-            // Các Trigger trg_UpdateStock, trg_CalcThanhTien, trg_UpdateTongTien sẽ chạy
-            return ctpxDAO.insert(dsCT) > 0;
+        return pxDAO.thanhToan(px, dsCT);
+    }
+
+    public ArrayList<PhieuXuat> filter(java.util.Date start, java.util.Date end, String maNV, double min, double max) {
+        ArrayList<PhieuXuat> all = pxDAO.selectAll();
+        ArrayList<PhieuXuat> result = new ArrayList<>();
+
+        for (PhieuXuat px : all) {
+            boolean matchDate = true;
+            if (start != null && px.getNgayXuat().before(start))
+                matchDate = false;
+            if (end != null && px.getNgayXuat().after(end))
+                matchDate = false;
+
+            boolean matchNV = maNV.equals("Tất cả") || px.getMaNV().equalsIgnoreCase(maNV);
+
+            boolean matchPrice = px.getTongTien() >= min && px.getTongTien() <= max;
+
+            if (matchDate && matchNV && matchPrice) {
+                result.add(px);
+            }
         }
-        return false;
+        return result;
     }
 }

@@ -23,16 +23,23 @@ public class ProductGrid extends JPanel {
     public ProductGrid(BanHangSidebar sidebar, PaginationPanel pagination) {
         this.sidebar = sidebar;
         this.pagination = pagination;
+
+        if (this.pagination != null) {
+            this.pagination.setOnPageChange(this::displayPage);
+        }
+
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        mainPanel = new JPanel(new MigLayout("ins 10, wrap 3, fillx",
-                "[fill, grow]15[fill, grow]15[fill, grow]", "[]15[]"));
+        mainPanel = new JPanel(new MigLayout("ins 5, wrap 3, fillx",
+                "[fill, grow]10[fill, grow]10[fill, grow]", "[]10[]"));
         mainPanel.setBackground(Color.WHITE);
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         add(scrollPane, BorderLayout.CENTER);
 
@@ -43,7 +50,6 @@ public class ProductGrid extends JPanel {
         PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
         this.fullList = pbBUS.getAllPhienBanSanPham();
         updatePagination();
-        displayPage(1);
     }
 
     public void loadSearchData(String text) {
