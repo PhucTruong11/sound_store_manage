@@ -4,6 +4,7 @@ import Backend.DatabaseHelper;
 import Backend.DTO.PhieuNhap;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
 
@@ -123,7 +124,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
 
         if(!maNCC.equals("All")) sql.append(" AND MaNCC = ?");
         if(from != null) sql.append(" AND NgayNhap >= ?");
-        if(to != null) sql.append(" NgayNhap <= ?");
+        if(to != null) sql.append(" AND NgayNhap <= ?");
         if(minPrice >= 0) sql.append(" AND TongTien >= ?");
         if(maxPrice > 0) sql.append(" AND TongTien <= ?");
 
@@ -132,18 +133,18 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
             int index = 1;
-            if (!maNCC.equals("All")) stmt.setString(index++, maNCC);
+            if(!maNCC.equals("All")) stmt.setString(index++, maNCC);
             if (from != null) stmt.setTimestamp(index++, new Timestamp(from.getTime()));
             if (to != null) stmt.setTimestamp(index++, new Timestamp(to.getTime()));
             if (minPrice >= 0) stmt.setLong(index++, minPrice);
             if (maxPrice > 0) stmt.setLong(index++, maxPrice);
-
+             
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-            list.add(new PhieuNhap(rs.getString(1), rs.getTimestamp(2), rs.getString(3),
+                list.add(new PhieuNhap(rs.getString(1), rs.getTimestamp(2), rs.getString(3),
                                    rs.getString(4), rs.getDouble(5), rs.getBoolean(6)));
-             }
-        } catch (Exception e) { e.printStackTrace(); }
+            }
+        } catch (Exception e) {e.printStackTrace(); }
         return list;
     }
 }

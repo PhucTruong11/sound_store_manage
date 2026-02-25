@@ -10,7 +10,6 @@ import Backend.DTO.NhaCungCap;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import java.awt.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -57,14 +56,15 @@ public class PhieuNhapSidebar extends JPanel{
         }
         cbxNhaCungCap.setModel(model);
 
-        cbxNhaCungCap.addActionListener(e -> {
-            NhaCungCap selected = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
-            if(selected != null) {
-                table.loadDataByNCC(selected.getMaNCC());
-            }
-        });
+        cbxNhaCungCap.addActionListener(e -> { onFilterChange(); });
 
         add(cbxNhaCungCap, "h 35!");
+    }
+
+    private void onFilterChange() {
+        NhaCungCap ncc = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
+        String maNCC = (ncc != null) ? ncc.getMaNCC() : "All";
+        table.filter(maNCC, dateFrom.getDate(), dateTo.getDate(), txtMinPrice.getText(), txtMaxPrice.getText());
     }
 
     private void initDate() {
@@ -83,6 +83,13 @@ public class PhieuNhapSidebar extends JPanel{
         dateTo.setDateFormatString("dd/MM/yyyy");
         dateTo.setDate(new Date());
         add(dateTo, "h 35!");
+
+        dateFrom.addPropertyChangeListener(e -> {
+            if("date".equals(e.getPropertyName())) onFilterChange();
+        });
+        dateTo.addPropertyChangeListener(e -> {
+            if("date".equals(e.getPropertyName())) onFilterChange();
+        });
     }
 
     private void initPrice() {
@@ -92,5 +99,17 @@ public class PhieuNhapSidebar extends JPanel{
         add(new JLabel("Đến số tiền (VNĐ):"), "gaptop 10");
         txtMaxPrice = new JTextField();
         add(txtMaxPrice, "h 35!");
+
+        javax.swing.event.DocumentListener priceListener = new javax.swing.event.DocumentListener() {
+        @Override
+        public void insertUpdate(javax.swing.event.DocumentEvent e) { onFilterChange(); }
+        @Override
+        public void removeUpdate(javax.swing.event.DocumentEvent e) { onFilterChange(); }
+        @Override
+        public void changedUpdate(javax.swing.event.DocumentEvent e) { onFilterChange(); }
+        };
+
+        txtMinPrice.getDocument().addDocumentListener(priceListener);
+        txtMaxPrice.getDocument().addDocumentListener(priceListener);
     }
 }
