@@ -108,9 +108,20 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
     private void updatePreview() {
         int row = tblDetails.getSelectedRow();
         if (row != -1) {
-            txtImeiList.setText("Hệ thống sẽ liệt kê các mã IMEI vừa tạo tự động tại đây...");
-            
-            // lblImage.setIcon(...); // Load ảnh từ folder dựa vào dữ liệu SanPham
+            String maPhienBan = model.getValueAt(row, 1).toString();
+
+            ArrayList<String> dsImei = ctBUS.getImeisByDetails(maHD, maPhienBan);
+
+            StringBuilder sb = new StringBuilder();
+            if(dsImei.isEmpty()) {
+                sb.append("Không tìm thấy mã IMEI cho sản phẩm này.");
+            } else {
+                for (int i = 0; i < dsImei.size(); i++) {
+                    sb.append(i + 1).append(". ").append(dsImei.get(i)).append("\n");
+                }
+            }
+            txtImeiList.setText(sb.toString());
+            txtImeiList.setCaretPosition(0);
         }
     }
 
