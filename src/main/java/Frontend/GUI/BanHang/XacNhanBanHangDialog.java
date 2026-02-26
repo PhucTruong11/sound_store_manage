@@ -1,6 +1,7 @@
 package Frontend.GUI.BanHang;
 
 import Frontend.Compoent.Theme;
+import Frontend.GUI.BaoHanh.BaoHanhTable;
 import Frontend.GUI.PhieuXuat.PhieuXuatTable;
 import Frontend.Compoent.CustomButton;
 import Frontend.Compoent.Table;
@@ -23,12 +24,14 @@ public class XacNhanBanHangDialog extends JDialog {
     private JLabel lblTongSL, lblTongTien;
     private String maKH;
     private PhieuXuatTable phieuXuatTable;
+    private BaoHanhTable baoHanhTable;
 
     public XacNhanBanHangDialog(JFrame parent, DefaultTableModel sourceModel, String maKH,
-            PhieuXuatTable phieuXuatTable) {
+            PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable) {
         super(parent, "Xác nhận hóa đơn bán hàng", true);
         this.maKH = maKH;
         this.phieuXuatTable = phieuXuatTable;
+        this.baoHanhTable = baoHanhTable;
         setLayout(new MigLayout("fill, insets 20", "[grow]", "[][grow][]"));
         setSize(800, 500);
         setLocationRelativeTo(parent);
@@ -132,12 +135,23 @@ public class XacNhanBanHangDialog extends JDialog {
                 }
 
                 if (pxBUS.thanhToan(phieuXuat, dsChiTiet)) {
-                    JOptionPane.showMessageDialog(this, "Bán hàng thành công! Mã hóa đơn: " + maPX);
+                    JOptionPane.showMessageDialog(this,
+                            "Bán hàng thành công!\n" +
+                                    "Mã hóa đơn: " + maPX + "\n" +
+                                    "Hệ thống đã tự động kích hoạt bảo hành cho các thiết bị.");
 
                     if (this.phieuXuatTable != null) {
                         this.phieuXuatTable.loadData("");
                     }
+
+                    if (this.baoHanhTable != null) {
+                        this.baoHanhTable.loadData();
+                    }
                     dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Thanh toán thất bại! Vui lòng kiểm tra lại số lượng IMEI trong kho.",
+                            "Lỗi xử lý", JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

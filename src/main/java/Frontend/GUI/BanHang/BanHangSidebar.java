@@ -1,7 +1,9 @@
 package Frontend.GUI.BanHang;
 
 import Frontend.Compoent.Theme;
+import Frontend.GUI.BaoHanh.BaoHanhTable;
 import Frontend.GUI.Nhaphang.XacNhanNhapHangDialog;
+import Frontend.GUI.PhieuXuat.PhieuXuatTable;
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
 
@@ -17,6 +19,8 @@ public class BanHangSidebar extends JPanel {
     private JTable tblBan;
     private DefaultTableModel modelBan;
     private JComboBox<String> cbxNhanVien;
+    private PhieuXuatTable phieuXuatTable;
+    private BaoHanhTable baoHanhTable;
 
     private String currentMa = "";
     private String currentGia = "";
@@ -24,7 +28,9 @@ public class BanHangSidebar extends JPanel {
     private String maKHSelected = "";
     private String currentMauSac = "";
 
-    public BanHangSidebar() {
+    public BanHangSidebar(PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable) {
+        this.phieuXuatTable = phieuXuatTable;
+        this.baoHanhTable = baoHanhTable;
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(280, 0));
@@ -120,7 +126,13 @@ public class BanHangSidebar extends JPanel {
             }
 
             JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-            XacNhanBanHangDialog dialog = new XacNhanBanHangDialog(parent, modelBan, maKHSelected, null);
+            XacNhanBanHangDialog dialog = new XacNhanBanHangDialog(
+                    parent,
+                    modelBan,
+                    maKHSelected,
+                    this.phieuXuatTable, 
+                    this.baoHanhTable 
+            );
             dialog.setVisible(true);
         });
         add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");
