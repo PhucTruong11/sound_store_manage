@@ -121,4 +121,48 @@ public class ChiTietSPDAO implements DAOInterface<ChiTietSP> {
             }
             return 0;
         }
+
+    public boolean checkImeiExists(String imei) {
+        String sql = "SELECT 1 FROM ChiTietSP WHERE MaImei = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, imei);
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) { e.printStackTrace();}
+        return false;
+    }
+
+    public void insertImei(String imei, String maPB, String maPN) {
+        String sql = "INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang, TrangThai) VALUES (?, ?, ?, ?, TRUE)";
+        try (Connection conn = DatabaseHelper.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, imei);
+            stmt.setString(2, maPB);
+            stmt.setString(3, maPN);
+            stmt.setString(4, "Trong kho");
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<String> getImeisByDetails(String maPhieuNhap, String maPhienBan) {
+        ArrayList<String> list = new ArrayList<>();
+        String sql = "SELECT MaImei FROM ChiTietSP WHERE MaPhieuNhap = ? AND MaPhienBan = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maPhieuNhap);
+            stmt.setString(2, maPhienBan);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    list.add(rs.getString("MaImei"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 }

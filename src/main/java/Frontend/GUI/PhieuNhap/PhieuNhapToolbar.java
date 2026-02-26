@@ -26,6 +26,14 @@ public class PhieuNhapToolbar extends JPanel{
         add(btnPdf, "w 105!, h 35!");
         add(btnExcel, "w 105!, h 35!");
 
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                String query = txtSearch.getText().trim();
+                table.loadDataBySearch(query);
+            }
+        });
+
         btnPdf.addActionListener(e -> {
             Frontend.Compoent.XuatPDF.xuat(table.getTable(), "DANH SÁCH PHIẾU NHẬP HÀNG");
         });

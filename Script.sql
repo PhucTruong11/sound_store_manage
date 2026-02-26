@@ -153,6 +153,14 @@ CREATE TABLE NhaCungCap (
     TrangThai BOOLEAN DEFAULT TRUE
 );
 
+CREATE TABLE NCC_SanPham (
+    MaNCC VARCHAR(20),
+    MaSP VARCHAR(20),
+    PRIMARY KEY (MaNCC, MaSP),
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
+);
+
 CREATE TABLE PhieuNhap (
     MaPhieuNhap VARCHAR(20) PRIMARY KEY,
     NgayNhap DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -428,24 +436,8 @@ INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES
 ('840100003', 'PB01', 'PN01', 'Trong kho'),
 ('123123123', 'PB02', 'PN01', 'Trong kho'),
 ('456456456', 'PB02', 'PN01', 'Trong kho'),
-('222111003', 'PB02', 'PN01', 'Trong kho'),
-('222111004', 'PB02', 'PN01', 'Trong kho'),
-('222111005', 'PB02', 'PN01', 'Trong kho'),
-('222111006', 'PB02', 'PN01', 'Trong kho'),
-('222111007', 'PB02', 'PN01', 'Trong kho'),
-('222111008', 'PB02', 'PN01', 'Trong kho'),
-('222111009', 'PB02', 'PN01', 'Trong kho'),
-('222111010', 'PB02', 'PN01', 'Trong kho'),
-('333111001', 'PB03', 'PN01', 'Trong kho'),
-('333111002', 'PB03', 'PN01', 'Trong kho'),
-('333111003', 'PB03', 'PN01', 'Trong kho'),
-('333111004', 'PB03', 'PN01', 'Trong kho'),
-('333111005', 'PB03', 'PN01', 'Trong kho'),
-('333111006', 'PB03', 'PN01', 'Trong kho'),
-('333111007', 'PB03', 'PN01', 'Trong kho'),
-('333111008', 'PB03', 'PN01', 'Trong kho'),
-('333111009', 'PB03', 'PN01', 'Trong kho'),
-('333111010', 'PB03', 'PN01', 'Trong kho');
+('999888777', 'PB02', 'PN01', 'Đã bán');
+-- ------------------------------------------------------
 
 INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc) VALUES 
 ('KM01', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31');
@@ -493,15 +485,6 @@ INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES
 ('CTBH07', 'BH05', 'Hỏng da đệm tai (Earpads)', 'Đang sửa chữa'),
 ('CTBH08', 'BH06', 'Loa không lên nguồn', 'Đang sửa chữa'),
 ('CTBH09', 'BH06', 'Kiểm tra pin và mạch sạc', 'Đang sửa chữa');
-
-
-CREATE TABLE NCC_SanPham (
-    MaNCC VARCHAR(20),
-    MaSP VARCHAR(20),
-    PRIMARY KEY (MaNCC, MaSP),
-    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
-    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
-);
 
 INSERT INTO NCC_SanPham VALUES ('NCC01', 'SP01'), 
 ('NCC03', 'SP03'),('NCC01', 'SP04'), ('NCC01', 'SP05'), 

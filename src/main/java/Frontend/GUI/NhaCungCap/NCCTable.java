@@ -9,6 +9,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class NCCTable extends JPanel {
@@ -74,6 +76,20 @@ public class NCCTable extends JPanel {
         scrollPane = new JScrollPane(tbl);
         scrollPane.setBorder(null);
         add(scrollPane, "grow");
+
+        tbl.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount() == 2) {
+                    int row = tbl.getSelectedRow();
+                    String ma = tbl.getValueAt(row, 1).toString();
+                    String ten = tbl.getValueAt(row, 2).toString();
+
+                    JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(NCCTable.this);
+                    new NCCGanSPDialog(parent, ma, ten).setVisible(true);
+                }
+            }
+        });
     }
 
     public void loadData() {
