@@ -153,6 +153,14 @@ CREATE TABLE NhaCungCap (
     TrangThai BOOLEAN DEFAULT TRUE
 );
 
+CREATE TABLE NCC_SanPham (
+    MaNCC VARCHAR(20),
+    MaSP VARCHAR(20),
+    PRIMARY KEY (MaNCC, MaSP),
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
+);
+
 CREATE TABLE PhieuNhap (
     MaPhieuNhap VARCHAR(20) PRIMARY KEY,
     NgayNhap DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -457,15 +465,6 @@ INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES
 ('CTBH02', 'BH02', 'Lỗi kết nối Bluetooth chập chờn', 'Đã trả máy'),
 ('CTBH03', 'BH02', 'Vệ sinh chân sạc miễn phí', 'Đã trả máy'),
 ('CTBH04', 'BH03', 'Hỏng pin - Sạc không vào điện', 'Đang sửa chữa');
-
-
-CREATE TABLE NCC_SanPham (
-    MaNCC VARCHAR(20),
-    MaSP VARCHAR(20),
-    PRIMARY KEY (MaNCC, MaSP),
-    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
-    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
-);
 
 INSERT INTO NCC_SanPham VALUES ('NCC01', 'SP01'), 
 ('NCC03', 'SP03'),('NCC01', 'SP04'), ('NCC01', 'SP05'), 
