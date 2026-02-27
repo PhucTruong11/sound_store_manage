@@ -183,7 +183,8 @@ CREATE TABLE KhuyenMai (
     DieuKienGiam DOUBLE,  -- Giá trị đơn tối thiểu
     PhanTramGiam DOUBLE, 
     NgayBatDau DATE, 
-    NgayKetThuc DATE 
+    NgayKetThuc DATE,
+    TrangThai INT DEFAULT 1,
 );
 
 CREATE TABLE PhieuXuat (
