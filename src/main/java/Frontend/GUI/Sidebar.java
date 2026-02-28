@@ -14,6 +14,7 @@ import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
 import Frontend.GUI.SanPham.QuanlyamthanhPanel;
 import Frontend.GUI.BanHang.BanHangPanel;
 import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
+import Frontend.GUI.KhuyenMai.MainKhuyenMai;
 import Frontend.GUI.BaoHanh.BaoHanhPanel;
 import Frontend.GUI.NhaCungCap.MainHienThiNCC;
 import Frontend.GUI.NhanVien.FromHienThiNV;
@@ -74,7 +75,7 @@ public class Sidebar extends JPanel {
                     parent.setPage(new FromHienThiKhachHang());
                     break;
                 case "Khuyến mãi":
-                parent.setPage(new KhuyenMaiPanel());
+                parent.setPage(new MainKhuyenMai());
                 break;
                 case "Bảo hành":
                     parent.setPage(new BaoHanhPanel());

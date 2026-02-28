@@ -376,9 +376,8 @@ INSERT INTO KhachHang (ID) VALUES
 ('KH02');
 
 INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNV, MaNhomQuyen) VALUES 
-('admin', '123456', 'NV01', 'NQ01'),
-('kho', '123456', 'NV02', 'NQ03');
-
+('admin', SHA2('123456', 256), 'NV01', 'NQ01'),
+('kho', SHA2('123456', 256), 'NV02', 'NQ03');
 -- --------------------------------------------------------
 
 INSERT INTO LoaiSP VALUES 
