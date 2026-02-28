@@ -9,7 +9,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PhieuNhapToolbar extends JPanel{
+    private PhieuNhapTable table;
+
     public PhieuNhapToolbar(PhieuNhapTable table) {
+        this.table = table;
         setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC );
@@ -22,6 +25,14 @@ public class PhieuNhapToolbar extends JPanel{
         add(txtSearch, "growx, h 35!");
         add(btnPdf, "w 105!, h 35!");
         add(btnExcel, "w 105!, h 35!");
+
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                String query = txtSearch.getText().trim();
+                table.loadDataBySearch(query);
+            }
+        });
 
         btnPdf.addActionListener(e -> {
             Frontend.Compoent.XuatPDF.xuat(table.getTable(), "DANH SÁCH PHIẾU NHẬP HÀNG");

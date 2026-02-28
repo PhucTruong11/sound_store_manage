@@ -1,17 +1,5 @@
 package Frontend.GUI.BaoHanh;
 
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Cell;
-
-import org.apache.poi.ss.usermodel.CellStyle;
-// import org.apache.poi.ss.usermodel.Font;
-
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-import java.io.FileOutputStream;
-import java.io.File;
 import Backend.DTO.BaoHanh;
 import Backend.BUS.BaoHanhBUS;
 import Frontend.Compoent.Table;
@@ -19,6 +7,7 @@ import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -30,30 +19,43 @@ public class BaoHanhTable extends JPanel {
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
     private BaoHanhBUS baoHanhBUS = new BaoHanhBUS();
+    private JComboBox<String> cboStatus;
+    private TableRowSorter<DefaultTableModel> sorter;
+    private String currentKeyword = "";
 
     public BaoHanhTable() {
         setLayout(new MigLayout("wrap 1, fill, insets 10", "[grow]", "[]15[grow]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: 20");
 
-        initFilterHeader();
+        initHeader();
         initTable();
+
         loadData();
-        addTableEvents(); // Sự kiện double-click để xem chi tiết
+        addTableEvents();
     }
 
-    private void initFilterHeader() {
-        JPanel pnlHeader = new JPanel(new MigLayout("insets 10", "[]push[]"));
+    private void initHeader() {
+        JPanel pnlHeader = new JPanel(new MigLayout("insets 10, gapx 5", "[]push[]"));
         pnlHeader.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
-        JLabel lblTitle = new JLabel("Danh sách Bảo hành");
+        JLabel lblTitle = new JLabel("Bảo hành");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
+        cboStatus = new JComboBox<>(new String[] {
+                "Tất cả trạng thái", "Đang sửa chữa", "Đã trả máy"
+        });
+        cboStatus.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+
+        cboStatus.addActionListener(e -> applyFilters());
+
         pnlHeader.add(lblTitle);
+        pnlHeader.add(cboStatus, "w 160!, h 35!");
         add(pnlHeader, "growx");
     }
 
     private void initTable() {
-        String[] colums = { "STT", "Mã bảo hành", "Mã Imei", "Mã phiếu xuất", "Ngày bắt đầu", "Ngày kết thúc" };
+        String[] colums = { "STT", "Mã bảo hành", "Mã Imei", "Mã phiếu xuất", "Ngày bắt đầu", "Ngày kết thúc",
+                "Tình trạng" };
         tblModel = new DefaultTableModel(colums, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -63,6 +65,13 @@ public class BaoHanhTable extends JPanel {
 
         tbl = new Table();
         tbl.setModel(tblModel);
+
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
+
+        tbl.getColumnModel().getColumn(6).setMinWidth(0);
+        tbl.getColumnModel().getColumn(6).setMaxWidth(0);
+        tbl.getColumnModel().getColumn(6).setPreferredWidth(0);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -77,6 +86,29 @@ public class BaoHanhTable extends JPanel {
         renderTable(baoHanhBUS.getAllBaoHanh());
     }
 
+    public void applyFilters() {
+        String status = cboStatus.getSelectedItem().toString();
+        String keyword = currentKeyword.toLowerCase();
+
+        sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                String maBH = entry.getStringValue(1).toLowerCase();
+                String imei = entry.getStringValue(2).toLowerCase();
+                String trangThai = entry.getStringValue(6);
+
+                boolean matchSearch = keyword.isEmpty()
+                        || maBH.contains(keyword)
+                        || imei.contains(keyword);
+
+                boolean matchStatus = status.equals("Tất cả trạng thái")
+                        || trangThai.equalsIgnoreCase(status);
+
+                return matchSearch && matchStatus;
+            }
+        });
+    }
+
     private void renderTable(ArrayList<BaoHanh> list) {
         tblModel.setRowCount(0);
         int stt = 1;
@@ -87,17 +119,27 @@ public class BaoHanhTable extends JPanel {
                     bh.getMaImei(),
                     bh.getMaPhieuXuat(),
                     bh.getNgayBatDau(),
-                    bh.getNgayKetThuc()
+                    bh.getNgayKetThuc(),
+                    bh.getTinhTrang()
             };
             tblModel.addRow(row);
         }
+    }
+
+    public JTable getTbl() {
+        return tbl;
+    }
+
+    public void loadDataBySearch(String query) {
+        this.currentKeyword = query.trim();
+        applyFilters();
     }
 
     private void addTableEvents() {
         tbl.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Nhấn đúp chuột để xem chi tiết
+                if (e.getClickCount() == 2) {
                     int row = tbl.getSelectedRow();
                     if (row != -1) {
                         String maBH = tbl.getValueAt(row, 1).toString();
@@ -108,21 +150,5 @@ public class BaoHanhTable extends JPanel {
                 }
             }
         });
-    }
-
-    public JTable getTbl() {
-        return tbl;
-    }
-
-    public void loadDataBySearch(String query) {
-        ArrayList<BaoHanh> list = baoHanhBUS.getAllBaoHanh();
-        ArrayList<BaoHanh> result = new ArrayList<>();
-        String k = query.toLowerCase();
-        for (BaoHanh bh : list) {
-            if (bh.getMaBH().toLowerCase().contains(k) || bh.getMaImei().contains(k)) {
-                result.add(bh);
-            }
-        }
-        renderTable(result);
     }
 }

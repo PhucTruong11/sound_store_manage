@@ -87,8 +87,10 @@ public class LoginFrame extends JFrame {
             return;
         }
 
-        // --- GỌI XỬ LÝ THỰT TẾ TỪ DATABASE ---
-        TaiKhoan tk = taiKhoanBUS.login(username, password);
+        // MOCK: đăng nhập thành công nếu username = admin / password = 123
+        if (username.equals("admin") && password.equals("123456")) {
+            JOptionPane.showMessageDialog(this,
+                    "Đăng nhập thành công");
 
         if (tk != null) {
             JOptionPane.showMessageDialog(this, "Đăng nhập thành công! Chào " + tk.getUsername());
@@ -100,4 +102,4 @@ public class LoginFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
-} // Đảm bảo có đủ dấu đóng class ở đây
+}

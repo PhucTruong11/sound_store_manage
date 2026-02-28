@@ -13,13 +13,15 @@ public class PhienBanSanPham {
     private double giaBan;
     private int soLuongTon;
     private String tenSP;
+    private boolean trangThai;
+    private String hinhAnh;
 
     public PhienBanSanPham() {
     }
 
-    public PhienBanSanPham(String maPhienBan, String maSP, String mauSac, 
-                         String congSuat, String pin, String ketNoi,
-                         double giaNhap, double giaBan, int soLuongTon) {
+    public PhienBanSanPham(String maPhienBan, String maSP, String mauSac,
+            String congSuat, String pin, String ketNoi,
+            double giaNhap, double giaBan, int soLuongTon, boolean trangThai, String hinhAnh) {
         this.maPhienBan = maPhienBan;
         this.maSP = maSP;
         this.mauSac = mauSac;
@@ -29,43 +31,113 @@ public class PhienBanSanPham {
         this.giaNhap = giaNhap;
         this.giaBan = giaBan;
         this.soLuongTon = soLuongTon;
+        this.trangThai = trangThai;
+        this.hinhAnh = hinhAnh;
     }
 
     // Getters & Setters
-    public String getMaPhienBan() { return maPhienBan; }
-    public void setMaPhienBan(String maPhienBan) { this.maPhienBan = maPhienBan; }
+    public String getMaPhienBan() {
+        return maPhienBan;
+    }
 
-    public String getMaSP() { return maSP; }
-    public void setMaSP(String maSP) { this.maSP = maSP; }
+    public void setMaPhienBan(String maPhienBan) {
+        this.maPhienBan = maPhienBan;
+    }
 
-    public String getMauSac() { return mauSac; }
-    public void setMauSac(String mauSac) { this.mauSac = mauSac; }
+    public String getMaSP() {
+        return maSP;
+    }
 
-    public String getCongSuat() { return congSuat; }
-    public void setCongSuat(String congSuat) { this.congSuat = congSuat; }
+    public void setMaSP(String maSP) {
+        this.maSP = maSP;
+    }
 
-    public String getPin() { return pin; }
-    public void setPin(String pin) { this.pin = pin; }
+    public String getMauSac() {
+        return mauSac;
+    }
 
-    public String getKetNoi() { return ketNoi; }
-    public void setKetNoi(String ketNoi) { this.ketNoi = ketNoi; }
+    public void setMauSac(String mauSac) {
+        this.mauSac = mauSac;
+    }
 
-    public double getGiaNhap() { return giaNhap; }
-    public void setGiaNhap(double giaNhap) { this.giaNhap = giaNhap; }
+    public String getCongSuat() {
+        return congSuat;
+    }
 
-    public double getGiaBan() { return giaBan; }
-    public void setGiaBan(double giaBan) { this.giaBan = giaBan; }
+    public void setCongSuat(String congSuat) {
+        this.congSuat = congSuat;
+    }
 
-    public int getSoLuongTon() { return soLuongTon; }
-    public void setSoLuongTon(int soLuongTon) { this.soLuongTon = soLuongTon; }
+    public String getPin() {
+        return pin;
+    }
 
-    public String getTenSP() { return tenSP; }
-    public void setTenSP(String tenSP) { this.tenSP = tenSP; }
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
+    public String getKetNoi() {
+        return ketNoi;
+    }
+
+    public void setKetNoi(String ketNoi) {
+        this.ketNoi = ketNoi;
+    }
+
+    public double getGiaNhap() {
+        return giaNhap;
+    }
+
+    public void setGiaNhap(double giaNhap) {
+        this.giaNhap = giaNhap;
+    }
+
+    public double getGiaBan() {
+        return giaBan;
+    }
+
+    public void setGiaBan(double giaBan) {
+        this.giaBan = giaBan;
+    }
+
+    public int getSoLuongTon() {
+        return soLuongTon;
+    }
+
+    public void setSoLuongTon(int soLuongTon) {
+        this.soLuongTon = soLuongTon;
+    }
+
+    public String getTenSP() {
+        return tenSP;
+    }
+
+    public void setTenSP(String tenSP) {
+        this.tenSP = tenSP;
+    }
+
+    public boolean isTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(boolean trangThai) {
+        this.trangThai = trangThai;
+    }
+
+    public String getHinhAnh() {
+        return hinhAnh;
+    }
+
+    public void setHinhAnh(String hinhAnh) {
+        this.hinhAnh = hinhAnh;
+    }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
         PhienBanSanPham that = (PhienBanSanPham) obj;
         return Objects.equals(maPhienBan, that.maPhienBan);
     }
@@ -79,6 +151,7 @@ public class PhienBanSanPham {
                 ", giaNhap=" + giaNhap +
                 ", giaBan=" + giaBan +
                 ", soLuongTon=" + soLuongTon +
+                ", trangThai=" + trangThai +
                 '}';
     }
 }

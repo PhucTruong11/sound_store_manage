@@ -41,7 +41,7 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
         pnlHeader.add(lblTitle);
         add(pnlHeader, BorderLayout.NORTH);
 
-        JPanel pnlMain = new JPanel(new MigLayout("fill, insets 10", "[grow]10[300!]", "[grow]"));
+        JPanel pnlMain = new JPanel(new MigLayout("fill, insets 15", "[grow]15[300!]", "[grow]"));
         pnlMain.setBackground(Color.WHITE);
 
         String[] columns = { "STT", "Mã Phiên Bản", "Tên Sản Phẩm", "Số lượng", "Đơn giá", "Thành tiền" };
@@ -108,9 +108,20 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
     private void updatePreview() {
         int row = tblDetails.getSelectedRow();
         if (row != -1) {
-            txtImeiList.setText("Hệ thống sẽ liệt kê các mã IMEI vừa tạo tự động tại đây...");
-            
-            // lblImage.setIcon(...); // Load ảnh từ folder dựa vào dữ liệu SanPham
+            String maPhienBan = model.getValueAt(row, 1).toString();
+
+            ArrayList<String> dsImei = ctBUS.getImeisByDetails(maHD, maPhienBan);
+
+            StringBuilder sb = new StringBuilder();
+            if(dsImei.isEmpty()) {
+                sb.append("Không tìm thấy mã IMEI cho sản phẩm này.");
+            } else {
+                for (int i = 0; i < dsImei.size(); i++) {
+                    sb.append(i + 1).append(". ").append(dsImei.get(i)).append("\n");
+                }
+            }
+            txtImeiList.setText(sb.toString());
+            txtImeiList.setCaretPosition(0);
         }
     }
 

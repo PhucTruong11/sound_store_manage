@@ -99,10 +99,10 @@ CREATE TABLE SanPham (
     TenSP VARCHAR(100) NOT NULL,
     MaLoai VARCHAR(20),
     MaHang VARCHAR(20),
-    HinhAnh VARCHAR(255),
     MoTa TEXT,
     ThoiGianBaoHanh INT DEFAULT 12, -- Tháng
     TrangThai BOOLEAN DEFAULT TRUE,
+    HinhAnh VARCHAR(255),
     FOREIGN KEY (MaLoai) REFERENCES LoaiSP(MaLoai),
     FOREIGN KEY (MaHang) REFERENCES HangSX(MaHang)
 );
@@ -121,6 +121,8 @@ CREATE TABLE PhienBanSP (
     GiaNhap DOUBLE,
     GiaBan DOUBLE,
     SoLuongTon INT DEFAULT 0,
+    TrangThai BOOLEAN DEFAULT TRUE,
+    HinhAnh VARCHAR(255),
     FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
 );
 
@@ -133,6 +135,7 @@ CREATE TABLE ChiTietSP (
     MaPhieuNhap VARCHAR(20),
     MaPhieuXuat VARCHAR(20),
     TinhTrang VARCHAR(50) DEFAULT 'Trong kho', -- Đã bán, Bảo hành
+    TrangThai BOOLEAN DEFAULT TRUE,
     FOREIGN KEY (MaPhienBan) REFERENCES PhienBanSP(MaPhienBan)
 );
 
@@ -146,7 +149,16 @@ CREATE TABLE NhaCungCap (
     MaNCC VARCHAR(20) PRIMARY KEY, 
     TenNCC VARCHAR(100), 
     DiaChi VARCHAR(255), 
-    Sdt VARCHAR(20) 
+    Sdt VARCHAR(20),
+    TrangThai BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE NCC_SanPham (
+    MaNCC VARCHAR(20),
+    MaSP VARCHAR(20),
+    PRIMARY KEY (MaNCC, MaSP),
+    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
+    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
 );
 
 CREATE TABLE PhieuNhap (
@@ -184,7 +196,7 @@ CREATE TABLE KhuyenMai (
     PhanTramGiam DOUBLE, 
     NgayBatDau DATE, 
     NgayKetThuc DATE,
-    TrangThai INT DEFAULT 1,
+    TrangThai BOOLEAN DEFAULT TRUE
 );
 
 CREATE TABLE PhieuXuat (
@@ -221,8 +233,10 @@ CREATE TABLE BaoHanh (
     MaBH VARCHAR(20) PRIMARY KEY, 
     MaImei VARCHAR(50), 
     MaPhieuXuat VARCHAR(20), 
-    NgayBatDau DATE DEFAULT CURRENT_DATE,
+    NgayBatDau DATE DEFAULT (CURRENT_DATE),
     NgayKetThuc DATE,
+    TinhTrang VARCHAR(50) DEFAULT 'Đang sửa chữa', 
+    TrangThai BOOLEAN DEFAULT TRUE, 
     FOREIGN KEY (MaImei) REFERENCES ChiTietSP(MaImei),
     FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat)
 );
@@ -231,7 +245,7 @@ CREATE TABLE ChiTietBaoHanh (
     MaCTBH VARCHAR(20) PRIMARY KEY, 
     MaBH VARCHAR(20), 
     NoiDung TEXT, 
-    TinhTrang VARCHAR(50) DEFAULT 'Còn bảo hành',
+    TinhTrang VARCHAR(50) DEFAULT 'Đang sửa chữa',
     FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH) ON DELETE CASCADE
 );
 
@@ -306,6 +320,8 @@ BEGIN
     WHERE MaPhieuXuat = NEW.MaPhieuXuat;
 END//
 
+
+
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -370,20 +386,35 @@ INSERT INTO LoaiSP VALUES
 
 INSERT INTO HangSX VALUES 
 ('H01', 'Marshall', 'Anh'),
-('H02', 'Sony', 'Nhật');
+('H02', 'Sony', 'Nhật'),
+('H03', 'JBL', 'Mỹ');
 
-INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, HinhAnh, MoTa, ThoiGianBaoHanh) VALUES 
-('SP01', 'Marshall Stanmore III', 'L01', 'H01', 'stanmore3.jpg', 'Loa decor cực đẹp', 12),
-('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'sony_xm5.jpg', 'Chống ồn đỉnh cao', 12);
+INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, MoTa, ThoiGianBaoHanh, TrangThai, HinhAnh) VALUES 
+('SP01', 'Marshall Stanmore III', 'L01', 'H01', 'Loa decor cực đẹp', 12, TRUE, 'marshall.jpg'),
+('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'Chống ồn đỉnh cao', 12, TRUE, 'sony_xm5.jpg'),
+('SP03', 'JBL Boombox 3', 'L01', 'H03', 'Loa di động công suất lớn, kháng nước IP67', 12, TRUE, 'jbl_boombox3.jpg'),
+('SP04', 'Marshall Emberton II', 'L01', 'H01', 'Loa cầm tay nhỏ gọn, pin 30h', 12, TRUE, 'marshall_emberton_2.jpg'),
+('SP05', 'Marshall Middleton', 'L01', 'H01', 'Loa Bluetooth 4 loa cực mạnh', 12, TRUE, 'marshall_middleton.jpg'),
+('SP06', 'Sony SRS-XE300', 'L01', 'H02', 'Loa chống nước, âm thanh rộng', 12, TRUE, 'sony_xe300.jpg'),
+('SP07', 'Sony WH-CH720N', 'L02', 'H02', 'Tai nghe chống ồn giá rẻ', 12, TRUE, 'sony_ch720n.jpg'),
+('SP08', 'JBL Charge 5', 'L01', 'H03', 'Loa Bluetooth kiêm sạc dự phòng', 12, TRUE, 'jbl_charge5.jpg'),
+('SP09', 'JBL PartyBox Encore', 'L01', 'H03', 'Loa kèm 2 Micro hát karaoke', 12, TRUE, 'jbl_encore.jpg'),
+('SP10', 'JBL Flip 6', 'L01', 'H03', 'Loa di động âm thanh 2 đường tiếng', 12, TRUE, 'jbl_flip6.jpg');
 
-INSERT INTO PhienBanSP (MaPhienBan, MaSP, MauSac, CongSuat, Pin, KetNoi, GiaNhap, GiaBan, SoLuongTon) VALUES 
-('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 0),
-('PB02', 'SP01', 'Đen (Black)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 0),
-('PB03', 'SP02', 'Bạc (Silver)', 'N/A', '30 Giờ', 'Bluetooth, 3.5mm', 6000000, 8490000, 0);
-
+INSERT INTO PhienBanSP VALUES 
+('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 10, TRUE, 'marshall.jpg'),
+('PB02', 'SP02', 'Đen (Black)', 'N/A', '30h', 'Bluetooth 5.2', 7000000, 9500000, 10, TRUE, 'sony_xm5.jpg'),
+('PB03', 'SP03', 'Đen (Black)', '180W', '24h', 'Bluetooth 5.3', 8500000, 11900000, 10, TRUE, 'jbl_boombox3.jpg'),
+('PB04', 'SP04', 'Đen Brass', '20W', '30h', 'Bluetooth 5.1', 3200000, 4500000, 10, TRUE, 'marshall_emberton_2.jpg'),
+('PB05', 'SP05', 'Đen (Black)', '60W', '20h', 'Bluetooth 5.1', 6500000, 8500000, 10, TRUE, 'marshall_middleton.jpg'),
+('PB06', 'SP06', 'Xám (Grey)', '30W', '24h', 'Bluetooth 5.2', 2800000, 3900000, 10, TRUE, 'sony_xe300.jpg'),
+('PB07', 'SP07', 'Xanh (Blue)', 'N/A', '35h', 'Bluetooth 5.2', 1800000, 2500000, 15, TRUE, 'sony_ch720n.jpg'),
+('PB08', 'SP08', 'Đen (Black)', '40W', '20h', 'Bluetooth 5.1', 3000000, 3900000, 12, TRUE, 'jbl_charge5.jpg'),
+('PB09', 'SP09', 'Đen (Black)', '100W', '10h', 'Bluetooth 5.1', 5800000, 7500000,10 , TRUE, 'jbl_encore.jpg'),
+('PB10', 'SP10', 'Đỏ (Red)', '20W', '12h', 'Bluetooth 5.1', 2200000, 2900000, 20, TRUE, 'jbl_flip6.jpg');
 -- --------------------------------------------------------
 
-INSERT INTO NhaCungCap VALUES 
+INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt) VALUES 
 ('NCC01', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333089'),
 ('NCC02', 'B&O', 'Q7, TP.HCM', '0961254087'),
 ('NCC03', 'Bose', 'Hà Nội', '0991299099');
@@ -398,13 +429,16 @@ INSERT INTO ChiTietPhieuNhap (MaPhieuNhap, MaPhienBan, SoLuong, DonGia) VALUES
 INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
 ('111222333', 'PB01', 'PN01', 'Trong kho'),
 ('444555666', 'PB01', 'PN01', 'Trong kho'),
-('777888999', 'PB01', 'PN01', 'Trong kho'),
+('777888999', 'PB01', 'PN01', 'Trong kho'), 
+('840100001', 'PB01', 'PN01', 'Trong kho'), 
+('840100002', 'PB01', 'PN01', 'Trong kho'),
+('840100003', 'PB01', 'PN01', 'Trong kho'),
 ('123123123', 'PB02', 'PN01', 'Trong kho'),
-('456456456', 'PB02', 'PN01', 'Trong kho');
+('456456456', 'PB02', 'PN01', 'Trong kho'),
+('999888777', 'PB02', 'PN01', 'Đã bán');
+-- ------------------------------------------------------
 
--- --------------------------------------------------------
-
-INSERT INTO KhuyenMai VALUES 
+INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc) VALUES 
 ('KM01', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31');
 
 INSERT INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, MaKM) VALUES 
@@ -414,28 +448,45 @@ INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES
 ('PX01', 'PB01', 1, 8550000);
 
 UPDATE ChiTietSP 
-SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
+SET TinhTrang = 'Trong kho', MaPhieuXuat = NULL 
 WHERE MaImei IN ('111222333', '444555666', '777888999');
 
--- cái này để có thêm bảo hành vào cái sản phẩm
+UPDATE ChiTietSP 
+SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
+WHERE MaImei = '111222333';
+
 INSERT IGNORE INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, TongTien) VALUES 
 ('PX01', 'NV01', 'KH01', 8550000);
 -- --------------------------------------------------------
 
-INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc) VALUES 
-('BH01', '111222333', 'PX01', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH));
+INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, TongTien) VALUES 
+('PX02', '2026-02-20 10:30:00', 'NV02', 'KH02', 30900000);
+
+UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' WHERE MaImei IN ('444555666', '777888999');
+UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX02' WHERE MaImei IN ('123123123', '456456456', '333111001');
+
+INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc, TinhTrang) VALUES 
+('BH01', '111222333', 'PX01', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH), 'Đang sửa chữa'),
+('BH02', '444555666', 'PX01', '2026-01-10', '2027-01-10', 'Đã trả máy'),
+('BH03', '777888999', 'PX01', '2026-02-05', '2027-02-05', 'Đang sửa chữa'), 
+('BH04', '123123123', 'PX02', '2026-02-22', '2027-02-22', 'Hoàn thành'), 
+('BH05', '456456456', 'PX02', '2026-02-24', '2027-02-24', 'Đang sửa chữa'), 
+('BH06', '333111001', 'PX02', '2026-02-25', '2027-02-25', 'Đang sửa chữa');
+
 
 INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES 
-('CTBH01', 'BH01', 'Loa bị rè bass', 'Đang sửa chữa');
+('CTBH01', 'BH01', 'Loa bị rè bass', 'Đang sửa chữa'),
+('CTBH02', 'BH02', 'Lỗi kết nối Bluetooth chập chờn', 'Đã trả máy'),
+('CTBH03', 'BH02', 'Vệ sinh chân sạc miễn phí', 'Đã trả máy'),
+('CTBH04', 'BH03', 'Hỏng pin - Sạc không vào điện', 'Đang sửa chữa'),
+('CTBH05', 'BH04', 'Khách báo chống ồn ANC hoạt động chập chờn', 'Đang sửa chữa'),
+('CTBH06', 'BH04', 'Cập nhật lại Firmware phiên bản mới nhất', 'Hoàn thành'),
+('CTBH07', 'BH05', 'Hỏng da đệm tai (Earpads)', 'Đang sửa chữa'),
+('CTBH08', 'BH06', 'Loa không lên nguồn', 'Đang sửa chữa'),
+('CTBH09', 'BH06', 'Kiểm tra pin và mạch sạc', 'Đang sửa chữa');
 
+INSERT INTO NCC_SanPham VALUES ('NCC01', 'SP01'), 
+('NCC03', 'SP03'),('NCC01', 'SP04'), ('NCC01', 'SP05'), 
+('NCC02', 'SP06'), ('NCC02', 'SP07'), ('NCC03', 'SP08'), 
+('NCC03', 'SP09'), ('NCC03', 'SP10');
 
-CREATE TABLE NCC_SanPham (
-    MaNCC VARCHAR(20),
-    MaSP VARCHAR(20),
-    PRIMARY KEY (MaNCC, MaSP),
-    FOREIGN KEY (MaNCC) REFERENCES NhaCungCap(MaNCC),
-    FOREIGN KEY (MaSP) REFERENCES SanPham(MaSP)
-);
-
-INSERT INTO NCC_SanPham VALUES ('NCC01', 'SP01');
-INSERT INTO 

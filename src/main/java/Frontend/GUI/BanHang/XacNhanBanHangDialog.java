@@ -1,21 +1,37 @@
 package Frontend.GUI.BanHang;
 
 import Frontend.Compoent.Theme;
+import Frontend.GUI.BaoHanh.BaoHanhTable;
+import Frontend.GUI.PhieuXuat.PhieuXuatTable;
 import Frontend.Compoent.CustomButton;
 import Frontend.Compoent.Table;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import Backend.DAO.PhieuXuatDAO;
+import Backend.BUS.PhieuXuatBUS;
+import Backend.BUS.ChiTietPhieuXuatBUS;
+import Backend.DTO.PhieuXuat;
+import Backend.DTO.ChiTietPhieuXuat;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.util.ArrayList;
+import java.sql.Timestamp;
 
 public class XacNhanBanHangDialog extends JDialog {
     private JTable tblReview;
     private DefaultTableModel modelReview;
     private JLabel lblTongSL, lblTongTien;
+    private String maKH;
+    private PhieuXuatTable phieuXuatTable;
+    private BaoHanhTable baoHanhTable;
 
-    public XacNhanBanHangDialog(JFrame parent, DefaultTableModel sourceModel) {
-        super(parent, "Xác nhận phiếu nhập hàng", true);
+    public XacNhanBanHangDialog(JFrame parent, DefaultTableModel sourceModel, String maKH,
+            PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable) {
+        super(parent, "Xác nhận hóa đơn bán hàng", true);
+        this.maKH = maKH;
+        this.phieuXuatTable = phieuXuatTable;
+        this.baoHanhTable = baoHanhTable;
         setLayout(new MigLayout("fill, insets 20", "[grow]", "[][grow][]"));
         setSize(800, 500);
         setLocationRelativeTo(parent);
@@ -26,7 +42,7 @@ public class XacNhanBanHangDialog extends JDialog {
     }
 
     private void initComponents(DefaultTableModel sourceModel) {
-        JLabel lblTitle = new JLabel("KIỂM TRA THÔNG TIN NHẬP HÀNG");
+        JLabel lblTitle = new JLabel("KIỂM TRA THÔNG TIN HÓA ĐƠN");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 18));
         lblTitle.setForeground(Theme.PRIMARY_COLOR);
         add(lblTitle, "center, wrap, gapbottom 15");
@@ -37,7 +53,7 @@ public class XacNhanBanHangDialog extends JDialog {
         Table tblReview = new Table();
         tblReview.setModel(modelReview);
 
-                tblReview.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblReview.getColumnModel().getColumn(0).setPreferredWidth(40);
         tblReview.getColumnModel().getColumn(0).setMaxWidth(50);
 
         tblReview.getColumnModel().getColumn(1).setPreferredWidth(80);
@@ -46,8 +62,8 @@ public class XacNhanBanHangDialog extends JDialog {
         tblReview.getColumnModel().getColumn(3).setPreferredWidth(50);
         tblReview.getColumnModel().getColumn(3).setMaxWidth(60);
 
-        tblReview.getColumnModel().getColumn(2).setPreferredWidth(250); 
-        
+        tblReview.getColumnModel().getColumn(2).setPreferredWidth(250);
+
         tblReview.getColumnModel().getColumn(4).setPreferredWidth(100);
         tblReview.getColumnModel().getColumn(5).setPreferredWidth(120);
 
@@ -100,31 +116,50 @@ public class XacNhanBanHangDialog extends JDialog {
 
         CustomButton btnXacNhan = new CustomButton("XÁC NHẬN & XUẤT HÓA ĐƠN", Theme.ACCENT_COLOR);
         btnXacNhan.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Bán hàng thành công!");
-            dispose();
+            try {
+                PhieuXuatBUS pxBUS = new PhieuXuatBUS();
+                String maPX = pxBUS.getNewMaPhieu();
+                Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+                double tongTienValue = Double.parseDouble(lblTongTien.getText().replaceAll("[^0-9]", ""));
+                PhieuXuat phieuXuat = new PhieuXuat(
+                        maPX, currentTime, "NV01", maKH, null, tongTienValue, true);
+
+                ArrayList<ChiTietPhieuXuat> dsChiTiet = new ArrayList<>();
+                for (int i = 0; i < modelReview.getRowCount(); i++) {
+                    String maPB = modelReview.getValueAt(i, 1).toString();
+                    int sl = Integer.parseInt(modelReview.getValueAt(i, 3).toString());
+                    String giaStr = modelReview.getValueAt(i, 4).toString().replaceAll("[^0-9]", "");
+                    double gia = Double.parseDouble(giaStr);
+
+                    dsChiTiet.add(new ChiTietPhieuXuat(maPX, maPB, sl, gia, 0.0));
+                }
+
+                if (pxBUS.thanhToan(phieuXuat, dsChiTiet)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Bán hàng thành công!\n" +
+                                    "Mã hóa đơn: " + maPX + "\n" +
+                                    "Hệ thống đã tự động kích hoạt bảo hành cho các thiết bị.");
+
+                    if (this.phieuXuatTable != null) {
+                        this.phieuXuatTable.loadData("");
+                    }
+
+                    if (this.baoHanhTable != null) {
+                        this.baoHanhTable.loadData();
+                    }
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Thanh toán thất bại! Vui lòng kiểm tra lại số lượng IMEI trong kho.",
+                            "Lỗi xử lý", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         pnlButtons.add(btnHuy);
         pnlButtons.add(btnXacNhan);
-
-        // btnXacNhan.addActionListener(e -> {
-        // 1. Tạo đối tượng PhieuNhapDTO (Mã PN tự tăng, Mã NV, Mã NCC, Tổng tiền, Ngày
-        // lập)
-
-        // 2. Duyệt modelReview để tạo danh sách ArrayList<ChiTietPhieuNhapDTO>
-        // Mỗi ChiTiet gồm: MaPN, MaSP, SoLuong, DonGia.
-
-        // 3. Gọi PhieuNhapBUS.insert(phieuNhap, listChiTiet)
-        // Logic BUS phải thực hiện 3 việc:
-        // - Lưu vào bảng PhieuNhap.
-        // - Lưu vào bảng ChiTietPhieuNhap.
-        // - TĂNG số lượng tồn kho của Sản phẩm trong bảng SanPham.
-
-        // JOptionPane.showMessageDialog(this, "Nhập hàng thành công và đã cập nhật tồn
-        // kho!");
-        // dispose();
-        // });
-
         add(pnlButtons, "right");
     }
 

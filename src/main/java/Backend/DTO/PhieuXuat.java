@@ -10,12 +10,12 @@ public class PhieuXuat {
     private String maKH;
     private String maKM;
     private double tongTien;
-    private int trangThai; 
+    private boolean trangThai; 
 
     public PhieuXuat() {
     }
 
-    public PhieuXuat(String maPhieuXuat, Timestamp ngayXuat, String maNV, String maKH, String maKM, double tongTien, int trangThai) {
+    public PhieuXuat(String maPhieuXuat, Timestamp ngayXuat, String maNV, String maKH, String maKM, double tongTien, boolean trangThai) {
         this.maPhieuXuat = maPhieuXuat;
         this.ngayXuat = ngayXuat;
         this.maNV = maNV;
@@ -43,8 +43,8 @@ public class PhieuXuat {
     public double getTongTien() { return tongTien; }
     public void setTongTien(double tongTien) { this.tongTien = tongTien; }
 
-    public int getTrangThai() { return trangThai; }
-    public void setTrangThai(int trangThai) { this.trangThai = trangThai; }
+    public boolean getTrangThai() { return trangThai; }
+    public void setTrangThai(boolean trangThai) { this.trangThai = trangThai; }
 
     @Override
     public boolean equals(Object obj) {

@@ -1,24 +1,32 @@
 package Frontend.GUI.KhachHang;
 
-import Frontend.Compoent.BaseThaoTacDialog;
-import net.miginfocom.swing.MigLayout;
-
 import javax.swing.*;
+import Backend.BUS.KhachHangBUS;
+import Backend.DTO.KhachHang;
+import Frontend.Compoent.BaseThaoTacDialog;
 
 public class KhachHangAddDialog extends BaseThaoTacDialog {
     private JTextField txtMa, txtTen, txtSDT, txtDiaChi;
+    private KhachHangBUS khBUS = new KhachHangBUS();
+    private KhachHangTable parentTable;
 
     public KhachHangAddDialog() {
-        super("THÊM KHÁCH HÀNG", 450, 400);
+        super("THÊM KHÁCH HÀNG", 450, 350);
 
-        initForm();
-        logicXacNhan();
+        // Tự động lấy và điền mã mới
+        String newMa = khBUS.getNewMa();
+        txtMa.setText(newMa);
+
+        txtMa.setEditable(false);
+        txtMa.setFocusable(false);
+
+        SwingUtilities.invokeLater(() -> {
+            txtTen.requestFocusInWindow();
+        });
     }
 
     @Override
     protected void initForm() {
-        pnlContent.setLayout(new MigLayout("wrap 2, fillx, insets 30", "[100!]20[grow]", "[]20[]20[]20[]20[]"));
-
         pnlContent.add(new JLabel("Mã KH:"));
         txtMa = new JTextField();
         pnlContent.add(txtMa, "growx, h 35!");
@@ -38,7 +46,18 @@ public class KhachHangAddDialog extends BaseThaoTacDialog {
 
     @Override
     protected void logicXacNhan() {
-        System.out.println("Đã lưu KH: " + txtTen.getText());
-        dispose();
+        KhachHang kh = new KhachHang(
+                txtMa.getText(),
+                txtTen.getText(),
+                txtSDT.getText(),
+                txtDiaChi.getText(),
+                true
+        );
+        if (khBUS.add(kh)) {
+            JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công!");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Thêm khách hàng thất bại!");
+        }
     }
 }
