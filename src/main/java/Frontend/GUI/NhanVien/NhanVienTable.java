@@ -62,7 +62,7 @@ public class NhanVienTable extends JPanel {
         // pnlHeader.add(cboNV, "w 150!, h 35!");
         // add(pnlHeader, "growx");
         cboSort = new JComboBox<>(new String[]{
-                "Mặc định",
+                "Tên mặc định",
                 "Tên A - Z",
                 "Tên Z - A"
         });
@@ -277,7 +277,7 @@ public void filterByKeyword(String keyword) {
     // }
     private void loadComboBoxChucVu() {
             cboChucVu.removeAllItems();
-            cboChucVu.addItem("Tất cả");
+            cboChucVu.addItem("Tất cả chức vụ");
 
             ArrayList<NhanVien> list = nvBUS.getAllNhanVien();
             java.util.Set<String> set = new java.util.HashSet<>();
