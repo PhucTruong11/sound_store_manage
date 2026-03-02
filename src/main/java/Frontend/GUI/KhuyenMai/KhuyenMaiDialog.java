@@ -4,6 +4,9 @@ import Backend.DTO.KhuyenMai;
 import com.toedter.calendar.JDateChooser;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.util.Date;
 
@@ -16,75 +19,83 @@ public class KhuyenMaiDialog extends JDialog {
     public KhuyenMaiDialog(Frame owner, String title, KhuyenMai data) {
         super(owner, title, true);
         
-        // 1. Định nghĩa kích thước chuẩn (đã tính toán cho Scale 2.1)
-        Dimension size = new Dimension(550, 600);
-        this.setSize(size);
-        this.setPreferredSize(size);
-        this.setMinimumSize(size);
+        // Cấu hình kích thước nhỏ gọn hơn (giảm chiều rộng và chiều cao)
+        this.setSize(500, 580); 
         this.setResizable(false);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setUndecorated(true);
 
-        // 2. Tạo Panel chính với MigLayout quản lý lưới 2 cột
-        // "fillx" trải rộng ngang, "insets 35" tạo lề an toàn
-        // "[right]20[grow, fill]" cột 1 căn phải, cột 2 tự giãn và lấp đầy
-        JPanel container = new JPanel(new MigLayout("fillx, insets 35", "[right]20[grow, fill]"));
-        container.setBackground(Color.WHITE);
-        container.setPreferredSize(size);
-        setContentPane(container);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.setBorder(new LineBorder(new Color(200, 200, 200), 1));
+        mainPanel.setBackground(Color.WHITE);
+        setContentPane(mainPanel);
 
-        // Header - Tiêu đề lớn căn giữa
-        JLabel lblHeader = new JLabel(title.toUpperCase());
-        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblHeader.setForeground(new Color(52, 73, 94));
-        container.add(lblHeader, "span 2, center, gapbottom 25, wrap");
+        // 1. Header: Chiều cao thấp hơn (40px)
+        JPanel pnlHeader = new JPanel(new BorderLayout());
+        pnlHeader.setBackground(new Color(44, 62, 80));
+        pnlHeader.setPreferredSize(new Dimension(0, 40));
 
-        // 3. Khởi tạo và Style linh kiện
-        // "h 45!" ép chiều cao, "w 300!" ép chiều rộng, "wrap" ép xuống dòng
-        String fieldStyle = "h 45!, w 300!, wrap";
+        JLabel lblHeader = new JLabel(title.toUpperCase(), SwingConstants.CENTER);
+        lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblHeader.setForeground(Color.WHITE);
+        pnlHeader.add(lblHeader, BorderLayout.CENTER);
 
-        txtMa = new JTextField();
-        txtTen = new JTextField();
-        txtGiam = new JTextField();
-        dateBD = new JDateChooser(new Date());
-        dateKT = new JDateChooser(new Date());
+        JButton btnClose = new JButton("X");
+        btnClose.setFont(new Font("Arial", Font.BOLD, 14));
+        btnClose.setForeground(Color.WHITE);
+        btnClose.setFocusPainted(false);
+        btnClose.setBorderPainted(false);
+        btnClose.setContentAreaFilled(false);
+        btnClose.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnClose.addActionListener(e -> dispose());
+        pnlHeader.add(btnClose, BorderLayout.EAST);
 
-        // Áp dụng định dạng hiển thị cho JDateChooser
-        dateBD.setDateFormatString("dd/MM/yyyy");
-        dateKT.setDateFormatString("dd/MM/yyyy");
+        mainPanel.add(pnlHeader, BorderLayout.NORTH);
 
-        // Thêm linh kiện vào lưới
-        container.add(new JLabel("Mã KM:")); 
-        container.add(txtMa, fieldStyle);
+        // 2. Content: Thu hẹp insets và gap
+        // [right, 130!] (nhãn hẹp hơn) 15 (khoảng cách hẹp hơn) [grow, fill]
+        JPanel pnlContent = new JPanel(new MigLayout("fillx, insets 25 40 20 40", "[right, 130!]15[grow, fill]"));
+        pnlContent.setBackground(Color.WHITE);
+        mainPanel.add(pnlContent, BorderLayout.CENTER);
 
-        container.add(new JLabel("Tên chương trình:")); 
-        container.add(txtTen, fieldStyle);
+        Font labelFont = new Font("Segoe UI", Font.PLAIN, 13);
+        String fieldStyle = "h 32!, wrap 20"; // Chiều cao input chỉ 32px (giống chuẩn web/app)
 
-        container.add(new JLabel("% Giảm:")); 
-        container.add(txtGiam, fieldStyle);
+        txtMa = createStyledTextField();
+        txtTen = createStyledTextField();
+        txtGiam = createStyledTextField();
+        dateBD = createStyledDateChooser();
+        dateKT = createStyledDateChooser();
 
-        container.add(new JLabel("Ngày bắt đầu:")); 
-        container.add(dateBD, fieldStyle);
+        pnlContent.add(new JLabel("Mã khuyến mãi:") {{ setFont(labelFont); }});
+        pnlContent.add(txtMa, fieldStyle);
 
-        container.add(new JLabel("Ngày kết thúc:")); 
-        container.add(dateKT, fieldStyle);
+        pnlContent.add(new JLabel("Tên chương trình:") {{ setFont(labelFont); }});
+        pnlContent.add(txtTen, fieldStyle);
 
-        // 4. Các nút bấm hành động
-        btnSave = new JButton("Xác nhận");
-        btnSave.setBackground(new Color(26, 188, 156)); // Màu Teal hiện đại
-        btnSave.setForeground(Color.WHITE);
-        btnSave.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnSave.setFocusPainted(false);
+        pnlContent.add(new JLabel("% Giảm giá:") {{ setFont(labelFont); }});
+        pnlContent.add(txtGiam, fieldStyle);
 
-        btnCancel = new JButton("Hủy bỏ");
-        btnCancel.setBackground(new Color(189, 195, 199)); // Màu xám nhẹ
-        btnCancel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btnCancel.setFocusPainted(false);
+        pnlContent.add(new JLabel("Ngày bắt đầu:") {{ setFont(labelFont); }});
+        pnlContent.add(dateBD, fieldStyle);
 
-        // Bố trí nút bấm: "split 2" gộp 2 nút vào 1 hàng, "center" căn giữa hàng đó
-        container.add(btnSave, "split 2, center, gaptop 40, w 140!, h 45!");
-        container.add(btnCancel, "w 140!, h 45!");
+        pnlContent.add(new JLabel("Ngày kết thúc:") {{ setFont(labelFont); }});
+        pnlContent.add(dateKT, fieldStyle);
 
-        // 5. Đổ dữ liệu nếu ở chế độ Chỉnh sửa
+        // 3. Footer: Nền xám nhạt, nút bấm nhỏ gọn
+        JPanel pnlFooter = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        pnlFooter.setBackground(new Color(245, 245, 245));
+
+        btnCancel = new JButton("HỦY");
+        styleButton(btnCancel, new Color(240, 94, 94), 90); // Chiều rộng chỉ 90px
+
+        btnSave = new JButton("LƯU THAY ĐỔI");
+        styleButton(btnSave, new Color(26, 188, 156), 140); // Chiều rộng 140px
+
+        pnlFooter.add(btnCancel);
+        pnlFooter.add(btnSave);
+        mainPanel.add(pnlFooter, BorderLayout.SOUTH);
+
         if (data != null) {
             txtMa.setText(data.getMaKM());
             txtMa.setEditable(false);
@@ -94,55 +105,60 @@ public class KhuyenMaiDialog extends JDialog {
             dateKT.setDate(data.getNgayKT());
         }
 
-        // 6. Xử lý sự kiện
-        btnSave.addActionListener(e -> {
-            if (validateInput()) {
-                confirmed = true;
-                dispose();
-            }
-        });
-        
+        btnSave.addActionListener(e -> { confirmed = true; dispose(); });
         btnCancel.addActionListener(e -> dispose());
 
-        // 7. CÚ CHỐT: Ép vẽ lại toàn bộ để fix lỗi trắng xóa trên Wayland
-        this.pack();
-        this.setSize(size);
         this.setLocationRelativeTo(owner);
-        
-        // Buộc layout manager tính toán lại và vẽ lại linh kiện ngay lập tức
-        container.revalidate();
-        container.repaint();
     }
 
-    // Kiểm tra dữ liệu nhập vào cơ bản
-    private boolean validateInput() {
-        if (txtMa.getText().trim().isEmpty() || txtTen.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ Mã và Tên KM!");
-            return false;
-        }
-        try {
-            double giam = Double.parseDouble(txtGiam.getText());
-            if (giam < 0 || giam > 100) throw new NumberFormatException();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "% giảm giá phải là số từ 0 - 100!");
-            return false;
-        }
-        return true;
+    private JTextField createStyledTextField() {
+        JTextField tf = new JTextField();
+        tf.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        tf.setBorder(BorderFactory.createCompoundBorder(
+            new LineBorder(new Color(220, 220, 220), 1, true),
+            new EmptyBorder(0, 8, 0, 8)
+        ));
+        return tf;
+    }
+
+    private JDateChooser createStyledDateChooser() {
+        JDateChooser dc = new JDateChooser();
+        dc.setDateFormatString("dd/MM/yyyy");
+        dc.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        dc.getComponent(1).setCursor(new Cursor(Cursor.HAND_CURSOR)); // Icon lịch
+        dc.setBorder(new LineBorder(new Color(220, 220, 220), 1, true));
+        dc.setBackground(Color.WHITE);
+        return dc;
+    }
+
+    private void styleButton(JButton btn, Color color, int width) {
+        btn.setBackground(color);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        btn.setPreferredSize(new Dimension(width, 32)); // Nút thanh mảnh hơn (cao 32px)
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setContentAreaFilled(false);
+        
+        btn.setUI(new BasicButtonUI() {
+            @Override
+            public void paint(Graphics g, JComponent c) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(c.getBackground());
+                g2.fillRoundRect(0, 0, c.getWidth(), c.getHeight(), 6, 6); // Bo góc ít hơn cho tinh tế
+                super.paint(g2, c);
+                g2.dispose();
+            }
+        });
     }
 
     public KhuyenMai getData() {
         if (!confirmed) return null;
         try {
-            return new KhuyenMai(
-                txtMa.getText().trim(),
-                txtTen.getText().trim(),
-                Double.parseDouble(txtGiam.getText()),
-                dateBD.getDate(),
-                dateKT.getDate(),
-                1 // Trạng thái mặc định
-            );
-        } catch (Exception e) {
-            return null;
-        }
+            return new KhuyenMai(txtMa.getText().trim(), txtTen.getText().trim(), 
+                                 Double.parseDouble(txtGiam.getText()), dateBD.getDate(), dateKT.getDate(), 1);
+        } catch (Exception e) { return null; }
     }
 }
