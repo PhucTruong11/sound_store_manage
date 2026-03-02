@@ -55,7 +55,8 @@ public class PaginationPanel extends JPanel {
     public void setTotalPages(int total) {
         this.totalPages = Math.max(1, total);
         this.currentPage = 1; 
-        refreshPage();
+        lblPageInfo.setText("Trang " + currentPage + " / " + totalPages);
+        updateUIState();
     }
 
     private void refreshPage() {

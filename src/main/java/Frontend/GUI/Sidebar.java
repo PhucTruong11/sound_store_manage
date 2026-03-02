@@ -36,7 +36,19 @@ public class Sidebar extends JPanel {
         FlatSVGIcon logoutIcon = new FlatSVGIcon("images/icon/log-out.svg", 20, 20);
         CustomButton btnLogout = new CustomButton("Đăng xuất", Theme.DANGER_COLOR);
         btnLogout.setIcon(logoutIcon);
-        btnLogout.addActionListener(e -> System.exit(0));
+        btnLogout.addActionListener(e -> {
+                    int confirm = JOptionPane.showConfirmDialog(parent, 
+                "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", 
+                JOptionPane.YES_NO_OPTION);
+            
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Đóng cửa sổ chính (MainFrame)
+                parent.dispose(); 
+                
+                // Mở lại cửa sổ đăng nhập
+                new Frontend.GUI.LogIn.LoginFrame().setVisible(true); 
+            }
+        });
         add(btnLogout, "pushy, aligny bottom, h 40!");
     }
 

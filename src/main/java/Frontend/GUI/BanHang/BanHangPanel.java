@@ -35,7 +35,7 @@ public class BanHangPanel extends JPanel {
         add(toolbar, "span 2, growx, wrap, gapbottom 10");
         add(sidebar, "w 280!, growy, span 1 2");
         add(productGrid, "grow, wrap");
-        add(pagination, "center, south");
+        // add(pagination, "center, south");
 
         productGrid.loadData();
     }
