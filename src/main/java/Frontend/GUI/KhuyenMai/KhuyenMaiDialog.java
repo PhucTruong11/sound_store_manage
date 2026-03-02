@@ -18,7 +18,7 @@ public class KhuyenMaiDialog extends BaseThaoTacDialog {
 
     // Constructor cho Thêm mới
     public KhuyenMaiDialog(Frame owner, String title, KhuyenMai data) {
-        super(title, 500, 580);
+        super(title, 450, 450);
         if (data != null) {
             fillData(data);
             txtMaKM.setEditable(false);
