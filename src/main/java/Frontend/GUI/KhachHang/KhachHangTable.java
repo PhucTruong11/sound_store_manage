@@ -58,7 +58,7 @@ public class KhachHangTable extends JPanel {
         // pnlHeader.add(cboKH, "w 150!, h 35!");
         // add(pnlHeader, "growx");
         cboSort = new JComboBox<>(new String[]{
-                "Mặc định",
+                "Tên mặc định",
                 "Tên A - Z",
                 "Tên Z - A"
         });
