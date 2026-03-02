@@ -131,7 +131,8 @@ public class BanHangSidebar extends JPanel {
                     modelBan,
                     maKHSelected,
                     this.phieuXuatTable, 
-                    this.baoHanhTable 
+                    this.baoHanhTable, 
+                    this
             );
             dialog.setVisible(true);
         });
@@ -165,4 +166,13 @@ public class BanHangSidebar extends JPanel {
         lblTenSP.setText("Chưa chọn sản phẩm");
         spnSoLuongBan.setValue(1);
     }
+
+    public void clearCart() {
+    modelBan.setRowCount(0);
+    maKHSelected = "";
+    lblKhachHang.setText("Chưa chọn khách hàng");
+    lblKhachHang.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+    lblKhachHang.setForeground(Color.GRAY);
+    resetSelection();
+}
 }

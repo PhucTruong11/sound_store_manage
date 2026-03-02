@@ -6,6 +6,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import Backend.BUS.NhaCungCapBUS;
+import Backend.BUS.TaiKhoanBUS;
 import Backend.DTO.NhaCungCap;
 import javax.swing.*;
 import java.awt.*;
@@ -24,6 +25,7 @@ public class NhapHangSidebar extends JPanel{
     private String currenGia = "";
 
     private NhapHangTable table;
+    private TaiKhoanBUS tkBUS;
 
     public NhapHangSidebar(NhapHangTable table) {
         this.table = table;

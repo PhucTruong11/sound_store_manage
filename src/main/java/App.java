@@ -7,7 +7,7 @@ public class App {
         Theme.setup(false); // Thiết lập FlatLaf/Theme
         java.awt.EventQueue.invokeLater(() -> {
             // Hiển thị màn hình đăng nhập trướcgit 
-            new MainFrame().setVisible(true);
+            new LoginFrame().setVisible(true);
         });
     }
 }

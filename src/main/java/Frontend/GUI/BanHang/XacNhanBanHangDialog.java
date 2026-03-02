@@ -25,13 +25,15 @@ public class XacNhanBanHangDialog extends JDialog {
     private String maKH;
     private PhieuXuatTable phieuXuatTable;
     private BaoHanhTable baoHanhTable;
+    private BanHangSidebar sidebar;
 
     public XacNhanBanHangDialog(JFrame parent, DefaultTableModel sourceModel, String maKH,
-            PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable) {
+            PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable, BanHangSidebar sidebar) {
         super(parent, "Xác nhận hóa đơn bán hàng", true);
         this.maKH = maKH;
         this.phieuXuatTable = phieuXuatTable;
         this.baoHanhTable = baoHanhTable;
+        this.sidebar = sidebar;
         setLayout(new MigLayout("fill, insets 20", "[grow]", "[][grow][]"));
         setSize(800, 500);
         setLocationRelativeTo(parent);
@@ -146,6 +148,10 @@ public class XacNhanBanHangDialog extends JDialog {
 
                     if (this.baoHanhTable != null) {
                         this.baoHanhTable.loadData();
+                    }
+
+                    if (this.sidebar != null) {
+                        this.sidebar.clearCart();
                     }
                     dispose();
                 } else {

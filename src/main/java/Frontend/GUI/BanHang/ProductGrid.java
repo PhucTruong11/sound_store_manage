@@ -31,9 +31,9 @@ public class ProductGrid extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        mainPanel = new JPanel(new MigLayout("ins 5, wrap 3, fillx",
-                "[fill, grow]10[fill, grow]10[fill, grow]", "[]10[]"));
-        mainPanel.setBackground(Color.WHITE);
+        mainPanel = new JPanel(new MigLayout("ins 15, wrap 3, fillx, gap 15",
+                "[grow, fill][grow, fill][grow, fill]", ""));
+        mainPanel.setBackground(new Color(245, 245, 245));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         scrollPane.setBorder(null);
@@ -50,6 +50,7 @@ public class ProductGrid extends JPanel {
         PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
         this.fullList = pbBUS.getAllPhienBanSanPham();
         updatePagination();
+        displayPage(1);
     }
 
     public void loadSearchData(String text) {
@@ -70,7 +71,7 @@ public class ProductGrid extends JPanel {
         if (pagination != null) {
             int totalItems = fullList.size();
             int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
-            pagination.setTotalPages(totalPages == 0 ? 1 : totalPages);
+            pagination.setTotalPages(totalPages <= 0 ? 1 : totalPages);
         }
     }
 

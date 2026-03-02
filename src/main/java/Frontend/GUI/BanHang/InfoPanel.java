@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import Backend.BUS.PhienBanSanPhamBUS;
 import Backend.DTO.PhienBanSanPham;
+import Frontend.Compoent.Theme;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -25,11 +26,12 @@ class InfoPanel extends JPanel {
         setBackground(Color.WHITE);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        this.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
-                BorderFactory.createEmptyBorder(10, 10, 10, 10) // Padding 10px mỗi bên là vừa đẹp
-        ));
+        // this.setBorder(BorderFactory.createCompoundBorder(
+        //         BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
+        //         BorderFactory.createEmptyBorder(10, 10, 10, 10) // Padding 10px mỗi bên là vừa đẹp
+        // ));
 
+        this.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1, true));
         this.putClientProperty("FlatLaf.style", "arc: 15");
 
         JLabel lblImg = new JLabel();
@@ -49,6 +51,10 @@ class InfoPanel extends JPanel {
             lblImg.setText("Lỗi nạp ảnh");
         }
 
+        lblImg.putClientProperty("FlatLaf.style", "arc: 15"); 
+        lblImg.setOpaque(true);
+        lblImg.setBackground(new Color(252, 252, 252));
+
         lblImg.setBorder(BorderFactory.createLineBorder(new Color(240, 240, 240)));
 
         JLabel lblName = new JLabel(tenSP);
@@ -63,6 +69,14 @@ class InfoPanel extends JPanel {
         add(lblPrice, "gaptop 5");
 
         this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setBorder(BorderFactory.createLineBorder(Theme.PRIMARY_COLOR, 1, true));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1, true));
+            }
             @Override
             public void mouseClicked(MouseEvent e) {
                 PhienBanSanPhamBUS bus = new PhienBanSanPhamBUS();
