@@ -33,4 +33,8 @@ public class BaoHanhBUS {
         // Bước 2: Xóa bảng cha (BaoHanh)
         return bhDAO.delete(id) > 0;
     }
+
+    public String getNewMaBH() {
+        return bhDAO.generateMaBH();
+    }
 }

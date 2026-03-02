@@ -163,4 +163,20 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
         }
         return false;
     }
+
+    public String generateMaBH() {
+    String sql = "SELECT MaBH FROM BaoHanh ORDER BY CAST(SUBSTRING(MaBH, 3) AS UNSIGNED) DESC LIMIT 1";
+    try (Connection conn = DatabaseHelper.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql);
+         ResultSet rs = stmt.executeQuery()) {
+        if (rs.next()) {
+            String lastMa = rs.getString("MaBH");
+            int num = Integer.parseInt(lastMa.substring(2)); 
+            return String.format("BH%02d", num + 1);
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return "BH01"; 
+}
 }

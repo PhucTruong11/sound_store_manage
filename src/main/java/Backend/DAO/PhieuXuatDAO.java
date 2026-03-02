@@ -138,14 +138,14 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             conn = DatabaseHelper.getConnection();
             conn.setAutoCommit(false); 
 
-            String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement pstPX = conn.prepareStatement(sqlPX);
+String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?)";            PreparedStatement pstPX = conn.prepareStatement(sqlPX);
             pstPX.setString(1, px.getMaPhieuXuat());
             pstPX.setTimestamp(2, px.getNgayXuat());
             pstPX.setString(3, px.getMaNV());
             pstPX.setString(4, px.getMaKH());
             pstPX.setString(5, px.getMaKM());
             pstPX.setDouble(6, px.getTongTien());
+            pstPX.setBoolean(7, true); 
             pstPX.executeUpdate();
 
             String sqlCT = "INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES (?, ?, ?, ?)";

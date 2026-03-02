@@ -12,7 +12,9 @@ public class KhuyenMaiBUS {
         refreshData();
     }
 
+    // Trong KhuyenMaiBUS.java
     public void refreshData() {
+        kmDAO.autoUpdateExpiredStatus();
         dsKM = kmDAO.getAll();
     }
 
@@ -49,11 +51,31 @@ public class KhuyenMaiBUS {
         text = text.toLowerCase().trim();
         ArrayList<KhuyenMai> result = new ArrayList<>();
         for (KhuyenMai km : dsKM) {
-            if (km.getMaKM().toLowerCase().contains(text) || 
-                km.getTenKM().toLowerCase().contains(text)) {
+            if (km.getMaKM().toLowerCase().contains(text) ||
+                    km.getTenKM().toLowerCase().contains(text)) {
                 result.add(km);
             }
         }
         return result;
     }
+
+    public KhuyenMai getById(String maKM) {
+        for (KhuyenMai km : dsKM) {
+            if (km.getMaKM().equals(maKM)) {
+                return km;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<KhuyenMai> getActiveKhuyenMai() {
+        ArrayList<KhuyenMai> result = new ArrayList<>();
+        for (KhuyenMai km : dsKM) {
+            if (km.getTrangThai() == 1) {
+                result.add(km);
+            }
+        }
+        return result;
+    }
+
 }

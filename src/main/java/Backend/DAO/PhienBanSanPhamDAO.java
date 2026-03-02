@@ -48,7 +48,7 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
             stmt.setString(1, maPhienBan);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                return new PhienBanSanPham(
+                PhienBanSanPham pb = new PhienBanSanPham(
                         rs.getString("MaPhienBan"),
                         rs.getString("MaSP"),
                         rs.getString("MauSac"),
@@ -61,6 +61,9 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
                         rs.getBoolean("TrangThai"),
                         rs.getString("HinhAnh"));
 
+                pb.setTenSP(rs.getString("TenSP"));
+
+                return pb;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -177,7 +180,9 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
     // Lấy Phiên Bản từ mã sản phẩm
     public ArrayList<PhienBanSanPham> selectByMaSP(String maSP) {
         ArrayList<PhienBanSanPham> list = new ArrayList<>();
-        String sql = "SELECT * FROM PhienBanSP WHERE MaSP = ? AND TrangThai=TRUE";
+        String sql = "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
+                "JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
+                "WHERE pb.MaSP = ? AND pb.TrangThai = TRUE";
 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -198,6 +203,7 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
                         rs.getInt("SoLuongTon"),
                         rs.getBoolean("TrangThai"),
                         rs.getString("HinhAnh"));
+                pb.setTenSP(rs.getString("TenSP"));
                 list.add(pb);
             }
         } catch (Exception e) {

@@ -13,6 +13,7 @@ public class ChiTietBaoHanhBUS {
 
     public boolean add(ChiTietBaoHanh ctbh) {
         ArrayList<ChiTietBaoHanh> list = new ArrayList<>();
+        list.add(ctbh);
         return ctbhDAO.insert(list) > 0;
     }
 
@@ -26,5 +27,9 @@ public class ChiTietBaoHanhBUS {
 
     public boolean deleteAllByMaBH(String maBH) {
         return ctbhDAO.delete(maBH) >= 0;
+    }
+
+    public String getNewMaCTBH() {
+        return ctbhDAO.generateMaCTBH();
     }
 }

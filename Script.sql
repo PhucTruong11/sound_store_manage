@@ -311,16 +311,23 @@ CREATE TRIGGER trg_UpdateTongTienXuat
 AFTER INSERT ON ChiTietPhieuXuat
 FOR EACH ROW
 BEGIN
+    DECLARE v_phan_tram DOUBLE DEFAULT 0;
+
+    -- Lấy % giảm giá từ bảng KhuyenMai dựa vào MaKM của phiếu xuất hiện tại
+    SELECT COALESCE(km.PhanTramGiam, 0) INTO v_phan_tram
+    FROM PhieuXuat px
+    LEFT JOIN KhuyenMai km ON px.MaKM = km.MaKM
+    WHERE px.MaPhieuXuat = NEW.MaPhieuXuat;
+
+    -- Cập nhật lại tổng tiền = (Tổng giá gốc) * (1 - % giảm)
     UPDATE PhieuXuat
     SET TongTien = (
-        SELECT SUM(ThanhTien)
+        SELECT SUM(ThanhTien) * (1 - v_phan_tram / 100)
         FROM ChiTietPhieuXuat
         WHERE MaPhieuXuat = NEW.MaPhieuXuat
     )
     WHERE MaPhieuXuat = NEW.MaPhieuXuat;
 END//
-
-
 
 DELIMITER ;
 
@@ -463,14 +470,14 @@ INSERT IGNORE INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, TongTien) VALUES
 INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, TongTien) VALUES 
 ('PX02', '2026-02-20 10:30:00', 'NV02', 'KH02', 30900000);
 
-UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' WHERE MaImei IN ('444555666', '777888999');
+UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' WHERE MaImei IN ('111222333', '444555666', '777888999');
 UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX02' WHERE MaImei IN ('123123123', '456456456', '333111001');
 
 INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc, TinhTrang) VALUES 
 ('BH01', '111222333', 'PX01', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH), 'Đang sửa chữa'),
 ('BH02', '444555666', 'PX01', '2026-01-10', '2027-01-10', 'Đã trả máy'),
 ('BH03', '777888999', 'PX01', '2026-02-05', '2027-02-05', 'Đang sửa chữa'), 
-('BH04', '123123123', 'PX02', '2026-02-22', '2027-02-22', 'Hoàn thành'), 
+('BH04', '123123123', 'PX02', '2026-02-22', '2027-02-22', 'Hoàn thành'),
 ('BH05', '456456456', 'PX02', '2026-02-24', '2027-02-24', 'Đang sửa chữa'), 
 ('BH06', '333111001', 'PX02', '2026-02-25', '2027-02-25', 'Đang sửa chữa');
 

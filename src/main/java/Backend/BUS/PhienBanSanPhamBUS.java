@@ -64,4 +64,8 @@ public class PhienBanSanPhamBUS {
     public ArrayList<PhienBanSanPham> getByLoai(String tenLoai) {
         return pbspDAO.selectByLoai(tenLoai);
     }
+
+    public PhienBanSanPham getByMaPhienBan(String maPB) {
+        return pbspDAO.selectById(maPB);
+    }
 }
