@@ -119,6 +119,7 @@ public class XacNhanBanHangDialog extends JDialog {
         pnlButtons.setBackground(Color.WHITE);
 
         CustomButton btnKhuyenMai = new CustomButton("CHỌN KHUYẾN MÃI", Theme.ACCENT_COLOR);
+
         btnKhuyenMai.addActionListener(e -> {
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             ChonKhuyenMaiDialog dialog = new ChonKhuyenMaiDialog(parentFrame);
@@ -126,7 +127,6 @@ public class XacNhanBanHangDialog extends JDialog {
 
             if (dialog.getSelectedKM() != null) {
                 KhuyenMai km = dialog.getSelectedKM();
-
                 this.maKMSelected = km.getMaKM();
                 this.phanTramGiam = km.getPhanTramGiam();
 
@@ -193,7 +193,6 @@ public class XacNhanBanHangDialog extends JDialog {
         add(pnlButtons, "right");
     }
 
-    // Thêm biến này vào đầu class XacNhanBanHangDialog
     private double finalTotalValue = 0;
 
     private void calculateTotal() {
@@ -202,13 +201,11 @@ public class XacNhanBanHangDialog extends JDialog {
 
         for (int i = 0; i < modelReview.getRowCount(); i++) {
             totalSL += Integer.parseInt(modelReview.getValueAt(i, 3).toString());
-            // Lấy giá trị tiền gốc từ chính logic tính toán, không nên đọc từ Table String
             int sl = Integer.parseInt(modelReview.getValueAt(i, 3).toString());
             String giaStr = modelReview.getValueAt(i, 4).toString().replaceAll("[^0-9]", "");
             subTotal += sl * Double.parseDouble(giaStr);
         }
 
-        // Tính tiền sau giảm giá
         double moneyDiscount = subTotal * (this.phanTramGiam / 100.0);
         this.finalTotalValue = subTotal - moneyDiscount;
 

@@ -7,7 +7,7 @@ import Frontend.Compoent.Theme;
 public class MainFrame extends JFrame {
     private JPanel mainContent;
 
-    public MainFrame(String userName) {
+    public MainFrame(String userName, String maNQ) {
         setTitle("Cửa hàng thiết bị âm thanh " + userName);
         setSize(1400, 800);
         setBackground(Theme.BACKGROUND_COLOR);
@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
         setLayout(new BorderLayout());
 
         add(new Navigation(userName), BorderLayout.NORTH);
-        add(new Sidebar(this), BorderLayout.WEST);
+        add(new Sidebar(this, maNQ), BorderLayout.WEST);
 
         mainContent = new JPanel(new BorderLayout());
         mainContent.setBackground(Theme.BACKGROUND_COLOR);
@@ -38,4 +38,6 @@ public class MainFrame extends JFrame {
         mainContent.revalidate(); // Vẽ lại giao diện
         mainContent.repaint();
     }
+
+    
 }

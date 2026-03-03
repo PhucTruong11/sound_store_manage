@@ -15,7 +15,6 @@ public class LoginFrame extends JFrame {
     private JTextField txtUsername;
     private JPasswordField txtPassword;
     private CustomButton btnLogin;
-    private JLabel lblForgotPassword;
     private TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
 
     public LoginFrame() {
@@ -25,7 +24,7 @@ public class LoginFrame extends JFrame {
     private void initUI() {
         setTitle("Đăng nhập hệ thống - Sound Store");
         setSize(500, 500);
-        setLocationRelativeTo(null); 
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
@@ -46,7 +45,7 @@ public class LoginFrame extends JFrame {
         formPanel.add(lblUsername, "gaptop 10");
 
         txtUsername = new JTextField();
-        txtUsername.putClientProperty("FlatLaf.style", "margin: 5,10,5,10; arc: 10"); // Padding bên trong ô text
+        txtUsername.putClientProperty("FlatLaf.style", "margin: 5,10,5,10; arc: 10");
         formPanel.add(txtUsername, "growx, h 45!");
 
         JLabel lblPassword = new JLabel("Mật khẩu:");
@@ -61,17 +60,11 @@ public class LoginFrame extends JFrame {
         btnLogin = new CustomButton("ĐĂNG NHẬP", Theme.PRIMARY_COLOR);
         formPanel.add(btnLogin, "growx, h 45!, gaptop 30");
 
-        lblForgotPassword = new JLabel("<html><u>Quên mật khẩu?</u></html>");
-        lblForgotPassword.setForeground(Theme.PRIMARY_COLOR);
-        lblForgotPassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        formPanel.add(lblForgotPassword, "center, gaptop 15");
-
-        mainPanel.add(formPanel, "w 340!"); 
+        mainPanel.add(formPanel, "w 340!");
         setContentPane(mainPanel);
 
         btnLogin.addActionListener(e -> doLogin());
 
-        // Hỗ trợ bấm Enter ở cả 2 ô text để đăng nhập nhanh
         KeyAdapter enterSubmit = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -89,18 +82,21 @@ public class LoginFrame extends JFrame {
         String password = new String(txtPassword.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Cảnh báo",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         TaiKhoan tk = taiKhoanBUS.login(username, password);
 
         if (tk != null) {
-            // Truyền tên đăng nhập (hoặc tên nhân viên nếu bạn join bảng) sang MainFrame
-            new Frontend.GUI.MainFrame(tk.getUsername()).setVisible(true);
-            dispose(); // Đóng form Login
+            String maNQ = tk.getMaNhomQuyen();
+
+            new Frontend.GUI.MainFrame(tk.getUsername(), maNQ).setVisible(true);
+            dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị khóa!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị khóa!",
+                    "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

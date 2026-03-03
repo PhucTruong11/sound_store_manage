@@ -350,6 +350,8 @@ ADD CONSTRAINT chk_soluong_nhap CHECK (SoLuong > 0);
 ALTER TABLE ChiTietPhieuXuat
 ADD CONSTRAINT chk_soluong_xuat CHECK (SoLuong > 0);
 
+ALTER TABLE KhuyenMai MODIFY COLUMN TrangThai INT DEFAULT 1;
+
 
 -- INDEX ĐỂ TỐI ƯU HÓA 
 CREATE INDEX idx_sp_ten ON SanPham(TenSP);
@@ -362,29 +364,61 @@ CREATE INDEX idx_connguoi_sdt ON ConNguoi(SDT);
 
 
 -- DỮ LIỆU
+-- Bổ sung dữ liệu Chức năng để hiện lên bảng Phân quyền
+INSERT IGNORE INTO ChucNang (MaChucNang, TenChucNang, MoTa) VALUES 
+('BANHANG', 'Bán hàng', 'Quản lý giao dịch bán hàng'),
+('NHAPHANG', 'Nhập hàng', 'Quản lý nhập kho sản phẩm'),
+('SANPHAM', 'Sản phẩm', 'Quản lý thông tin và phiên bản sản phẩm'),
+('KHACHHANG', 'Khách hàng', 'Quản lý thông tin khách hàng'),
+('NHANVIEN', 'Nhân viên', 'Quản lý nhân sự và chức vụ'),
+('NHACUNGCAP', 'Nhà cung cấp', 'Quản lý đối tác cung ứng'),
+('PHIEUNHAP', 'Phiếu nhập', 'Quản lý lịch sử nhập hàng'),
+('PHIEUXUAT', 'Phiếu xuất', 'Quản lý hóa đơn xuất hàng'),
+('KHUYENMAI', 'Khuyến mãi', 'Quản lý chương trình giảm giá'),
+('BAOHANH', 'Bảo hành', 'Quản lý thiết bị bảo hành'),
+('THONGKE', 'Thống kê', 'Xem báo cáo doanh thu và tồn kho'),
+('PHANQUYEN', 'Phân quyền', 'Thiết lập quyền hạn cho nhóm người dùng');
 
 INSERT INTO NhomQuyen VALUES 
 ('NQ01', 'Quản lý cửa hàng', 'Full quyền'),
 ('NQ02', 'Nhân viên bán hàng', 'Chỉ bán và xem kho'),
 ('NQ03', 'Nhân viên kho', 'Chỉ nhập hàng');
 
+INSERT IGNORE INTO ChiTietQuyen (MaNhomQuyen, MaChucNang, HanhDong)
+SELECT 'NQ01', MaChucNang, act
+FROM ChucNang
+CROSS JOIN (SELECT 'read' AS act UNION SELECT 'create' UNION SELECT 'update' UNION SELECT 'delete') AS actions;
+
+INSERT INTO ChiTietQuyen (MaNhomQuyen, MaChucNang, HanhDong) VALUES 
+('NQ02', 'BANHANG', 'read'), ('NQ02', 'BANHANG', 'create'), ('NQ02', 'BANHANG', 'update'),
+('NQ02', 'PHIEUXUAT', 'read'), ('NQ02', 'PHIEUXUAT', 'create'),
+('NQ02', 'KHACHHANG', 'read'), ('NQ02', 'KHACHHANG', 'create'), ('NQ02', 'KHACHHANG', 'update'),
+('NQ02', 'SANPHAM', 'read'), ('NQ02', 'BAOHANH', 'read'), ('NQ02', 'BAOHANH', 'create'),
+('NQ03', 'NHAPHANG', 'read'), ('NQ03', 'NHAPHANG', 'create'),
+('NQ03', 'PHIEUNHAP', 'read'), ('NQ03', 'PHIEUNHAP', 'create'),
+('NQ03', 'SANPHAM', 'read'), ('NQ03', 'SANPHAM', 'create'), ('NQ03', 'SANPHAM', 'update'),
+('NQ03', 'NHACUNGCAP', 'read'), ('NQ03', 'NHACUNGCAP', 'create');
+
 INSERT INTO ConNguoi (ID, HoTen, SDT, DiaChi) VALUES 
 ('NV01', 'Trương Phúc', '0909123456', 'Đà Nẵng'),
 ('NV02', 'Lê Văn Nam', '0909123457', 'Hà Nội'),
+('NV03', 'Nguyễn Văn Kho', '0909999888', 'Hải Phòng'),
 ('KH01', 'Nguyễn Khách', '0912345678', 'TP.HCM'),
 ('KH02', 'Trần VIP', '0987654321', 'Cần Thơ');
 
 INSERT INTO NhanVien (ID, ChucVu, Email, Luong) VALUES 
 ('NV01', 'Quản lý', 'phuc@sw.com', 20000000),
-('NV02', 'Nhân viên bán hàng', 'nam@sw.com', 10000000);
+('NV02', 'Nhân viên bán hàng', 'nam@sw.com', 10000000),
+('NV03', 'Nhân viên kho', 'kho@sw.com', 12000000);
 
 INSERT INTO KhachHang (ID) VALUES 
 ('KH01'),
 ('KH02');
 
-INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNV, MaNhomQuyen) VALUES 
-('admin', '123456', 'NV01', 'NQ01'),
-('kho', '123456', 'NV02', 'NQ03');
+INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai) VALUES 
+('admin', '123456', 'NV01', 'NQ01', 1), 
+('nhanvien', '123456', 'NV02', 'NQ02', 1),
+('kho', '123456', 'NV03', 'NQ03', 1);
 -- --------------------------------------------------------
 
 INSERT INTO LoaiSP VALUES 
@@ -446,8 +480,13 @@ INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES
 ('333111001', 'PB03', 'PN01', 'Trong kho');
 -- ------------------------------------------------------
 
-INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc) VALUES 
-('KM01', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31');
+INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc, TrangThai) VALUES 
+('KM01', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31', 1), 
+('KM02', 'Siêu sale Black Friday', 5000000, 20, '2026-11-20', '2026-11-30', 1),
+('KM03', 'Hè rực rỡ', 0, 5, '2026-06-01', '2026-08-31', 1),
+('KM04', 'Chào năm mới 2027', 2000000, 15, '2026-12-25', '2027-01-05', 1),
+('KM05', 'Tri ân khách hàng VIP', 10000000, 25, '2026-01-01', '2026-12-31', 1),
+('KM06', 'Giảm giá cuối tháng', 1000000, 8, '2026-03-25', '2026-03-31', 1);
 
 INSERT INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, MaKM) VALUES 
 ('PX01', 'NV01', 'KH01', 'KM01');
