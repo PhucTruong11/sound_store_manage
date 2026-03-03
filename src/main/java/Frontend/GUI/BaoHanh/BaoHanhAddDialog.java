@@ -16,6 +16,15 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
 
     public BaoHanhAddDialog() {
         super("THÊM PHIẾU BẢO HÀNH", 450, 450);
+        String newMa = bhBUS.getNewMaBH();
+        txtMaBH.setText(newMa);
+
+        txtMaBH.setEditable(false);
+        txtMaBH.setFocusable(false);
+
+        SwingUtilities.invokeLater(() -> {
+            txtImei.requestFocusInWindow();
+        });
     }
 
     @Override
@@ -51,22 +60,34 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
         String imei = txtImei.getText().trim();
         String maPX = txtMaPX.getText().trim();
 
-        LocalDate ngayBD = LocalDate.parse(new java.text.SimpleDateFormat("yyyy-MM-dd").format(spnNgayBD.getValue()));
-        LocalDate ngayKT = LocalDate.parse(new java.text.SimpleDateFormat("yyyy-MM-dd").format(spnNgayKT.getValue()));
+        if (maBH.isEmpty() || imei.isEmpty() || maPX.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
+        java.util.Date dStart = (java.util.Date) spnNgayBD.getValue();
+        java.util.Date dEnd = (java.util.Date) spnNgayKT.getValue();
+        LocalDate ngayBD = new java.sql.Date(dStart.getTime()).toLocalDate();
+        LocalDate ngayKT = new java.sql.Date(dEnd.getTime()).toLocalDate();
 
         BaoHanh bh = new BaoHanh(maBH, imei, maPX, ngayBD, ngayKT);
 
         if (bhBUS.add(bh)) {
             ChiTietBaoHanhBUS ctbhBUS = new ChiTietBaoHanhBUS();
+
+            String maCTMoi = ctbhBUS.getNewMaCTBH();
+
             ChiTietBaoHanh ctbhMacDinh = new ChiTietBaoHanh(
-                    "CT" + bh.getMaBH(),
+                    maCTMoi,
                     bh.getMaBH(),
                     null,
                     "Tiếp nhận thiết bị",
                     "Đang sửa chữa");
-            ctbhBUS.add(ctbhMacDinh);
-            JOptionPane.showMessageDialog(this, "Thêm thành công!");
-            dispose();
+
+            if (ctbhBUS.add(ctbhMacDinh)) {
+                JOptionPane.showMessageDialog(this, "Thêm thành công!");
+                dispose();
+            }
         }
     }
 }

@@ -13,6 +13,8 @@ import Backend.BUS.PhieuXuatBUS;
 import Backend.BUS.ChiTietPhieuXuatBUS;
 import Backend.DTO.PhieuXuat;
 import Backend.DTO.ChiTietPhieuXuat;
+import Backend.DTO.KhuyenMai;
+
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
@@ -26,6 +28,9 @@ public class XacNhanBanHangDialog extends JDialog {
     private PhieuXuatTable phieuXuatTable;
     private BaoHanhTable baoHanhTable;
     private BanHangSidebar sidebar;
+    private String maKMSelected = null;
+    private double phanTramGiam = 0;
+    private JLabel lblGiamGia;
 
     public XacNhanBanHangDialog(JFrame parent, DefaultTableModel sourceModel, String maKH,
             PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable, BanHangSidebar sidebar) {
@@ -110,8 +115,25 @@ public class XacNhanBanHangDialog extends JDialog {
         pnlTotal.add(lblTongTien);
         add(pnlTotal, "growx, wrap, gaptop 10");
 
-        JPanel pnlButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel pnlButtons = new JPanel(new MigLayout("fillx, insets 5 0 0 0", "[left][grow][right]"));
         pnlButtons.setBackground(Color.WHITE);
+
+        CustomButton btnKhuyenMai = new CustomButton("CHỌN KHUYẾN MÃI", Theme.ACCENT_COLOR);
+        btnKhuyenMai.addActionListener(e -> {
+            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            ChonKhuyenMaiDialog dialog = new ChonKhuyenMaiDialog(parentFrame);
+            dialog.setVisible(true);
+
+            if (dialog.getSelectedKM() != null) {
+                KhuyenMai km = dialog.getSelectedKM();
+
+                this.maKMSelected = km.getMaKM();
+                this.phanTramGiam = km.getPhanTramGiam();
+
+                btnKhuyenMai.setText("KM: " + km.getTenKM() + " (-" + phanTramGiam + "%)");
+                calculateTotal();
+            }
+        });
 
         CustomButton btnHuy = new CustomButton("HỦY BỎ", new Color(149, 165, 166));
         btnHuy.addActionListener(e -> dispose());
@@ -122,9 +144,9 @@ public class XacNhanBanHangDialog extends JDialog {
                 PhieuXuatBUS pxBUS = new PhieuXuatBUS();
                 String maPX = pxBUS.getNewMaPhieu();
                 Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-                double tongTienValue = Double.parseDouble(lblTongTien.getText().replaceAll("[^0-9]", ""));
+
                 PhieuXuat phieuXuat = new PhieuXuat(
-                        maPX, currentTime, "NV01", maKH, null, tongTienValue, true);
+                        maPX, currentTime, "NV01", maKH, maKMSelected, finalTotalValue, true);
 
                 ArrayList<ChiTietPhieuXuat> dsChiTiet = new ArrayList<>();
                 for (int i = 0; i < modelReview.getRowCount(); i++) {
@@ -164,20 +186,33 @@ public class XacNhanBanHangDialog extends JDialog {
             }
         });
 
+        pnlButtons.add(btnKhuyenMai);
+        pnlButtons.add(new JLabel(), "growx");
         pnlButtons.add(btnHuy);
         pnlButtons.add(btnXacNhan);
         add(pnlButtons, "right");
     }
 
+    // Thêm biến này vào đầu class XacNhanBanHangDialog
+    private double finalTotalValue = 0;
+
     private void calculateTotal() {
         int totalSL = 0;
-        double totalMoney = 0;
+        double subTotal = 0;
+
         for (int i = 0; i < modelReview.getRowCount(); i++) {
             totalSL += Integer.parseInt(modelReview.getValueAt(i, 3).toString());
-            String thanhTienStr = modelReview.getValueAt(i, 5).toString().replaceAll("[^0-9]", "");
-            totalMoney += Double.parseDouble(thanhTienStr);
+            // Lấy giá trị tiền gốc từ chính logic tính toán, không nên đọc từ Table String
+            int sl = Integer.parseInt(modelReview.getValueAt(i, 3).toString());
+            String giaStr = modelReview.getValueAt(i, 4).toString().replaceAll("[^0-9]", "");
+            subTotal += sl * Double.parseDouble(giaStr);
         }
+
+        // Tính tiền sau giảm giá
+        double moneyDiscount = subTotal * (this.phanTramGiam / 100.0);
+        this.finalTotalValue = subTotal - moneyDiscount;
+
         lblTongSL.setText("Tổng số lượng: " + totalSL);
-        lblTongTien.setText("TỔNG TIỀN THANH TOÁN: " + String.format("%,.0f", totalMoney) + " VNĐ");
+        lblTongTien.setText("TỔNG TIỀN THANH TOÁN: " + String.format("%,.0f", finalTotalValue) + " VNĐ");
     }
 }

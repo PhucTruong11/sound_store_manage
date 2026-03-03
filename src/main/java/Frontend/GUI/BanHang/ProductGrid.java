@@ -15,18 +15,12 @@ import Backend.DTO.PhienBanSanPham;
 
 public class ProductGrid extends JPanel {
     private JPanel mainPanel;
-    private final int ITEMS_PER_PAGE = 9;
     private ArrayList<PhienBanSanPham> fullList = new ArrayList<>();
     private PaginationPanel pagination;
     private BanHangSidebar sidebar;
 
     public ProductGrid(BanHangSidebar sidebar, PaginationPanel pagination) {
         this.sidebar = sidebar;
-        this.pagination = pagination;
-
-        if (this.pagination != null) {
-            this.pagination.setOnPageChange(this::displayPage);
-        }
 
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
@@ -49,49 +43,39 @@ public class ProductGrid extends JPanel {
     public void loadData() {
         PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
         this.fullList = pbBUS.getAllPhienBanSanPham();
-        updatePagination();
-        displayPage(1);
+        displayAll();
     }
 
     public void loadSearchData(String text) {
         PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
         this.fullList = pbBUS.search(text);
-        updatePagination();
-        displayPage(1);
+        displayAll();
     }
 
     public void loadByCategoryData(String tenLoai) {
         PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
-        this.fullList = pbBUS.getByLoai(tenLoai);
-        updatePagination();
-        displayPage(1);
-    }
-
-    private void updatePagination() {
-        if (pagination != null) {
-            int totalItems = fullList.size();
-            int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
-            pagination.setTotalPages(totalPages <= 0 ? 1 : totalPages);
+        if (tenLoai.equals("Tất cả sản phẩm")) {
+            loadData();
+        } else {
+            this.fullList = pbBUS.getByLoai(tenLoai);
+            displayAll();
         }
     }
 
-    public void displayPage(int page) {
+    public void displayAll() {
         mainPanel.removeAll();
-        int start = (page - 1) * ITEMS_PER_PAGE;
-        int end = Math.min(start + ITEMS_PER_PAGE, fullList.size());
 
-        if (start < fullList.size()) {
-            List<PhienBanSanPham> pagedList = fullList.subList(start, end);
-            for (PhienBanSanPham pb : pagedList) {
-                InfoPanel card = new InfoPanel(
-                        pb.getMaPhienBan(),
-                        pb.getTenSP(),
-                        String.format("%,.0f", pb.getGiaBan()),
-                        pb.getHinhAnh(),
-                        sidebar);
-                mainPanel.add(card);
-            }
+        // Duyệt toàn bộ danh sách thay vì dùng subList
+        for (PhienBanSanPham pb : fullList) {
+            InfoPanel card = new InfoPanel(
+                    pb.getMaPhienBan(),
+                    pb.getTenSP(),
+                    String.format("%,.0f", pb.getGiaBan()),
+                    pb.getHinhAnh(),
+                    sidebar);
+            mainPanel.add(card);
         }
+
         mainPanel.revalidate();
         mainPanel.repaint();
     }

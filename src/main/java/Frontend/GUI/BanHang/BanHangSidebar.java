@@ -130,20 +130,12 @@ public class BanHangSidebar extends JPanel {
                     parent,
                     modelBan,
                     maKHSelected,
-                    this.phieuXuatTable, 
-                    this.baoHanhTable, 
-                    this
-            );
+                    this.phieuXuatTable,
+                    this.baoHanhTable,
+                    this);
             dialog.setVisible(true);
         });
         add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");
-    }
-
-    public void updateInfo(String ma, String ten, String gia) {
-        this.currentMa = ma;
-        this.currentGia = gia;
-
-        lblTenSP.setText(ten);
     }
 
     private void addProductToTable() {
@@ -164,15 +156,44 @@ public class BanHangSidebar extends JPanel {
         this.currentMa = "";
         this.currentGia = "";
         lblTenSP.setText("Chưa chọn sản phẩm");
+        lblTonKho.setText("Tồn kho hiện tại: 0");
         spnSoLuongBan.setValue(1);
     }
 
     public void clearCart() {
-    modelBan.setRowCount(0);
-    maKHSelected = "";
-    lblKhachHang.setText("Chưa chọn khách hàng");
-    lblKhachHang.setFont(new Font("Segoe UI", Font.ITALIC, 13));
-    lblKhachHang.setForeground(Color.GRAY);
-    resetSelection();
-}
+        modelBan.setRowCount(0);
+        maKHSelected = "";
+        lblKhachHang.setText("Chưa chọn khách hàng");
+        lblKhachHang.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+        lblKhachHang.setForeground(Color.GRAY);
+        resetSelection();
+    }
+
+    public void updateInfo(String ma, String ten, String gia, String ton) {
+        this.currentMa = ma;
+        this.currentGia = gia;
+        lblTenSP.setText(ten);
+
+        try {
+            String cleanTon = ton.replaceAll("[^0-9]", "");
+            int tonInt = Integer.parseInt(cleanTon);
+
+            lblTonKho.setText("Tồn kho hiện tại: " + tonInt);
+            lblTonKho.setForeground(tonInt > 0 ? Color.BLACK : Color.RED);
+
+            if (tonInt > 0) {
+                spnSoLuongBan.setModel(new SpinnerNumberModel(1, 1, tonInt, 1));
+                spnSoLuongBan.setEnabled(true);
+            } else {
+                spnSoLuongBan.setModel(new SpinnerNumberModel(0, 0, 0, 0));
+                spnSoLuongBan.setEnabled(false);
+            }
+        } catch (Exception e) {
+            lblTonKho.setText("Tồn kho hiện tại: 0");
+            spnSoLuongBan.setEnabled(false);
+        }
+
+        this.revalidate();
+        this.repaint();
+    }
 }

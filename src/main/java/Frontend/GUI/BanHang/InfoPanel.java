@@ -26,11 +26,6 @@ class InfoPanel extends JPanel {
         setBackground(Color.WHITE);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // this.setBorder(BorderFactory.createCompoundBorder(
-        //         BorderFactory.createLineBorder(new Color(230, 230, 230), 1),
-        //         BorderFactory.createEmptyBorder(10, 10, 10, 10) // Padding 10px mỗi bên là vừa đẹp
-        // ));
-
         this.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1, true));
         this.putClientProperty("FlatLaf.style", "arc: 15");
 
@@ -51,7 +46,7 @@ class InfoPanel extends JPanel {
             lblImg.setText("Lỗi nạp ảnh");
         }
 
-        lblImg.putClientProperty("FlatLaf.style", "arc: 15"); 
+        lblImg.putClientProperty("FlatLaf.style", "arc: 15");
         lblImg.setOpaque(true);
         lblImg.setBackground(new Color(252, 252, 252));
 
@@ -73,10 +68,12 @@ class InfoPanel extends JPanel {
             public void mouseEntered(MouseEvent e) {
                 setBorder(BorderFactory.createLineBorder(Theme.PRIMARY_COLOR, 1, true));
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1, true));
             }
+
             @Override
             public void mouseClicked(MouseEvent e) {
                 PhienBanSanPhamBUS bus = new PhienBanSanPhamBUS();
@@ -84,7 +81,7 @@ class InfoPanel extends JPanel {
 
                 if (dsPhienBan != null && dsPhienBan.size() > 1) {
                     String[] options = dsPhienBan.stream()
-                            .map(pb -> pb.getMauSac() + " - " + String.format("%,.0f", pb.getGiaBan()))
+                            .map(pb -> pb.getMauSac() + " - SL: " + pb.getSoLuongTon())
                             .toArray(String[]::new);
 
                     int choice = JOptionPane.showOptionDialog(null, "Chọn màu sắc sản phẩm:",
@@ -92,13 +89,29 @@ class InfoPanel extends JPanel {
                             JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
 
                     if (choice >= 0) {
-                        PhienBanSanPham selected = dsPhienBan.get(choice);
-                        sidebar.updateInfo(selected.getMaPhienBan(), selected.getTenSP(),
-                                String.format("%,.0f", selected.getGiaBan()));
+                        updateSidebar(dsPhienBan.get(choice));
                     }
-                } else {
-                    sidebar.updateInfo(maSP, tenSP, gia);
                 }
+                else {
+                    PhienBanSanPham selected = bus.getByMaPhienBan(maSP); 
+
+                    if (selected != null) {
+                        updateSidebar(selected);
+                    } else if (dsPhienBan != null && !dsPhienBan.isEmpty()) {
+                        updateSidebar(dsPhienBan.get(0));
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Không tìm thấy dữ liệu tồn kho cho mã: " + maSP);
+                    }
+                }
+            }
+
+            private void updateSidebar(PhienBanSanPham pb) {
+                sidebar.updateInfo(
+                        pb.getMaPhienBan(),
+                        pb.getTenSP(),
+                        String.format("%.0f", pb.getGiaBan()), 
+                        String.valueOf(pb.getSoLuongTon()) 
+                );
             }
         });
     }
