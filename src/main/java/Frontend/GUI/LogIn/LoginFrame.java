@@ -82,21 +82,35 @@ public class LoginFrame extends JFrame {
         String password = new String(txtPassword.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Cảnh báo",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
+
+        btnLogin.setEnabled(false);
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
         TaiKhoan tk = taiKhoanBUS.login(username, password);
 
         if (tk != null) {
-            String maNQ = tk.getMaNhomQuyen();
+            // Lưu vào Session để dùng toàn cục
+            Backend.DTO.Session.currentAccount = tk;
 
-            new Frontend.GUI.MainFrame(tk.getUsername(), maNQ).setVisible(true);
-            dispose();
+            // Lấy thông tin nhân viên thật
+            Backend.BUS.NhanVienBUS nvBUS = new Backend.BUS.NhanVienBUS();
+            Backend.DTO.NhanVien nv = nvBUS.getById(tk.getMaNV()); 
+            Backend.DTO.Session.currentNhanVien = nv;
+
+            String displayName = (nv != null) ? nv.getHoTen() : tk.getUsername();
+
+            JOptionPane.showMessageDialog(this, "Chào mừng " + displayName + " quay trở lại!");
+            
+            new Frontend.GUI.MainFrame(displayName, tk.getMaNhomQuyen()).setVisible(true);
+            this.dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu, hoặc tài khoản đã bị khóa!",
-                    "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            btnLogin.setEnabled(true);
+            setCursor(Cursor.getDefaultCursor());
+            txtPassword.setText("");
         }
-    }
-}
+    } // Đóng doLogin
+} // Đóng class LoginFrame
