@@ -1,18 +1,27 @@
 package Frontend.GUI.NhanVien;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 import Backend.BUS.NhanVienBUS;
 import Backend.DTO.NhanVien;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
-import java.util.ArrayList;
-import java.text.DecimalFormat;
 
 public class NhanVienTable extends JPanel {
     private JTable tbl;
@@ -218,15 +227,17 @@ public class NhanVienTable extends JPanel {
     }
 
     public JTable getTbl() { return tbl; }
-public void filterByKeyword(String keyword) {
-    currentKeyword = (keyword == null) ? "" : keyword.toLowerCase().trim();
-    applyFilters();
-}
+    public void filterByKeyword(String keyword) {
+        currentKeyword = (keyword == null) ? "" : keyword.toLowerCase().trim();
+        applyFilters();
+    }
 
 
     public void applyFilters() {
     String chucVu = cboChucVu.getSelectedItem().toString();
     String keyword = currentKeyword; // từ search
+
+    String[] keywords = keyword.isEmpty() ? new String[0] : keyword.split("\\s+");
 
     sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
         @Override
@@ -235,16 +246,21 @@ public void filterByKeyword(String keyword) {
             String ma = entry.getStringValue(1).toLowerCase();
             String ten = entry.getStringValue(2).toLowerCase();
             String sdt = entry.getStringValue(3).toLowerCase();
+            String diaChi = entry.getStringValue(4).toLowerCase();
             String cv  = entry.getStringValue(5);
 
-            boolean matchSearch =
-                    keyword.isEmpty()
-                    || ma.contains(keyword)
-                    || ten.contains(keyword)
-                    || sdt.contains(keyword);
+            String infoToSearch = ma + " " + ten + " " + sdt + " " + diaChi;
+
+            boolean matchSearch = true;
+            for (String word : keywords) {
+                if (!infoToSearch.contains(word)) {
+                    matchSearch = false;
+                    break;
+                }
+            }
 
             boolean matchChucVu =
-                    chucVu.equals("Tất cả")
+                    chucVu.equals("Tất cả chức vụ")
                     || cv.equalsIgnoreCase(chucVu);
 
             return matchSearch && matchChucVu;
