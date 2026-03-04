@@ -29,13 +29,10 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhap> {
     @Override
     public ArrayList<ChiTietPhieuNhap> selectAll(String maPN) {
         ArrayList<ChiTietPhieuNhap> list = new ArrayList<>();
-        String sql = """
-                SELECT ct.*, sp.TenSP
-                FROM ChiTietPhieuNhap AS ct
-                JOIN PhienBanSP AS pb ON ct.MaPhienBan = pb.MaPhienBan
-                JOIN SanPham AS sp ON pb.MaSP = sp.MaSP
-                WHERE ct.MaPhieuNhap = ?
-                """;
+        String sql = "SELECT ct.*, sp.TenSP, sp.HinhAnh FROM ChiTietPhieuNhap ct " +
+                "JOIN PhienBanSP pb ON ct.MaPhienBan = pb.MaPhienBan " +
+                "JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
+                "WHERE ct.MaPhieuNhap = ?";
 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -44,12 +41,13 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhap> {
 
             while (rs.next()) {
                 ChiTietPhieuNhap ct = new ChiTietPhieuNhap(
-                        rs.getString(1),
-                        rs.getString(2),
-                        rs.getInt(3),
-                        rs.getDouble(4),
-                        rs.getDouble(5));
+                        rs.getString("MaPhieuNhap"),
+                        rs.getString("MaPhienBan"),
+                        rs.getInt("SoLuong"),
+                        rs.getDouble("DonGia"),
+                        rs.getDouble("ThanhTien"));
                 ct.setTenSP(rs.getString("TenSP"));
+                ct.setHinhAnh(rs.getString("HinhAnh"));
                 list.add(ct);
             }
         } catch (Exception e) {

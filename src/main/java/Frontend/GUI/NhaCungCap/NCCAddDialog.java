@@ -12,7 +12,6 @@ public class NCCAddDialog extends BaseThaoTacDialog{
     public NCCAddDialog() {
         super("THÊM NHÀ CUNG CẤP", 450, 350);
         
-        // Tự động lấy và điền mã mới
         String newMa = nccBUS.getNewMaNCC();
         txtMa.setText(newMa);
 

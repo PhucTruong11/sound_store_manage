@@ -132,7 +132,7 @@ public class ChiTietPhieuXuatDialog extends JDialog {
                 lblImage.setIcon(new ImageIcon(scaled));
             }
         } catch (Exception e) {
-            lblImage.setText("Lỗi ảnh");
+            lblImage.setText("Hiện tại không thể tải ảnh");
         }
     }
 }

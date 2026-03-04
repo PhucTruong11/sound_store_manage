@@ -98,7 +98,7 @@ public class BanHangSidebar extends JPanel {
         add(new JSeparator(), "growx, gaptop 10, gapbottom 10");
 
         add(new JLabel("Số lượng bán:"), "gaptop 5");
-        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
+        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, 10000, 1));
         add(spnSoLuongBan, "split 2, w 100!, h 35!");
 
         CustomButton btnThem = new CustomButton("THÊM", new Color(0, 153, 255));

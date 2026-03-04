@@ -9,6 +9,7 @@ public class ChiTietPhieuNhap {
     private double donGia;
     private double thanhTien;
     private String tenSP;
+    private String hinhAnh;
 
     public ChiTietPhieuNhap() {
     }
@@ -23,6 +24,9 @@ public class ChiTietPhieuNhap {
 
     public String getTenSP() { return tenSP; }
     public void setTenSP(String tenSP) { this.tenSP = tenSP; }
+
+    public String getHinhAnh() { return hinhAnh; }
+    public void setHinhAnh(String hinhAnh) { this.hinhAnh = hinhAnh; }
 
     public String getMaPhieuNhap() { return maPhieuNhap; }
     public void setMaPhieuNhap(String maPhieuNhap) { this.maPhieuNhap = maPhieuNhap; }

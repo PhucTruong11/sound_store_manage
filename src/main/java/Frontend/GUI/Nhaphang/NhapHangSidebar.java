@@ -1,11 +1,13 @@
 package Frontend.GUI.Nhaphang;
 
-import Frontend.Compoent.Theme;
+import Frontend.Compoent.Theme; 
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import Backend.BUS.NhaCungCapBUS;
+import Backend.BUS.TaiKhoanBUS;
+import Backend.DTO.TaiKhoan;
 import Backend.DTO.NhaCungCap;
 import Backend.DTO.Session; // Import Session để lấy thông tin đăng nhập
 import javax.swing.*;
@@ -27,6 +29,7 @@ public class NhapHangSidebar extends JPanel {
     private String currenGia = "";
 
     private NhapHangTable table;
+    // private TaiKhoanBUS tkBUS;
 
     public NhapHangSidebar(NhapHangTable table) {
         this.table = table;
@@ -97,7 +100,7 @@ public class NhapHangSidebar extends JPanel {
         add(new JSeparator(), "growx, gaptop 5, gapbottom 5");
 
         add(new JLabel("Số lượng nhập:"), "gaptop 5");
-        spnSoLuongNhap = new JSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
+        spnSoLuongNhap = new JSpinner(new SpinnerNumberModel(1, 1, 10000, 1));
         add(spnSoLuongNhap, "split 2, w 120!, h 30!");
 
         CustomButton btnThem = new CustomButton("THÊM", new Color(52, 152, 219));

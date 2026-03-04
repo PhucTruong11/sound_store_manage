@@ -18,6 +18,7 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
     private JLabel lblImage;
     private JTextArea txtImeiList;
     private ChiTietPhieuNhapBUS ctBUS = new ChiTietPhieuNhapBUS();
+    private ArrayList<ChiTietPhieuNhap> listChiTietPhieuNhap;
 
     public ChiTietHoaDonNhapDialog(JFrame parent, String maHD) {
         super(parent, "Chi tiết hóa đơn: " + maHD, true);
@@ -82,6 +83,16 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
         // --- Sự kiện click bảng để đổi ảnh ---
         tblDetails.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
+                int row = tblDetails.getSelectedRow();
+                if (row != -1 && listChiTietPhieuNhap != null && row < listChiTietPhieuNhap.size()) {
+                    ChiTietPhieuNhap ct = listChiTietPhieuNhap.get(row);
+                    if (ct.getHinhAnh() != null && !ct.getHinhAnh().isEmpty()) {
+                        loadProductImage(ct.getHinhAnh());
+                    } else {
+                        lblImage.setIcon(null);
+                        lblImage.setText("Không có ảnh");
+                    }
+                }
                 updatePreview();
             }
         });
@@ -90,10 +101,10 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
     private void loadData() {
         model.setRowCount(0);
         DecimalFormat df = new DecimalFormat("#, ###");
-        ArrayList<ChiTietPhieuNhap> list = ctBUS.getByMaPhieu(maHD);
+        listChiTietPhieuNhap = ctBUS.getByMaPhieu(maHD);
 
         int stt = 1;
-        for(ChiTietPhieuNhap ct : list) {
+        for(ChiTietPhieuNhap ct : listChiTietPhieuNhap) {
             model.addRow(new Object[] {
                 stt++, 
                 ct.getMaPhienBan(), 
@@ -123,6 +134,22 @@ public class ChiTietHoaDonNhapDialog extends JDialog {
             txtImeiList.setText(sb.toString());
             txtImeiList.setCaretPosition(0);
         }
+    }
+
+
+
+    private void loadProductImage(String imgName) {
+        try {
+            java.net.URL imgURL = getClass().getClassLoader().getResource("images/product/" + imgName);
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
+                Image scaled = icon.getImage().getScaledInstance(280, 250, Image.SCALE_SMOOTH);
+                lblImage.setIcon(new ImageIcon(scaled));
+            }
+        } catch (Exception e) {
+            lblImage.setText("Hiện tại ko thể tải ảnh");
+        }
+
     }
 
 }
