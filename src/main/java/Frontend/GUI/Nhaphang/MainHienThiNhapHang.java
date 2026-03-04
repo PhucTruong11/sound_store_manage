@@ -16,7 +16,7 @@ public class MainHienThiNhapHang extends JPanel {
         table = new NhapHangTable(null);
         sidebar = new NhapHangSidebar(table);
         table.setSidebar(sidebar);
-        toolbar = new NhapHangToolbar();
+        toolbar = new NhapHangToolbar(table);
 
         add(toolbar, "span 2, growx, wrap, gapbottom 10");
         add(sidebar, "w 280!, growy, cell 0 1");

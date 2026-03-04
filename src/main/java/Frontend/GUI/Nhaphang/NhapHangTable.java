@@ -18,6 +18,9 @@ public class NhapHangTable extends JScrollPane {
     private DefaultTableModel tblModel;
     private PhienBanSanPhamBUS phienbansanphamBUS;
     private NhapHangSidebar sidebar;
+    private String currentSearchQuery = "";
+    private String currentMaLoai = "All";
+    private String currentMaNCC = "All";
 
     public NhapHangTable(NhapHangSidebar sidebar) {
         phienbansanphamBUS = new PhienBanSanPhamBUS();
@@ -84,41 +87,17 @@ public class NhapHangTable extends JScrollPane {
     }
 
     public void loadData() {
+        applyFilters();
+    }
+    
+    public void applyFilters() {
         tblModel.setRowCount(0);
-        ArrayList<PhienBanSanPham> list = phienbansanphamBUS.getAllPhienBanSanPham();
 
-        DecimalFormat df = new DecimalFormat("#, ###");
-        
+        ArrayList<PhienBanSanPham> list = phienbansanphamBUS.getFilteredListNhapHang(currentMaNCC, currentMaLoai, currentSearchQuery);
+
+        DecimalFormat df = new DecimalFormat("#,###");
         int stt = 1;
         for (PhienBanSanPham pbsp : list) {
-           Object[] row = {
-            stt++,
-            pbsp.getMaPhienBan(),
-            pbsp.getTenSP(),
-            pbsp.getMauSac(),
-            df.format(pbsp.getGiaNhap()),
-            pbsp.getSoLuongTon(),
-           };
-           tblModel.addRow(row);
-        }
-    }
-
-
-    // Gọi hàm từ PhienBanSanPhamBUS
-    public void loadDataByNCC(String maNCC) {
-        tblModel.setRowCount(0);
-        ArrayList<PhienBanSanPham> list;
-
-        if(maNCC.equals("All")) {
-            list = phienbansanphamBUS.getAllPhienBanSanPham();
-        } else {
-            list = phienbansanphamBUS.getByNCC(maNCC);
-        }
-
-        DecimalFormat df = new DecimalFormat("#, ###");
-
-        int stt = 1;
-        for(PhienBanSanPham pbsp : list) {
             Object[] row = {
                 stt++,
                 pbsp.getMaPhienBan(),
@@ -129,5 +108,20 @@ public class NhapHangTable extends JScrollPane {
             };
             tblModel.addRow(row);
         }
+    }
+
+    public void loadDataBySearch(String query) {
+        this.currentSearchQuery = query;
+        applyFilters();
+    }
+
+    public void loadDataByLoai(String maLoai) {
+        this.currentMaLoai = maLoai;
+        applyFilters();
+    }
+
+    public void loadDataByNCC(String maNCC) {
+        this.currentMaNCC = maNCC;
+        applyFilters();
     }
 }
