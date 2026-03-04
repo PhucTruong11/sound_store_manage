@@ -65,7 +65,6 @@ public class ProductGrid extends JPanel {
     public void displayAll() {
         mainPanel.removeAll();
 
-        // Duyệt toàn bộ danh sách thay vì dùng subList
         for (PhienBanSanPham pb : fullList) {
             InfoPanel card = new InfoPanel(
                     pb.getMaPhienBan(),

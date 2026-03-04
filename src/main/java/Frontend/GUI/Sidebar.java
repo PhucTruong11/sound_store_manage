@@ -4,6 +4,8 @@ import javax.swing.*;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
+import Backend.BUS.ChiTietQuyenBUS;
+
 import java.awt.*;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
@@ -20,12 +22,16 @@ import Frontend.GUI.BaoHanh.BaoHanhPanel;
 import Frontend.GUI.NhaCungCap.MainHienThiNCC;
 import Frontend.GUI.NhanVien.FromHienThiNV;
 import Frontend.GUI.PhieuXuat.PhieuXuatPanel;
+import Frontend.GUI.PhanQuyen.PhanQuyenPanel;
 
 public class Sidebar extends JPanel {
     private MainFrame parent;
+    private ChiTietQuyenBUS qBUS = new ChiTietQuyenBUS();
+    private String maNQ;
 
-    public Sidebar(MainFrame parent) {
+    public Sidebar(MainFrame parent, String maNQ) {
         this.parent = parent;
+        this.maNQ = maNQ;
         setBackground(Theme.SECONDARY_COLOR);
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", "[]20[]"));
 
@@ -38,16 +44,16 @@ public class Sidebar extends JPanel {
         CustomButton btnLogout = new CustomButton("Đăng xuất", Theme.DANGER_COLOR);
         btnLogout.setIcon(logoutIcon);
         btnLogout.addActionListener(e -> {
-                    int confirm = JOptionPane.showConfirmDialog(parent, 
-                "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", 
-                JOptionPane.YES_NO_OPTION);
-            
+            int confirm = JOptionPane.showConfirmDialog(parent,
+                    "Bạn có chắc chắn muốn đăng xuất?", "Xác nhận",
+                    JOptionPane.YES_NO_OPTION);
+
             if (confirm == JOptionPane.YES_OPTION) {
                 // Đóng cửa sổ chính (MainFrame)
-                parent.dispose(); 
-                
+                parent.dispose();
+
                 // Mở lại cửa sổ đăng nhập
-                new Frontend.GUI.LogIn.LoginFrame().setVisible(true); 
+                new Frontend.GUI.LogIn.LoginFrame().setVisible(true);
             }
         });
         add(btnLogout, "pushy, aligny bottom, h 40!");
@@ -88,14 +94,16 @@ public class Sidebar extends JPanel {
                     parent.setPage(new FromHienThiKhachHang());
                     break;
                 case "Khuyến mãi":
-                parent.setPage(new MainKhuyenMai());
-                break;
+                    parent.setPage(new MainKhuyenMai());
+                    break;
                 case "Bảo hành":
                     parent.setPage(new BaoHanhPanel());
                     break;
                 case "Nhà cung cấp":
                     parent.setPage(new MainHienThiNCC());
                     break;
+                case "Phân quyền":
+                    parent.setPage(new PhanQuyenPanel());
                 case "Thống kê":
                     parent.setPage(new ThongKePanel());
                     break;
@@ -137,6 +145,35 @@ public class Sidebar extends JPanel {
                 return "user-round-pen";
             default:
                 return "help-circle";
+        }
+    }
+
+    private String getChucNangCode(String text) {
+        switch (text) {
+            case "Sản phẩm":
+                return "SANPHAM";
+            case "Bán hàng":
+                return "BANHANG";
+            case "Nhập hàng":
+                return "NHAPHANG";
+            case "Phiếu nhập":
+                return "PHIEUNHAP";
+            case "Phiếu xuất":
+                return "PHIEUXUAT";
+            case "Khuyến mãi":
+                return "KHUYENMAI";
+            case "Bảo hành":
+                return "BAOHANH";
+            case "Nhà cung cấp":
+                return "NHACUNGCAP";
+            case "Nhân viên":
+                return "NHANVIEN";
+            case "Khách hàng":
+                return "KHACHHANG";
+            case "Phân quyền":
+                return "PHANQUYEN";
+            default:
+                return "";
         }
     }
 }
