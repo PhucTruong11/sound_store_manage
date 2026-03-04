@@ -98,7 +98,18 @@ public class ChiTietPhieuXuatDialog extends JDialog {
                         lblImage.setText("Không có ảnh");
                     }
 
-                    txtImeiList.setText("Danh sách IMEI của sản phẩm: " + ct.getTenSP());
+                    ArrayList<String> imeis = chiTietPhieuXuatBUS.getImeisByMaPX(maPX, ct.getMaPhienBan());
+                    StringBuilder sb = new StringBuilder();
+                    if (imeis.isEmpty()) {
+                        sb.append("(Không tìm thấy mã IMEI cho sản phẩm này)");
+                    } else {
+                        for (int i = 0; i < imeis.size(); i++) {
+                            sb.append(String.format("%2d. ", i + 1)).append(imeis.get(i)).append("\n");
+                        }
+                    }
+
+                    txtImeiList.setText(sb.toString());
+                    txtImeiList.setCaretPosition(0);
                 }
             }
         });
@@ -113,7 +124,7 @@ public class ChiTietPhieuXuatDialog extends JDialog {
         for (ChiTietPhieuXuat ctpx : listChiTietPhieuXuat) {
             Object[] row = {
                     STT++,
-                    ctpx.getMaPhienBan(), 
+                    ctpx.getMaPhienBan(),
                     ctpx.getTenSP(),
                     ctpx.getSoLuong(),
                     df.format(ctpx.getDonGia()),

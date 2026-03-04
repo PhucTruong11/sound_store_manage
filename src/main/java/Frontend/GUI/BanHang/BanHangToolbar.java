@@ -1,14 +1,20 @@
 package Frontend.GUI.BanHang;
 
 import javax.swing.*;
+
+import Backend.BUS.LoaiSPBUS;
+import Backend.DTO.ThuocTinhSanPham.LoaiSP;
 import net.miginfocom.swing.MigLayout;
 import Frontend.Compoent.Theme;
 import Frontend.Compoent.SearchTextField;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class BanHangToolbar extends JPanel {
     private ProductGrid productGrid;
     private BanHangSidebar sidebar;
+    private JComboBox<LoaiSP> cbFilter;
+
 
     public BanHangToolbar(ProductGrid productGrid, BanHangSidebar sidebar) {
         this.productGrid = productGrid;
@@ -28,12 +34,26 @@ public class BanHangToolbar extends JPanel {
         });
         add(txtSearch, "growx, h 35!");
 
-        String[] loaiSP = { "Tất cả sản phẩm", "Loa", "Tai nghe", "Phụ kiện" };
-        JComboBox<String> cbFilter = new JComboBox<>(loaiSP);
+        cbFilter = new JComboBox<>();
+        DefaultComboBoxModel<LoaiSP> model = new DefaultComboBoxModel<>();
+        model.addElement(new LoaiSP("All", "Tất cả sản phẩm"));
+
+        LoaiSPBUS loaiBUS = new LoaiSPBUS();
+        ArrayList<LoaiSP> listLoai = loaiBUS.getAll();
+        for (LoaiSP l : listLoai) {
+            model.addElement(l);
+        }
+        cbFilter.setModel(model);
+
+        cbFilter.addActionListener(e -> {
+            LoaiSP selected = (LoaiSP) cbFilter.getSelectedItem();
+            if (selected != null) {
+                productGrid.loadDataByLoai(selected.getMaLoai());
+            }
+        });
 
         cbFilter.setPreferredSize(new Dimension(200, 35));
         cbFilter.putClientProperty("FlatLaf.style", "arc: 10");
-
         add(cbFilter, "w 200!");
     }
 }

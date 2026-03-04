@@ -78,4 +78,14 @@ public class ProductGrid extends JPanel {
         mainPanel.revalidate();
         mainPanel.repaint();
     }
+
+    public void loadDataByLoai(String maLoai) {
+        PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
+        if (maLoai.equals("All")) {
+            loadData();
+        } else {
+            this.fullList = pbBUS.getByLoai(maLoai);
+            displayAll();
+        }
+    }
 }

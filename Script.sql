@@ -13,6 +13,7 @@ USE quanlyamthanh;
 -- Nhóm Con Người (Kế thừa)
 --
 
+
 CREATE TABLE ConNguoi (
     ID VARCHAR(20) PRIMARY KEY, -- Định dạng: NV001 hoặc KH001
     HoTen VARCHAR(40) NOT NULL,
@@ -390,14 +391,26 @@ FROM ChucNang
 CROSS JOIN (SELECT 'read' AS act UNION SELECT 'create' UNION SELECT 'update' UNION SELECT 'delete') AS actions;
 
 INSERT INTO ChiTietQuyen (MaNhomQuyen, MaChucNang, HanhDong) VALUES 
-('NQ02', 'BANHANG', 'read'), ('NQ02', 'BANHANG', 'create'), ('NQ02', 'BANHANG', 'update'),
-('NQ02', 'PHIEUXUAT', 'read'), ('NQ02', 'PHIEUXUAT', 'create'),
-('NQ02', 'KHACHHANG', 'read'), ('NQ02', 'KHACHHANG', 'create'), ('NQ02', 'KHACHHANG', 'update'),
-('NQ02', 'SANPHAM', 'read'), ('NQ02', 'BAOHANH', 'read'), ('NQ02', 'BAOHANH', 'create'),
-('NQ03', 'NHAPHANG', 'read'), ('NQ03', 'NHAPHANG', 'create'),
-('NQ03', 'PHIEUNHAP', 'read'), ('NQ03', 'PHIEUNHAP', 'create'),
-('NQ03', 'SANPHAM', 'read'), ('NQ03', 'SANPHAM', 'create'), ('NQ03', 'SANPHAM', 'update'),
-('NQ03', 'NHACUNGCAP', 'read'), ('NQ03', 'NHACUNGCAP', 'create');
+('NQ02', 'BANHANG', 'read'), 
+('NQ02', 'BANHANG', 'create'), 
+('NQ02', 'BANHANG', 'update'),
+('NQ02', 'PHIEUXUAT', 'read'), 
+('NQ02', 'PHIEUXUAT', 'create'),
+('NQ02', 'KHACHHANG', 'read'), 
+('NQ02', 'KHACHHANG', 'create'), 
+('NQ02', 'KHACHHANG', 'update'),
+('NQ02', 'SANPHAM', 'read'), 
+('NQ02', 'BAOHANH', 'read'), 
+('NQ02', 'BAOHANH', 'create'),
+('NQ03', 'NHAPHANG', 'read'), 
+('NQ03', 'NHAPHANG', 'create'),
+('NQ03', 'PHIEUNHAP', 'read'), 
+('NQ03', 'PHIEUNHAP', 'create'),
+('NQ03', 'SANPHAM', 'read'), 
+('NQ03', 'SANPHAM', 'create'), 
+('NQ03', 'SANPHAM', 'update'),
+('NQ03', 'NHACUNGCAP', 'read'), 
+('NQ03', 'NHACUNGCAP', 'create');
 
 INSERT INTO ConNguoi (ID, HoTen, SDT, DiaChi) VALUES 
 ('NV01', 'Trương Phúc', '0909123456', 'Đà Nẵng'),
@@ -423,7 +436,8 @@ INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai) VALUES
 
 INSERT INTO LoaiSP VALUES 
 ('L01', 'Loa Bluetooth'),
-('L02', 'Tai nghe Over-ear');
+('L02', 'Tai nghe Over-ear'),
+('L03', 'Phụ kiện âm thanh');
 
 INSERT INTO HangSX VALUES 
 ('H01', 'Marshall', 'Anh'),
@@ -440,7 +454,26 @@ INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, MoTa, ThoiGianBaoHanh, TrangTh
 ('SP07', 'Sony WH-CH720N', 'L02', 'H02', 'Tai nghe chống ồn giá rẻ', 12, TRUE, 'sony_ch720n.jpg'),
 ('SP08', 'JBL Charge 5', 'L01', 'H03', 'Loa Bluetooth kiêm sạc dự phòng', 12, TRUE, 'jbl_charge5.jpg'),
 ('SP09', 'JBL PartyBox Encore', 'L01', 'H03', 'Loa kèm 2 Micro hát karaoke', 12, TRUE, 'jbl_encore.jpg'),
-('SP10', 'JBL Flip 6', 'L01', 'H03', 'Loa di động âm thanh 2 đường tiếng', 12, TRUE, 'jbl_flip6.jpg');
+('SP10', 'JBL Flip 6', 'L01', 'H03', 'Loa di động âm thanh 2 đường tiếng', 12, TRUE, 'jbl_flip6.jpg'),
+
+('SP11', 'JBL Go 3', 'L01', 'H03', 'Loa mini chống nước', 12, TRUE, 'jbl_go3.jpg'),
+('SP12', 'Apple AirPods Pro 2', 'L02', 'H03', 'Chống ồn chủ động', 12, TRUE, 'airpods_pro.jpg'),
+('SP13', 'Sennheiser HD 450BT', 'L02', 'H02', 'Âm thanh chi tiết, pin 30h', 24, TRUE, 'sennheiser_hd450.jpg'),
+('SP14', 'Bose QuietComfort 45', 'L02', 'H03', 'Khử tiếng ồn đỉnh cao', 12, TRUE, 'bose_qc45.jpg'),
+('SP15', 'JBL Tune 510BT', 'L02', 'H03', 'Bass mạnh, giá sinh viên', 12, TRUE, 'jbl_510bt.jpg'),
+('SP16', 'Sony WH-1000XM4', 'L02', 'H02', 'Bản nâng cấp huyền thoại', 12, TRUE, 'sony_xm4.jpg'),
+('SP17', 'Marshall Major IV', 'L02', 'H01', 'Pin 80h, sạc không dây', 12, TRUE, 'marshall_major4.jpg'),
+('SP18', 'AirPods Max', 'L02', 'H03', 'Tai nghe Over-ear cao cấp', 12, TRUE, 'airpods_max.jpg'),
+('SP19', 'Micro Shure SM58', 'L03', 'H03', 'Micro vocal chuyên nghiệp', 12, TRUE, 'shure_sm58.jpg'),
+('SP20', 'Cáp Audio 3.5mm Ugreen', 'L03', 'H02', 'Dây bọc dù chống nhiễu', 6, TRUE, 'ugreen_35.jpg'),
+('SP21', 'Giá treo tai nghe Gỗ', 'L03', 'H01', 'Decor gỗ Walnut sang trọng', 0, TRUE, 'stand_wood.jpg'),
+('SP22', 'Bao da Marshall Willen', 'L03', 'H01', 'Bao bảo vệ silicon', 3, TRUE, 'case_willen.jpg'),
+('SP23', 'Micro JBL PBM100', 'L03', 'H03', 'Micro karaoke có dây', 12, TRUE, 'jbl_pbm100.jpg'),
+('SP24', 'Cáp sạc Type-C bọc thép', 'L03', 'H02', 'Sạc siêu bền cho loa', 6, TRUE, 'cable_c.jpg'),
+('SP25', 'Bộ vệ sinh tai nghe 3 in 1', 'L03', 'H02', 'Dạng bút vệ sinh tiện lợi', 0, TRUE, 'cleaning_kit.jpg'),
+('SP26', 'Jack chuyển 6.35mm sang 3.5mm', 'L03', 'H02', 'Mạ vàng cao cấp', 6, TRUE, 'jack_convert.jpg'),
+('SP27', 'Túi đựng loa JBL Charge', 'L03', 'H03', 'Chống sốc EVA cao cấp', 3, TRUE, 'bag_jbl.jpg');
+
 
 INSERT INTO PhienBanSP VALUES 
 ('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 10, TRUE, 'marshall.jpg'),
@@ -452,7 +485,24 @@ INSERT INTO PhienBanSP VALUES
 ('PB07', 'SP07', 'Xanh (Blue)', 'N/A', '35h', 'Bluetooth 5.2', 1800000, 2500000, 15, TRUE, 'sony_ch720n.jpg'),
 ('PB08', 'SP08', 'Đen (Black)', '40W', '20h', 'Bluetooth 5.1', 3000000, 3900000, 12, TRUE, 'jbl_charge5.jpg'),
 ('PB09', 'SP09', 'Đen (Black)', '100W', '10h', 'Bluetooth 5.1', 5800000, 7500000,10 , TRUE, 'jbl_encore.jpg'),
-('PB10', 'SP10', 'Đỏ (Red)', '20W', '12h', 'Bluetooth 5.1', 2200000, 2900000, 20, TRUE, 'jbl_flip6.jpg');
+('PB10', 'SP10', 'Đỏ (Red)', '20W', '12h', 'Bluetooth 5.1', 2200000, 2900000, 20, TRUE, 'jbl_flip6.jpg'),
+('PB11', 'SP11', 'Xanh quân đội', '4.2W', '5h', 'Bluetooth 5.1', 800000, 1050000, 20, TRUE, 'jbl_go3.jpg'),
+('PB12', 'SP12', 'Trắng', 'N/A', '6h', 'Bluetooth 5.3', 4500000, 5900000, 15, TRUE, 'airpods_pro.jpg'),
+('PB13', 'SP13', 'Đen', 'N/A', '30h', 'Bluetooth 5.0', 2800000, 3500000, 10, TRUE, 'sennheiser_hd450.jpg'),
+('PB14', 'SP14', 'Trắng', 'N/A', '24h', 'Bluetooth 5.1', 5500000, 7200000, 8, TRUE, 'bose_qc45.jpg'),
+('PB15', 'SP15', 'Hồng', 'N/A', '40h', 'Bluetooth 5.0', 700000, 1200000, 30, TRUE, 'jbl_510bt.jpg'),
+('PB16', 'SP16', 'Bạc', 'N/A', '30h', 'Bluetooth 5.0', 5000000, 6500000, 12, TRUE, 'sony_xm4.jpg'),
+('PB17', 'SP17', 'Nâu da', 'N/A', '80h', 'Bluetooth 5.0', 3000000, 4200000, 10, TRUE, 'marshall_major4.jpg'),
+('PB18', 'SP18', 'Xanh Sky', 'N/A', '20h', 'Bluetooth 5.0', 10000000, 13500000, 5, TRUE, 'airpods_max.jpg'),
+('PB19', 'SP19', 'Xám', 'N/A', 'N/A', 'XLR', 2100000, 2800000, 10, TRUE, 'shure_sm58.jpg'),
+('PB20', 'SP20', 'Đen', 'N/A', 'N/A', '3.5mm', 150000, 250000, 100, TRUE, 'ugreen_35.jpg'),
+('PB21', 'SP21', 'Gỗ Walnut', 'N/A', 'N/A', 'N/A', 300000, 550000, 15, TRUE, 'stand_wood.jpg'),
+('PB22', 'SP22', 'Đen', 'N/A', 'N/A', 'Silicon', 100000, 190000, 50, TRUE, 'case_willen.jpg'),
+('PB23', 'SP23', 'Đen', 'N/A', 'N/A', 'Cáp 3m', 700000, 950000, 20, TRUE, 'jbl_pbm100.jpg'),
+('PB24', 'SP24', 'Đỏ', '60W', 'N/A', 'Type-C', 120000, 220000, 80, TRUE, 'cable_c.jpg'),
+('PB25', 'SP25', 'Nhiều màu', 'N/A', 'N/A', 'N/A', 50000, 95000, 200, TRUE, 'cleaning_kit.jpg'),
+('PB26', 'SP26', 'Vàng', 'N/A', 'N/A', 'Mạ vàng', 80000, 150000, 60, TRUE, 'jack_convert.jpg'),
+('PB27', 'SP27', 'Đen', 'N/A', 'N/A', 'Vải Canvas', 200000, 350000, 40, TRUE, 'bag_jbl.jpg');
 -- --------------------------------------------------------
 
 INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt) VALUES 
@@ -531,9 +581,31 @@ INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES
 ('CTBH07', 'BH05', 'Hỏng da đệm tai (Earpads)', 'Đang sửa chữa'),
 ('CTBH08', 'BH06', 'Loa không lên nguồn', 'Đang sửa chữa'),
 ('CTBH09', 'BH06', 'Kiểm tra pin và mạch sạc', 'Đang sửa chữa');
-
-INSERT INTO NCC_SanPham VALUES ('NCC01', 'SP01'), 
-('NCC03', 'SP03'),('NCC01', 'SP04'), ('NCC01', 'SP05'), 
-('NCC02', 'SP06'), ('NCC02', 'SP07'), ('NCC03', 'SP08'), 
-('NCC03', 'SP09'), ('NCC03', 'SP10');
+INSERT INTO NCC_SanPham VALUES 
+('NCC01', 'SP01'), 
+('NCC03', 'SP03'),
+('NCC01', 'SP04'), 
+('NCC01', 'SP05'), 
+('NCC02', 'SP06'), 
+('NCC02', 'SP07'), 
+('NCC03', 'SP08'), 
+('NCC03', 'SP09'), 
+('NCC03', 'SP10'),
+('NCC03', 'SP11'), 
+('NCC03', 'SP12'), 
+('NCC02', 'SP13'), 
+('NCC03', 'SP14'), 
+('NCC03', 'SP15'), 
+('NCC02', 'SP16'), 
+('NCC01', 'SP17'), 
+('NCC03', 'SP18'), 
+('NCC03', 'SP19'), 
+('NCC02', 'SP20'), 
+('NCC01', 'SP21'), 
+('NCC01', 'SP22'), 
+('NCC03', 'SP23'), 
+('NCC02', 'SP24'), 
+('NCC02', 'SP25'), 
+('NCC02', 'SP26'), 
+('NCC03', 'SP27');
 

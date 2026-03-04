@@ -252,23 +252,27 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
 
     public ArrayList<PhienBanSanPham> selectByLoai(String maLoai) {
         ArrayList<PhienBanSanPham> list = new ArrayList<>();
-        // JOIN 3 bảng: Phiên bản -> Sản phẩm -> Loại sản phẩm
+        // SQL nạp đầy đủ thông tin từ bảng Phiên bản và Sản phẩm
         String sql = "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
-                    "JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
-                    "WHERE sp.MaLoai = ? AND pb.TrangThai = TRUE";
+                "JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
+                "WHERE sp.MaLoai = ? AND pb.TrangThai = TRUE";
         try (Connection conn = DatabaseHelper.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql)) {
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, maLoai);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 PhienBanSanPham pb = new PhienBanSanPham();
-                // Map đầy đủ các trường dữ liệu
                 pb.setMaPhienBan(rs.getString("MaPhienBan"));
                 pb.setMaSP(rs.getString("MaSP"));
+                pb.setTenSP(rs.getString("TenSP"));
                 pb.setMauSac(rs.getString("MauSac"));
+
+                pb.setGiaBan(rs.getDouble("GiaBan"));
+                pb.setHinhAnh(rs.getString("HinhAnh"));
+
                 pb.setGiaNhap(rs.getDouble("GiaNhap"));
                 pb.setSoLuongTon(rs.getInt("SoLuongTon"));
-                pb.setTenSP(rs.getString("TenSP"));
+                pb.setTrangThai(rs.getBoolean("TrangThai"));
                 list.add(pb);
             }
         } catch (Exception e) {
@@ -280,30 +284,35 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
     public ArrayList<PhienBanSanPham> selectByFilterNhapHang(String maNCC, String maLoai, String query) {
         ArrayList<PhienBanSanPham> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(
-            "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
-            "JOIN SanPham sp ON pb.MaSP = sp.MaSP "
-            // "JOIN NCC_SanPham ncc_sp ON sp.MaSP = ncc_sp.MaSP " +
-            // "WHERE pb.TrangThai = TRUE"
+                "SELECT pb.*, sp.TenSP FROM PhienBanSP pb " +
+                        "JOIN SanPham sp ON pb.MaSP = sp.MaSP "
+        // "JOIN NCC_SanPham ncc_sp ON sp.MaSP = ncc_sp.MaSP " +
+        // "WHERE pb.TrangThai = TRUE"
         );
 
-        if (!maNCC.equals("All")) sql.append(" JOIN NCC_SanPham ncc_sp ON sp.MaSP = ncc_sp.MaSP");
+        if (!maNCC.equals("All"))
+            sql.append(" JOIN NCC_SanPham ncc_sp ON sp.MaSP = ncc_sp.MaSP");
         sql.append(" WHERE pb.TrangThai = TRUE");
-        if (!maNCC.equals("All")) sql.append(" AND ncc_sp.MaNCC = ?");
-        if (!maLoai.equals("All")) sql.append(" AND sp.MaLoai = ?");
+        if (!maNCC.equals("All"))
+            sql.append(" AND ncc_sp.MaNCC = ?");
+        if (!maLoai.equals("All"))
+            sql.append(" AND sp.MaLoai = ?");
         if (query != null && !query.trim().isEmpty()) {
             String[] words = query.toLowerCase().split("\\s+");
             for (int i = 0; i < words.length; i++) {
                 sql.append(" AND (LOWER(sp.TenSP) LIKE ? OR LOWER(pb.MaPhienBan) LIKE ? " +
-                       "OR LOWER(pb.MauSac) LIKE ? OR CAST(pb.GiaNhap AS CHAR) LIKE ? " +
-                       "OR CAST(pb.SoLuongTon AS CHAR) LIKE ?)");
+                        "OR LOWER(pb.MauSac) LIKE ? OR CAST(pb.GiaNhap AS CHAR) LIKE ? " +
+                        "OR CAST(pb.SoLuongTon AS CHAR) LIKE ?)");
             }
         }
 
         try (Connection conn = DatabaseHelper.getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+                PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
             int index = 1;
-            if (!maNCC.equals("All")) stmt.setString(index++, maNCC);
-            if (!maLoai.equals("All")) stmt.setString(index++, maLoai);
+            if (!maNCC.equals("All"))
+                stmt.setString(index++, maNCC);
+            if (!maLoai.equals("All"))
+                stmt.setString(index++, maLoai);
             if (query != null && !query.trim().isEmpty()) {
                 String[] words = query.toLowerCase().split("\\s+");
                 for (String word : words) {
@@ -319,15 +328,16 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 PhienBanSanPham pb = new PhienBanSanPham(
-                    rs.getString("MaPhienBan"), rs.getString("MaSP"), rs.getString("MauSac"),
-                    rs.getString("CongSuat"), rs.getString("Pin"), rs.getString("KetNoi"),
-                    rs.getDouble("GiaNhap"), rs.getDouble("GiaBan"), rs.getInt("SoLuongTon"),
-                    rs.getBoolean("TrangThai"), rs.getString("HinhAnh")
-                );
+                        rs.getString("MaPhienBan"), rs.getString("MaSP"), rs.getString("MauSac"),
+                        rs.getString("CongSuat"), rs.getString("Pin"), rs.getString("KetNoi"),
+                        rs.getDouble("GiaNhap"), rs.getDouble("GiaBan"), rs.getInt("SoLuongTon"),
+                        rs.getBoolean("TrangThai"), rs.getString("HinhAnh"));
                 pb.setTenSP(rs.getString("TenSP"));
                 list.add(pb);
             }
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 }
