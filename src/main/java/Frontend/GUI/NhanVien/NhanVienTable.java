@@ -12,6 +12,7 @@ import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
+import java.text.DecimalFormat;
 
 public class NhanVienTable extends JPanel {
     private JTable tbl;
@@ -150,6 +151,16 @@ public class NhanVienTable extends JPanel {
         tbl.setModel(tblModel);
 
         sorter = new TableRowSorter<>(tblModel);
+        sorter.setComparator(7, (String s1, String s2) -> {
+            try {
+                // Loại bỏ dấu phẩy trước khi so sánh số
+                Double d1 = Double.parseDouble(s1.replace(",", ""));
+                Double d2 = Double.parseDouble(s2.replace(",", ""));
+                return d1.compareTo(d2);
+            } catch (Exception e) {
+                return 0;
+            }
+        });
         tbl.setRowSorter(sorter);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -165,8 +176,11 @@ public class NhanVienTable extends JPanel {
         tblModel.setRowCount(0);
         ArrayList<NhanVien> listNV = nvBUS.getAllNhanVien();
 
+        DecimalFormat df = new DecimalFormat("#,###");
+
         int stt = 1;
         for (NhanVien nv : listNV) {
+            String luongFormatted = df.format(nv.getLuong());
             Object[] row = {
                     stt++,
                     nv.getId(),
@@ -175,7 +189,7 @@ public class NhanVienTable extends JPanel {
                     nv.getDiaChi(),
                     nv.getChucVu(),
                     nv.getEmail(),
-                    nv.getLuong()
+                    luongFormatted
             };
             tblModel.addRow(row);
         }
