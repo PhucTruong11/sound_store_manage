@@ -1,7 +1,6 @@
 package Backend.DAO;
 
 import Backend.DatabaseHelper;
-import Backend.DTO.ChiTietPhieuNhap;
 import Backend.DTO.ChiTietPhieuXuat;
 import java.sql.*;
 import java.util.ArrayList;
@@ -52,7 +51,6 @@ public class ChiTietPhieuXuatDAO implements ChiTietInterface<ChiTietPhieuXuat> {
 
                     ctpx.setTenSP(rs.getString("TenSP"));
                     ctpx.setHinhAnh(rs.getString("HinhAnh"));
-
                     list.add(ctpx);
                 }
             }
