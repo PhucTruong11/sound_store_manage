@@ -14,4 +14,12 @@ public class TaiKhoanBUS {
         }
         return taiKhoanDAO.login(username, password);
     }
+
+    // THÊM PHƯƠNG THỨC NÀY ĐỂ HẾT LỖI MAVEN
+    public TaiKhoan getTaiKhoanByMaNV(String maNV) {
+        if (maNV == null || maNV.trim().isEmpty()) {
+            return null;
+        }
+        return taiKhoanDAO.getTaiKhoanByMaNV(maNV);
+    }
 }

@@ -2,7 +2,6 @@ package Frontend.GUI.BanHang;
 
 import Frontend.Compoent.Theme;
 import Frontend.GUI.BaoHanh.BaoHanhTable;
-import Frontend.GUI.Nhaphang.XacNhanNhapHangDialog;
 import Frontend.GUI.PhieuXuat.PhieuXuatTable;
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
@@ -12,6 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.awt.*;
+import Backend.DTO.Session; // Đảm bảo đã import Session
 
 public class BanHangSidebar extends JPanel {
 
@@ -19,7 +19,7 @@ public class BanHangSidebar extends JPanel {
     private JSpinner spnSoLuongBan;
     private JTable tblBan;
     private DefaultTableModel modelBan;
-    private JComboBox<String> cbxNhanVien;
+    private JTextField txtNhanVien; // Đổi từ JComboBox sang JTextField
     private PhieuXuatTable phieuXuatTable;
     private BaoHanhTable baoHanhTable;
 
@@ -46,11 +46,23 @@ public class BanHangSidebar extends JPanel {
 
     private void initHeader() {
         add(new JLabel("Nhân viên bán"), "gaptop 5");
-        cbxNhanVien = new JComboBox<>(new String[] { "Phúc Trương" });
-        cbxNhanVien.setEnabled(false);
-        add(cbxNhanVien, "h 30!");
+        
+        // Lấy họ tên từ Session giống bên Nhập hàng
+        String tenHienThi = "Chưa đăng nhập";
+        if (Session.currentNhanVien != null) {
+            tenHienThi = Session.currentNhanVien.getHoTen();
+        } else if (Session.currentAccount != null) {
+            tenHienThi = Session.currentAccount.getUsername();
+        }
 
-        add(new JLabel("Khách hàng"), "gaptop 5");
+        // Khởi tạo JTextField thay vì JComboBox
+        txtNhanVien = new JTextField(tenHienThi);
+        txtNhanVien.setEditable(false);
+        txtNhanVien.setFocusable(false);
+        txtNhanVien.setBackground(new Color(245, 245, 245)); // Màu nền xám nhẹ để phân biệt field chỉ đọc
+        add(txtNhanVien, "h 30!");
+
+        add(new JLabel("Khách hàng"), "gaptop 10");
         lblKhachHang = new JLabel("Chưa chọn khách hàng");
         lblKhachHang.setFont(new Font("Segoe UI", Font.ITALIC, 13));
         lblKhachHang.setForeground(Color.GRAY);
@@ -71,6 +83,8 @@ public class BanHangSidebar extends JPanel {
         });
         add(btnChonKH, "h 30!");
     }
+
+    // ... (Các hàm initProductSelection, initMiniTable, initConfirmButton giữ nguyên như cũ) ...
 
     private void initProductSelection() {
         lblTenSP = new JLabel("Chọn sản phẩm");
@@ -95,29 +109,28 @@ public class BanHangSidebar extends JPanel {
     private void initMiniTable() {
         add(new JLabel("Danh sách chờ bán:"), "gaptop 10");
         String[] cols = { "Mã SP", "Tên SP", "SL", "Đơn giá" };
-        modelBan = new DefaultTableModel(cols, 0);
-        tblBan = new JTable(modelBan);
-        tblBan.setRowHeight(30);
         
-         modelBan = new DefaultTableModel(cols, 0) {
+        modelBan = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Chặn chỉnh sửa ô, nhưng vẫn cho phép chọn dòng
+                return false;
             }
         };
         tblBan = new JTable(modelBan);
+        tblBan.setRowHeight(30);
         tblBan.setRowSelectionAllowed(true);
 
         tblBan.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int selected = tblBan.getSelectedRow();
-                if(e.getClickCount() == 2) {
+                if(e.getClickCount() == 2 && selected != -1) {
                     modelBan.removeRow(selected);
                 }
             }
         });
 
+        // Ẩn mã SP và đơn giá trong bảng phụ
         tblBan.getColumnModel().getColumn(1).setMinWidth(0);
         tblBan.getColumnModel().getColumn(1).setMaxWidth(0);
         tblBan.getColumnModel().getColumn(3).setMinWidth(0);
@@ -155,7 +168,7 @@ public class BanHangSidebar extends JPanel {
                     this);
             dialog.setVisible(true);
         });
-        add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");
+        add(btnXacNhan, "gaptop 5, growx, h 40!, pushy, aligny bottom");
     }
 
     private void addProductToTable() {
@@ -166,9 +179,7 @@ public class BanHangSidebar extends JPanel {
 
         int sl = (int) spnSoLuongBan.getValue();
         String ten = lblTenSP.getText();
-
         modelBan.addRow(new Object[] { currentMa, ten, sl, currentGia });
-
         resetSelection();
     }
 
