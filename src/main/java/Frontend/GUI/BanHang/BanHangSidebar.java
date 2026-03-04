@@ -6,9 +6,10 @@ import Frontend.GUI.Nhaphang.XacNhanNhapHangDialog;
 import Frontend.GUI.PhieuXuat.PhieuXuatTable;
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.awt.*;
 
@@ -97,6 +98,25 @@ public class BanHangSidebar extends JPanel {
         modelBan = new DefaultTableModel(cols, 0);
         tblBan = new JTable(modelBan);
         tblBan.setRowHeight(30);
+        
+         modelBan = new DefaultTableModel(cols, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Chặn chỉnh sửa ô, nhưng vẫn cho phép chọn dòng
+            }
+        };
+        tblBan = new JTable(modelBan);
+        tblBan.setRowSelectionAllowed(true);
+
+        tblBan.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selected = tblBan.getSelectedRow();
+                if(e.getClickCount() == 2) {
+                    modelBan.removeRow(selected);
+                }
+            }
+        });
 
         tblBan.getColumnModel().getColumn(1).setMinWidth(0);
         tblBan.getColumnModel().getColumn(1).setMaxWidth(0);

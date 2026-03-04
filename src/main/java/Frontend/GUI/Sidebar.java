@@ -14,6 +14,7 @@ import Frontend.GUI.KhachHang.FromHienThiKhachHang;
 import Frontend.GUI.Nhaphang.MainHienThiNhapHang;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
 import Frontend.GUI.SanPham.QuanlyamthanhPanel;
+import Frontend.GUI.ThongKe.ThongKePanel;
 import Frontend.GUI.BanHang.BanHangPanel;
 import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
 import Frontend.GUI.KhuyenMai.MainKhuyenMai;
@@ -35,15 +36,9 @@ public class Sidebar extends JPanel {
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", "[]20[]"));
 
         String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Phiếu nhập", "Phiếu xuất", "Khuyến mãi",
-                "Bảo hành", "Nhà cung cấp", "Nhân viên", "Khách hàng", "Phân quyền" };
-
-        for (String item : menuItems) {
-            String code = getChucNangCode(item);
-
-            if (qBUS.checkQuyen(maNQ, code, "read")) {
-                add(createMenubtn(item));
-            }
-        }
+                "Bảo hành", "Nhà cung cấp", "Nhân viên", "Khách hàng", "Thống kê", "Phân quyền" };
+        for (String item : menuItems)
+            add(createMenubtn(item));
 
         FlatSVGIcon logoutIcon = new FlatSVGIcon("images/icon/log-out.svg", 20, 20);
         CustomButton btnLogout = new CustomButton("Đăng xuất", Theme.DANGER_COLOR);
@@ -109,6 +104,8 @@ public class Sidebar extends JPanel {
                     break;
                 case "Phân quyền":
                     parent.setPage(new PhanQuyenPanel());
+                case "Thống kê":
+                    parent.setPage(new ThongKePanel());
                     break;
                 case "Đăng xuất":
                     System.exit(0);
@@ -142,6 +139,8 @@ public class Sidebar extends JPanel {
                 return "square-user";
             case "Khách hàng":
                 return "file-user";
+            case "Thống kê":
+                return "";
             case "Phân quyền":
                 return "user-round-pen";
             default:

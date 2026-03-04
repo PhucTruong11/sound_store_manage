@@ -30,9 +30,6 @@ public class LoaiSP {
 
     @Override
     public String toString() {
-        return "LoaiSP{" +
-                "maLoai='" + maLoai + '\'' +
-                ", tenLoai='" + tenLoai + '\'' +
-                '}';
+        return tenLoai;
     }
 }

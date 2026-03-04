@@ -10,6 +10,8 @@ import Backend.BUS.TaiKhoanBUS;
 import Backend.DTO.NhaCungCap;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class NhapHangSidebar extends JPanel{
@@ -100,6 +102,25 @@ public class NhapHangSidebar extends JPanel{
         tblNhap = new JTable(modelNhap);
         tblNhap.setRowHeight(25);
 
+        modelNhap = new DefaultTableModel(cols, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Chặn chỉnh sửa ô, nhưng vẫn cho phép chọn dòng
+            }
+        };
+        tblNhap = new JTable(modelNhap);
+        tblNhap.setRowSelectionAllowed(true);
+
+        tblNhap.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selected = tblNhap.getSelectedRow();
+                if(e.getClickCount() == 2) {
+                    modelNhap.removeRow(selected);
+                }
+            }
+        });
+
         // ẨN CỘT Tên SP (index 1) và Đơn giá (index 3)
         tblNhap.getColumnModel().getColumn(1).setMinWidth(0);
         tblNhap.getColumnModel().getColumn(1).setMaxWidth(0);
@@ -127,7 +148,7 @@ public class NhapHangSidebar extends JPanel{
         
         // Mở Dialog xác nhận
         JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-        XacNhanNhapHangDialog dialog = new XacNhanNhapHangDialog(parent, modelNhap);
+        XacNhanNhapHangDialog dialog = new XacNhanNhapHangDialog(parent, modelNhap, this.table, this);
         dialog.setVisible(true);
     });
         add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");
@@ -153,6 +174,11 @@ public class NhapHangSidebar extends JPanel{
         lblTenSP.setText("Chưa chọn sản phẩm");
         lblTonKho.setText("Tồn kho hiện tại: 0");
         spnSoLuongNhap.setValue(1);
+    }
+
+    public void clearCart() {
+        modelNhap.setRowCount(0);
+        resetSelection();
     }
 
     public void updateInfo(String ma, String ten, String gia, String ton) {

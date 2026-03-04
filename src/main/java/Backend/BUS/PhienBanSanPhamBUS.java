@@ -68,4 +68,8 @@ public class PhienBanSanPhamBUS {
     public PhienBanSanPham getByMaPhienBan(String maPB) {
         return pbspDAO.selectById(maPB);
     }
+
+    public ArrayList<PhienBanSanPham> getFilteredListNhapHang(String maNCC, String maLoai, String query) {
+        return pbspDAO.selectByFilterNhapHang(maNCC, maLoai, query != null ?  query.trim() : "");
+    }
 }

@@ -147,27 +147,65 @@ public class NCCTable extends JPanel {
             cboNCC.setSelectedItem(selected); // Khôi phục lại lựa chọn trước đó nếu nó vẫn còn tồn tại
     }
 
+    // public void loadDataBySearch(String query) {
+    //     tblModel.setRowCount(0);
+    //     ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
+
+    //     int stt = 1;
+    //     for (NhaCungCap ncc : list) {
+    //         boolean matchMa = ncc.getMaNCC().toLowerCase().contains(query);
+    //         boolean matchTen = ncc.getTenNCC().toLowerCase().contains(query);
+    //         if (matchMa || matchTen) {
+    //             Object[] row = {
+    //                     stt++,
+    //                     ncc.getMaNCC(),
+    //                     ncc.getTenNCC(),
+    //                     ncc.getDiaChi(),
+    //                     ncc.getSdt(),
+    //             };
+    //             tblModel.addRow(row);
+    //         }
+    //     }
+    //     if (query.isEmpty()) {
+    //         cboNCC.setSelectedIndex(0);
+    //     }
+    // }
+
     public void loadDataBySearch(String query) {
         tblModel.setRowCount(0);
         ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
 
+        String lowerQuery = query.toLowerCase().trim();
+        if(lowerQuery.isEmpty()) {
+            loadData();
+            return;
+        }
+        String[] keyWords = lowerQuery.split("\\s+");
+
         int stt = 1;
         for (NhaCungCap ncc : list) {
-            boolean matchMa = ncc.getMaNCC().toLowerCase().contains(query);
-            boolean matchTen = ncc.getTenNCC().toLowerCase().contains(query);
-            if (matchMa || matchTen) {
-                Object[] row = {
+            String infoToSearch = (ncc.getMaNCC() + " " +
+                                   ncc.getTenNCC() + " " +
+                                   ncc.getDiaChi() + " " +
+                                   ncc.getSdt()).toLowerCase();
+
+            boolean matchesAll = true;
+            for(String word : keyWords) {
+                if(!infoToSearch.contains(word)) {
+                    matchesAll = false;
+                    break;
+                }
+            }
+
+            if (matchesAll) {
+                tblModel.addRow(new Object[]{
                         stt++,
                         ncc.getMaNCC(),
                         ncc.getTenNCC(),
                         ncc.getDiaChi(),
                         ncc.getSdt(),
-                };
-                tblModel.addRow(row);
+                });
             }
-        }
-        if (query.isEmpty()) {
-            cboNCC.setSelectedIndex(0);
         }
     }
 }
