@@ -1,6 +1,7 @@
 package Frontend.GUI.BanHang;
 
 import Frontend.Compoent.Theme;
+import Frontend.Compoent.XuatPDFHoaDonXuat;
 import Frontend.GUI.BaoHanh.BaoHanhTable;
 import Frontend.GUI.PhieuXuat.PhieuXuatTable;
 import Frontend.Compoent.CustomButton;
@@ -8,13 +9,14 @@ import Frontend.Compoent.Table;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import Backend.DAO.PhieuXuatDAO;
 import Backend.BUS.PhieuXuatBUS;
 import Backend.BUS.ChiTietPhieuXuatBUS;
 import Backend.DTO.PhieuXuat;
 import Backend.DTO.ChiTietPhieuXuat;
 import Backend.DTO.KhuyenMai;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
@@ -57,8 +59,30 @@ public class XacNhanBanHangDialog extends JDialog {
         String[] cols = { "STT", "Mã SP", "Tên Sản Phẩm", "SL", "Đơn Giá", "Thành Tiền" };
         modelReview = new DefaultTableModel(cols, 0);
 
-        Table tblReview = new Table();
+        // Table tblReview = new Table();
+        // tblReview.setModel(modelReview);
+
+        modelReview = new DefaultTableModel(cols, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Chặn chỉnh sửa ô, nhưng vẫn cho phép chọn dòng
+            }
+        };
+        tblReview = new Table();
         tblReview.setModel(modelReview);
+        tblReview.setRowSelectionAllowed(true);
+
+         tblReview.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selected = tblReview.getSelectedRow();
+                if(e.getClickCount() == 2 && selected != -1) {
+                    modelReview.removeRow(selected);
+                    calculateTotal();
+                }
+            }
+        });
+
 
         tblReview.getColumnModel().getColumn(0).setPreferredWidth(40);
         tblReview.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -159,10 +183,18 @@ public class XacNhanBanHangDialog extends JDialog {
                 }
 
                 if (pxBUS.thanhToan(phieuXuat, dsChiTiet)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Bán hàng thành công!\n" +
-                                    "Mã hóa đơn: " + maPX + "\n" +
-                                    "Hệ thống đã tự động kích hoạt bảo hành cho các thiết bị.");
+                    // JOptionPane.showMessageDialog(this,
+                    //         "Bán hàng thành công!\n" +
+                    //                 "Mã hóa đơn: " + maPX + "\n" +
+                    //                 "Hệ thống đã tự động kích hoạt bảo hành cho các thiết bị.");
+
+                    int choice = JOptionPane.showConfirmDialog(this, 
+                    "Bán hàng thành công! Bạn có muốn xuất hóa đơn PDF không?",
+                    "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+                    if (choice == JOptionPane.YES_OPTION) {
+                        XuatPDFHoaDonXuat.xuatHoaDonNhap(phieuXuat, modelReview);
+                    }
 
                     if (this.phieuXuatTable != null) {
                         this.phieuXuatTable.loadData("");
@@ -172,6 +204,7 @@ public class XacNhanBanHangDialog extends JDialog {
                         this.baoHanhTable.loadData();
                     }
 
+        
                     if (this.sidebar != null) {
                         this.sidebar.clearCart();
                     }

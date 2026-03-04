@@ -64,16 +64,60 @@ public class PhieuNhapTable extends JScrollPane {
         }
     }
 
+    // public void loadDataBySearch(String query) {
+    //     tblModel.setRowCount(0);
+    //     ArrayList<PhieuNhap> list = phieuNhapBUS.getAllPhieuNhap();
+    //     DecimalFormat df = new DecimalFormat("#,###");
+    //     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    //     int stt = 1;
+    //     for (PhieuNhap pn : list) {
+    //         if (pn.getmaPhieuNhap().toLowerCase().contains(query.toLowerCase())) {
+    //             tblModel.addRow(new Object[]{stt++, pn.getmaPhieuNhap(), sdf.format(pn.getngayNhap()), 
+    //                                         pn.getmaNV(), df.format(pn.getTongTien())});
+    //         }
+    //     }
+    // }
+
     public void loadDataBySearch(String query) {
         tblModel.setRowCount(0);
         ArrayList<PhieuNhap> list = phieuNhapBUS.getAllPhieuNhap();
         DecimalFormat df = new DecimalFormat("#,###");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+
+        String lowerQuery = query.toLowerCase().trim();
+        if(lowerQuery.isEmpty()) {
+            loadData();
+            return;
+        }
+        String[] keyWords = lowerQuery.split("\\s+");
+
         int stt = 1;
         for (PhieuNhap pn : list) {
-            if (pn.getmaPhieuNhap().toLowerCase().contains(query.toLowerCase())) {
-                tblModel.addRow(new Object[]{stt++, pn.getmaPhieuNhap(), sdf.format(pn.getngayNhap()), 
-                                            pn.getmaNV(), df.format(pn.getTongTien())});
+            String tongTienStr = String.valueOf((long)pn.getTongTien());
+            String ngayNhapStr = sdf.format(pn.getngayNhap());
+
+            String infoToSearch = (pn.getmaPhieuNhap() + " " +
+                                   ngayNhapStr + " " +
+                                   pn.getmaNV() + " " +
+                                   pn.getmaNCC() + " " +
+                                   tongTienStr).toLowerCase();
+
+            boolean matchesAll = true;
+            for(String word : keyWords) {
+                if(!infoToSearch.contains(word)) {
+                    matchesAll = false;
+                    break;
+                }
+            }
+
+           if (matchesAll) {
+                tblModel.addRow(new Object[]{
+                    stt++,
+                    pn.getmaPhieuNhap(),
+                    ngayNhapStr,
+                    pn.getmaNV(),
+                    df.format(pn.getTongTien())
+                });
             }
         }
     }
