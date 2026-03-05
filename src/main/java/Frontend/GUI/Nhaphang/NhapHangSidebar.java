@@ -162,13 +162,31 @@ public class NhapHangSidebar extends JPanel {
     }
 
     private void addProductToTable() {
-        if(currenMa.isEmpty()) {
+        if(currenMa == null || currenMa.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm từ bảng bên phải!");
             return;
         }
 
-        int sl = (int) spnSoLuongNhap.getValue();
-        modelNhap.addRow(new Object[]{currenMa, currenTen, sl, currenGia});
+        int slNhapMoi = (int) spnSoLuongNhap.getValue();
+        boolean found = false;
+
+        for (int i = 0; i < modelNhap.getRowCount(); i++) {
+            String maTrongBang = modelNhap.getValueAt(i, 0).toString();
+
+            if(maTrongBang.equals(currenMa)) {
+                int slCu = (int) modelNhap.getValueAt(i, 2);
+                modelNhap.setValueAt(slCu + slNhapMoi, i, 2);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            modelNhap.addRow(new Object[]{currenMa, currenTen, slNhapMoi, currenGia});
+        }
+
+        // int sl = (int) spnSoLuongNhap.getValue();
+        // modelNhap.addRow(new Object[]{currenMa, currenTen, sl, currenGia});
         resetSelection();
     }
 

@@ -389,6 +389,7 @@ SELECT 'NQ01', MaChucNang, act
 FROM ChucNang
 CROSS JOIN (SELECT 'read' AS act UNION SELECT 'create' UNION SELECT 'update' UNION SELECT 'delete') AS actions;
 
+
 INSERT INTO ChiTietQuyen (MaNhomQuyen, MaChucNang, HanhDong) VALUES 
 ('NQ02', 'BANHANG', 'read'), ('NQ02', 'BANHANG', 'create'), ('NQ02', 'BANHANG', 'update'),
 ('NQ02', 'PHIEUXUAT', 'read'), ('NQ02', 'PHIEUXUAT', 'create'),

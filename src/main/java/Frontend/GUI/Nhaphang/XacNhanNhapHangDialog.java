@@ -64,6 +64,9 @@ public class XacNhanNhapHangDialog extends JDialog {
                 int selected = tblReview.getSelectedRow();
                 if(e.getClickCount() == 2 && selected != -1) {
                     modelReview.removeRow(selected);
+                    for(int i = 0; i< modelReview.getRowCount(); i++) {
+                        modelReview.setValueAt(i + 1, i, 0);
+                    }
                     calculateTotal();
                 }
             }
