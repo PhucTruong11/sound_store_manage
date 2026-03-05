@@ -14,7 +14,6 @@ public class ChiTietPhieuNhapBUS {
     }
 
     public ArrayList<String> getImeisByDetails(String maPN, String maPB) {
-    return ctspDAO.getImeisByDetails(maPN, maPB);
+        return ctspDAO.getImeisByDetails(maPN, maPB);
+    }
 }
-}
-

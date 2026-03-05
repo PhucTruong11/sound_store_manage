@@ -10,6 +10,7 @@ import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
+
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.ArrayList;
