@@ -177,9 +177,30 @@ public class BanHangSidebar extends JPanel {
             return;
         }
 
+        int slBanMoi = (int) spnSoLuongBan.getValue();
+        boolean found = false;
+
         int sl = (int) spnSoLuongBan.getValue();
         String ten = lblTenSP.getText();
-        modelBan.addRow(new Object[] { currentMa, ten, sl, currentGia });
+
+        for (int i = 0; i < modelBan.getRowCount(); i++) {
+            String maTrongBang = modelBan.getValueAt(i, 0).toString();
+
+            if(maTrongBang.equals(currentMa)) {
+                int slCu = (int) modelBan.getValueAt(i, 2);
+                modelBan.setValueAt(slCu + slBanMoi, i, 2);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            modelBan.addRow(new Object[]{currentMa, ten, sl, currentGia});
+        }
+
+        // int sl = (int) spnSoLuongBan.getValue();
+        // String ten = lblTenSP.getText();
+        // modelBan.addRow(new Object[] { currentMa, ten, sl, currentGia });
         resetSelection();
     }
 

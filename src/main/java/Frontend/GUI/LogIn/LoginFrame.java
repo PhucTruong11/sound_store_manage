@@ -102,7 +102,7 @@ public class LoginFrame extends JFrame {
 
             String displayName = (nv != null) ? nv.getHoTen() : tk.getUsername();
 
-            JOptionPane.showMessageDialog(this, "Chào mừng " + displayName + " quay trở lại!");
+            // JOptionPane.showMessageDialog(this, "Chào mừng " + displayName + " quay trở lại!");
             
             new Frontend.GUI.MainFrame(displayName, tk.getMaNhomQuyen()).setVisible(true);
             this.dispose();
