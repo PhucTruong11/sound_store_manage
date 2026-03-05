@@ -28,8 +28,8 @@ public class BanHangToolbar extends JPanel {
         txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
             public void keyReleased(java.awt.event.KeyEvent e) {
-                String text = txtSearch.getText().trim();
-                productGrid.loadSearchData(text);
+                String query = txtSearch.getText().trim();
+                productGrid.loadDataSearch(query);
             }
         });
         add(txtSearch, "growx, h 35!");

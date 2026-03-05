@@ -72,4 +72,8 @@ public class PhienBanSanPhamBUS {
     public ArrayList<PhienBanSanPham> getFilteredListNhapHang(String maNCC, String maLoai, String query) {
         return pbspDAO.selectByFilterNhapHang(maNCC, maLoai, query != null ?  query.trim() : "");
     }
+
+    public ArrayList<PhienBanSanPham> getFilteredListBanHang(String maLoai, String query) {
+        return pbspDAO.selectByFilterBanHang(maLoai, query != null ? query.trim() : "");
+    }
 }

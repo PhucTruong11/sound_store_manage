@@ -87,10 +87,10 @@ public class NhapHangTable extends JScrollPane {
     }
 
     public void loadData() {
-        applyFilters();
+        applyFiltersNhapHang();
     }
     
-    public void applyFilters() {
+    public void applyFiltersNhapHang() {
         tblModel.setRowCount(0);
 
         ArrayList<PhienBanSanPham> list = phienbansanphamBUS.getFilteredListNhapHang(currentMaNCC, currentMaLoai, currentSearchQuery);
@@ -112,16 +112,16 @@ public class NhapHangTable extends JScrollPane {
 
     public void loadDataBySearch(String query) {
         this.currentSearchQuery = query;
-        applyFilters();
+        applyFiltersNhapHang();
     }
 
     public void loadDataByLoai(String maLoai) {
         this.currentMaLoai = maLoai;
-        applyFilters();
+        applyFiltersNhapHang();
     }
 
     public void loadDataByNCC(String maNCC) {
         this.currentMaNCC = maNCC;
-        applyFilters();
+        applyFiltersNhapHang();
     }
 }

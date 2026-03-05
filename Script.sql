@@ -582,6 +582,7 @@ INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES
 ('CTBH07', 'BH05', 'Hỏng da đệm tai (Earpads)', 'Đang sửa chữa'),
 ('CTBH08', 'BH06', 'Loa không lên nguồn', 'Đang sửa chữa'),
 ('CTBH09', 'BH06', 'Kiểm tra pin và mạch sạc', 'Đang sửa chữa');
+
 INSERT INTO NCC_SanPham VALUES 
 ('NCC01', 'SP01'), 
 ('NCC03', 'SP03'),
