@@ -5,6 +5,7 @@ import Backend.DTO.PhieuNhap;
 import Frontend.Compoent.Table;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -18,6 +19,8 @@ public class PhieuNhapTable extends JScrollPane {
     private JTable tbl;     
     private DefaultTableModel tblModel;
     private PhieuNhapBUS phieuNhapBUS;
+    private TableRowSorter<DefaultTableModel> sorter;
+
 
     public PhieuNhapTable() {
         phieuNhapBUS = new PhieuNhapBUS();
@@ -37,6 +40,8 @@ public class PhieuNhapTable extends JScrollPane {
 
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         // Căn giữa các cột
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -47,12 +52,12 @@ public class PhieuNhapTable extends JScrollPane {
         setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
     }
 
-    public void filter(String maNCC, Date from, Date to, String minStr, String maxStr) {
+    public void filter(/*String maNCC,*/ Date from, Date to, String minStr, String maxStr) {
         long min = (minStr == null || minStr.trim().isEmpty()) ? 0 : Long.parseLong(minStr.replaceAll("[^0-9]", ""));
         long max = (maxStr == null || maxStr.trim().isEmpty()) ? 9999999999L : Long.parseLong(maxStr.replaceAll("[^0-9]", ""));
 
         tblModel.setRowCount(0);
-        ArrayList<PhieuNhap> list = phieuNhapBUS.getFilteredPhieuNhap(maNCC, from, to, min, max);
+        ArrayList<PhieuNhap> list = phieuNhapBUS.getFilteredPhieuNhap(/*maNCC,*/ from, to, min, max);
 
         DecimalFormat df = new DecimalFormat("#,###");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
@@ -140,7 +145,7 @@ public class PhieuNhapTable extends JScrollPane {
         //     };
         //     tblModel.addRow(row);
         // }
-        filter("All", null, null, "", "");
+        filter(/*"All",*/ null, null, "", "");
     }
 
     // public void loadDataByNCC(String maPN) {

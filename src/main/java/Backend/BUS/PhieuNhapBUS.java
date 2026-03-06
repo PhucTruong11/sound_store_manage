@@ -24,8 +24,8 @@ public class PhieuNhapBUS {
         return pnDAO.selectByNCC(maNCC);
     }
 
-    public ArrayList<PhieuNhap> getFilteredPhieuNhap(String maNCC, Date from, Date to, long min, long max) {
-        return pnDAO.selectByFilter(maNCC, from, to, min, max);
+    public ArrayList<PhieuNhap> getFilteredPhieuNhap(/*String maNCC,*/ Date from, Date to, long min, long max) {
+        return pnDAO.selectByFilter(/*maNCC,*/ from, to, min, max);
     }
 
     public String getNewMaPhieu() {

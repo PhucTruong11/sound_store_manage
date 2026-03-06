@@ -2,30 +2,50 @@ package Frontend.GUI.ThongKe;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
+
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+
+import Backend.BUS.ThongKeBUS;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 
 public class KpiCardsPanel extends JPanel {
 
+    private JLabel lblValDoanhThu, lblValDonHang, lblValVon, lblValLoiNhuan;
+    private final ThongKeBUS tkBUS = new ThongKeBUS();
+    private final DecimalFormat df = new DecimalFormat("#,###");
+
     public KpiCardsPanel() {
-        // 4 cột đều nhau cho 4 thẻ [cite: 2025-12-25]
         setLayout(new MigLayout("fill, insets 0", "[grow]15[grow]15[grow]15[grow]", "fill"));
         setOpaque(false);
         initComponents();
+        loadRealData();
     }
 
     private void initComponents() {
-        add(createKpiCard("Doanh Thu Ngày", "+15.2%", "5.400.000", "trending-up.svg", new Color(46, 204, 113)));
-        add(createKpiCard("Đơn Hàng Mới", "+5", "24", "shopping-cart.svg", new Color(52, 152, 219)));
-        add(createKpiCard("Vốn Nhập Kho", "-2.1%", "12.800.000", "shield-plus.svg", new Color(231, 76, 60)));
-        add(createKpiCard("Lợi Nhuận Gộp", "+8.4%", "1.250.000", "pie-chart.svg", new Color(155, 89, 182)));
+        lblValDoanhThu = new JLabel("0");
+        lblValDonHang = new JLabel("0");
+        lblValVon = new JLabel("0");
+        lblValLoiNhuan = new JLabel("0");
+
+        add(createKpiCard("Doanh Thu Ngày", "+Today", lblValDoanhThu, "landmark.svg", new Color(46, 204, 113)));
+        add(createKpiCard("Đơn Hàng Ngày", "Mới", lblValDonHang, "handbag.svg", new Color(52, 152, 219)));
+        add(createKpiCard("Vốn Nhập Tháng", "Chi", lblValVon, "banknote-arrow-up.svg", new Color(231, 76, 60)));
+        add(createKpiCard("Lợi Nhuận Tháng", "Thuần", lblValLoiNhuan, "banknote-arrow-down.svg", new Color(155, 89, 182)));
     }
 
-    private JPanel createKpiCard(String title, String trend, String value, String iconName, Color color) {
+    private void loadRealData() {
+        lblValDoanhThu.setText(df.format(tkBUS.getDoanhThuNgay()));
+        lblValDonHang.setText(String.valueOf(tkBUS.getDonHangMoiNgay()));
+        lblValVon.setText(df.format(tkBUS.getVonNhapThang()));
+        lblValLoiNhuan.setText(df.format(tkBUS.getLoiNhuanThang()));
+    }
+
+    private JPanel createKpiCard(String title, String trend, JLabel lblValue, String iconName, Color color) {
         JPanel card = new JPanel(new MigLayout("insets 15", "[][grow]", "[]2[]"));
         card.setBackground(Color.WHITE);
-        card.putClientProperty("FlatLaf.style", "arc: 20"); // Bo góc đồng bộ dự án [cite: 2025-12-25]
+        card.putClientProperty("FlatLaf.style", "arc: 20");
 
         FlatSVGIcon icon = new FlatSVGIcon("images/icon/" + iconName, 30, 30);
         icon.setColorFilter(new FlatSVGIcon.ColorFilter(c -> color));
@@ -38,7 +58,6 @@ public class KpiCardsPanel extends JPanel {
         lblTrend.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblTrend.setForeground(color);
 
-        JLabel lblValue = new JLabel(value);
         lblValue.setFont(new Font("Segoe UI", Font.BOLD, 22));
 
         card.add(new JLabel(icon), "spany 2, gapright 10");

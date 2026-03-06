@@ -21,18 +21,18 @@ public class PhieuXuatSidebar extends JPanel {
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
-        initNhanVienNhap();
+        // initNhanVienNhap();
         initDate();
         initPrice();
         addEventListeners();
     }
 
-    private void initNhanVienNhap() {
-        add(new JLabel("Nhân viên xuất"), "gaptop 10");
-        cbxNhanVien = new JComboBox<>(new String[] { "Phúc Trương" });
-        cbxNhanVien.setEnabled(false);
-        add(cbxNhanVien, "h 35!");
-    }
+    // private void initNhanVienNhap() {
+    //     add(new JLabel("Nhân viên xuất"), "gaptop 10");
+    //     cbxNhanVien = new JComboBox<>(new String[] { "Phúc Trương" });
+    //     cbxNhanVien.setEnabled(false);
+    //     add(cbxNhanVien, "h 35!");
+    // }
 
     private void initDate() {
         add(new JLabel("Từ ngày:"), "gaptop 10");

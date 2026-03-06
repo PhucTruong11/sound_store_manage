@@ -63,10 +63,27 @@ public class NhapHangSidebar extends JPanel {
 
         add(new JLabel("Nhà cung cấp:"), "gaptop 10");
         cbxNhaCungCap = new JComboBox<>();
+
+        // Renderer để hiển thị "Tên - Mã" giúp phân biệt nhà cung cấp trùng tên
+        cbxNhaCungCap.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof NhaCungCap) {
+                    NhaCungCap ncc = (NhaCungCap) value;
+                    if (ncc.getMaNCC().equals("All")) {
+                        setText(ncc.getTenNCC());
+                    } else {
+                        // Hiển thị thêm Mã để phân biệt các ông trùng tên
+                        setText(ncc.getTenNCC() + " (" + ncc.getMaNCC() + ")");
+                    }
+                }
+                return this;
+            }
+        });
         
         NhaCungCapBUS nccBUS = new NhaCungCapBUS();
         ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
-
         DefaultComboBoxModel<NhaCungCap> model = new DefaultComboBoxModel<>();
         model.addElement(new NhaCungCap("All", "Tất cả nhà cung cấp", "", ""));
 
