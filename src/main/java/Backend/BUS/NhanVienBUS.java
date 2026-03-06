@@ -75,16 +75,3 @@ public class NhanVienBUS {
         return "OK";
     }
 }
-
-    // ĐƯA HÀM NÀY VÀO TRONG LỚP NHƯ THẾ NÀY
-    public NhanVien getById(String id) {
-        if (id == null) return null;
-        ArrayList<NhanVien> list = getAllNhanVien();
-        for (NhanVien nv : list) {
-            if (nv.getId().equalsIgnoreCase(id)) {
-                return nv;
-            }
-        }
-        return null;
-    }
-}

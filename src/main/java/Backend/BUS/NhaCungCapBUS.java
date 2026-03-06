@@ -35,4 +35,27 @@ public class NhaCungCapBUS {
     public boolean saveSanPhamCungCap(String maNCC, ArrayList<String> dsMaSP) {
         return nccDAO.updateSanPhamCungCap(maNCC, dsMaSP);
     }
+
+    public String validate(NhaCungCap ncc, boolean isNew) {
+        if (ncc.getTenNCC() == null || ncc.getTenNCC().trim().isEmpty()) {
+            return "Tên nhà cung cấp không được để trống!";
+        }
+
+        if (ncc.getDiaChi() == null || ncc.getDiaChi().trim().isEmpty()) {
+            return "Địa chỉ nhà cung cấp không được để trống!";
+        }
+
+        if (ncc.getSdt().matches("^\\d{9}$")) {
+            return "SĐT phải có 10 chữ số và bắt đầu bằng số 0!";
+        }
+        ArrayList<NhaCungCap> list = getAllNhaCungCap();
+        for (NhaCungCap oldNCC : list) {
+            if (oldNCC.getSdt().equals(ncc.getSdt())) {
+                if (isNew || !oldNCC.getMaNCC().equals(ncc.getMaNCC())) {
+                    return "Số điện thoại này đã được sử dụng bởi nhân viên khac!";
+                }
+            }
+        }
+        return "OK";
+    }
 }
