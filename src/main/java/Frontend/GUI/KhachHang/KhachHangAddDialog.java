@@ -1,6 +1,10 @@
 package Frontend.GUI.KhachHang;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 import Backend.BUS.KhachHangBUS;
 import Backend.DTO.KhachHang;
 import Frontend.Compoent.BaseThaoTacDialog;
@@ -53,6 +57,11 @@ public class KhachHangAddDialog extends BaseThaoTacDialog {
                 txtDiaChi.getText(),
                 true
         );
+        String msg = khBUS.validate(kh, true);
+        if (!msg.equals("OK")) {
+            JOptionPane.showMessageDialog(this, msg, "Lỗi dữ liệu", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
         if (khBUS.add(kh)) {
             JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công!");
             dispose();
