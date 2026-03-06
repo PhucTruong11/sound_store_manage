@@ -10,6 +10,7 @@ import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import Backend.DTO.ChiTietPhieuXuat;
 import Backend.BUS.ChiTietPhieuXuatBUS;
+import Backend.BUS.PhieuXuatBUS;
 
 public class ChiTietPhieuXuatDialog extends JDialog {
     private String maPX;
@@ -46,7 +47,7 @@ public class ChiTietPhieuXuatDialog extends JDialog {
         JPanel pnlMain = new JPanel(new MigLayout("fill, insets 15", "[grow]15[300!]", "[grow]"));
         pnlMain.setBackground(Color.WHITE);
 
-        String[] columns = { "STT", "Mã Phiên Bản", "Tên Sản Phẩm", "Số lượng", "Đơn giá", "Thành tiền" };
+        String[] columns = { "STT", "Mã Phiên Bản", "Tên Sản Phẩm", "Số lượng", "Đơn giá", "Tổng tiền", "Thành tiền" };
         model = new DefaultTableModel(columns, 0) {
             @Override
             public boolean isCellEditable(int r, int c) {
@@ -55,6 +56,10 @@ public class ChiTietPhieuXuatDialog extends JDialog {
         };
         tblDetails = new Table();
         tblDetails.setModel(model);
+        tblDetails.getColumnModel().getColumn(0).setPreferredWidth(40);
+        tblDetails.getColumnModel().getColumn(3).setPreferredWidth(50); 
+        tblDetails.getColumnModel().getColumn(5).setPreferredWidth(120); 
+        tblDetails.getColumnModel().getColumn(6).setPreferredWidth(120);
 
         JScrollPane scrollPane = new JScrollPane(tblDetails);
         pnlMain.add(new JScrollPane(tblDetails), "grow");
@@ -116,19 +121,25 @@ public class ChiTietPhieuXuatDialog extends JDialog {
     }
 
     private void loadData() {
+        PhieuXuatBUS pxBUS = new PhieuXuatBUS();
         model.setRowCount(0);
         DecimalFormat df = new DecimalFormat("#,### VNĐ");
         listChiTietPhieuXuat = chiTietPhieuXuatBUS.getAllChiTietPhieuXuat(maPX);
 
+        double phanTramGiam = pxBUS.getPhanTramGiamCuaPhieu(maPX);
+
         int STT = 1;
         for (ChiTietPhieuXuat ctpx : listChiTietPhieuXuat) {
+            double thanhTienGoc = ctpx.getSoLuong() * ctpx.getDonGia();
+            double thanhTienThucTe = thanhTienGoc * (1 - phanTramGiam / 100.0);
             Object[] row = {
                     STT++,
                     ctpx.getMaPhienBan(),
                     ctpx.getTenSP(),
                     ctpx.getSoLuong(),
                     df.format(ctpx.getDonGia()),
-                    df.format(ctpx.getThanhTien()),
+                    df.format(thanhTienGoc),
+                    df.format(thanhTienThucTe)
             };
             model.addRow(row);
         }

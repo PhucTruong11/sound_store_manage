@@ -136,30 +136,38 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
         Connection conn = null;
         try {
             conn = DatabaseHelper.getConnection();
-            conn.setAutoCommit(false); 
+            conn.setAutoCommit(false);
 
-String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?)";            PreparedStatement pstPX = conn.prepareStatement(sqlPX);
+            // 1. Chèn phiếu xuất chính
+            String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement pstPX = conn.prepareStatement(sqlPX);
             pstPX.setString(1, px.getMaPhieuXuat());
             pstPX.setTimestamp(2, px.getNgayXuat());
             pstPX.setString(3, px.getMaNV());
             pstPX.setString(4, px.getMaKH());
             pstPX.setString(5, px.getMaKM());
             pstPX.setDouble(6, px.getTongTien());
-            pstPX.setBoolean(7, true); 
+            pstPX.setBoolean(7, true);
             pstPX.executeUpdate();
 
+            // 2. Chuẩn bị các câu lệnh Batch cho số lượng lớn
             String sqlCT = "INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES (?, ?, ?, ?)";
             String sqlSelectImei = "SELECT MaImei FROM ChiTietSP WHERE MaPhienBan = ? AND TinhTrang = 'Trong kho' LIMIT ?";
             String sqlUpdateImei = "UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = ? WHERE MaImei = ?";
             String sqlInsertBH = "INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc) VALUES (?, ?, ?, ?, ?)";
 
+            // CÂU LỆNH MỚI: Chèn nội dung bảo hành
+            String sqlInsertCTBH = "INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES (?, ?, ?, ?)";
+
             PreparedStatement pstCT = conn.prepareStatement(sqlCT);
             PreparedStatement pstUpImei = conn.prepareStatement(sqlUpdateImei);
             PreparedStatement pstInsBH = conn.prepareStatement(sqlInsertBH);
             PreparedStatement pstGetImei = conn.prepareStatement(sqlSelectImei);
+            PreparedStatement pstInsCTBH = conn.prepareStatement(sqlInsertCTBH);
 
-            String nextMaBH = generateMaBaoHanh();
-            int currentNumBH = Integer.parseInt(nextMaBH.substring(2));
+            // Lấy số thứ tự bắt đầu cho BH và CTBH
+            int currentNumBH = Integer.parseInt(generateMaBaoHanh().substring(2));
+            int currentNumCTBH = Integer.parseInt(new ChiTietBaoHanhDAO().generateMaCTBH().substring(4));
 
             for (ChiTietPhieuXuat ct : dsChiTiet) {
                 pstCT.setString(1, ct.getMaPhieuXuat());
@@ -168,6 +176,7 @@ String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, 
                 pstCT.setDouble(4, ct.getDonGia());
                 pstCT.addBatch();
 
+                // Lấy danh sách IMEI random có sẵn trong kho
                 pstGetImei.setString(1, ct.getMaPhienBan());
                 pstGetImei.setInt(2, ct.getSoLuong());
                 ResultSet rsImei = pstGetImei.executeQuery();
@@ -175,15 +184,17 @@ String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, 
                 int countFound = 0;
                 while (rsImei.next()) {
                     countFound++;
-                    String imei = rsImei.getString("MaImei");
+                    String imeiReal = rsImei.getString("MaImei");
 
+                    // A. Cập nhật IMEI đã bán
                     pstUpImei.setString(1, px.getMaPhieuXuat());
-                    pstUpImei.setString(2, imei);
+                    pstUpImei.setString(2, imeiReal);
                     pstUpImei.addBatch();
 
+                    // B. Tạo phiếu Bảo hành mới gắn với IMEI này
                     String maBH = String.format("BH%02d", currentNumBH++);
                     pstInsBH.setString(1, maBH);
-                    pstInsBH.setString(2, imei);
+                    pstInsBH.setString(2, imeiReal);
                     pstInsBH.setString(3, px.getMaPhieuXuat());
                     pstInsBH.setTimestamp(4, px.getNgayXuat());
 
@@ -192,17 +203,26 @@ String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, 
                     cal.add(java.util.Calendar.MONTH, 12);
                     pstInsBH.setDate(5, new java.sql.Date(cal.getTimeInMillis()));
                     pstInsBH.addBatch();
+
+                    // C. QUAN TRỌNG NHẤT: Tự động tạo Chi tiết bảo hành cho MaBH vừa sinh ra
+                    String maCTBH = String.format("CTBH%02d", currentNumCTBH++);
+                    pstInsCTBH.setString(1, maCTBH);
+                    pstInsCTBH.setString(2, maBH); // Khóa ngoại link tới BH vừa tạo
+                    pstInsCTBH.setString(3, "Thiết bị mới xuất kho - Kích hoạt bảo hành điện tử");
+                    pstInsCTBH.setString(4, "Hoàn thành");
+                    pstInsCTBH.addBatch();
                 }
 
                 if (countFound < ct.getSoLuong()) {
-                    throw new Exception(
-                            "Sản phẩm mã " + ct.getMaPhienBan() + " hiện không đủ mã IMEI trong kho để bán!");
+                    throw new Exception("Sản phẩm mã " + ct.getMaPhienBan() + " không đủ máy trong kho!");
                 }
             }
 
+            // Thực thi toàn bộ thay đổi trong 1 lượt để tối ưu hiệu năng
             pstCT.executeBatch();
             pstUpImei.executeBatch();
             pstInsBH.executeBatch();
+            pstInsCTBH.executeBatch(); // Thực thi chèn 100 chi tiết bảo hành
 
             conn.commit();
             return true;
@@ -229,7 +249,7 @@ String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "BH01"; 
+        return "BH01";
     }
 
     public ArrayList<PhieuXuat> filterSQL(Timestamp from, Timestamp to, Double min, Double max) {
@@ -245,5 +265,25 @@ String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, 
             e.printStackTrace();
         }
         return list;
+    }
+
+    public double getDiscountPercentage(String maPX) {
+        String sql = "SELECT km.PhanTramGiam FROM PhieuXuat px " +
+                "JOIN KhuyenMai km ON px.MaKM = km.MaKM " +
+                "WHERE px.MaPhieuXuat = ?";
+
+        try (Connection conn = Backend.DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, maPX);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("PhanTramGiam");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }

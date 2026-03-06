@@ -31,7 +31,7 @@ public class XacNhanBanHangDialog extends JDialog {
     private BanHangSidebar sidebar;
     private String maKMSelected = null;
     private double phanTramGiam = 0;
-    private double finalTotalValue = 0; // Khai báo biến tổng tiền cuối cùng
+    private double finalTotalValue = 0; 
 
     public XacNhanBanHangDialog(JFrame parent, DefaultTableModel sourceModel, String maKH,
                                 PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable, BanHangSidebar sidebar) {
@@ -82,7 +82,6 @@ public class XacNhanBanHangDialog extends JDialog {
             }
         });
 
-        // Định dạng cột
         tblReview.getColumnModel().getColumn(0).setMaxWidth(50);
         tblReview.getColumnModel().getColumn(1).setPreferredWidth(100);
         tblReview.getColumnModel().getColumn(3).setMaxWidth(60);
@@ -92,7 +91,6 @@ public class XacNhanBanHangDialog extends JDialog {
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblReview.setDefaultRenderer(Object.class, centerRenderer);
 
-        // Đổ dữ liệu từ Sidebar sang Dialog review
         for (int i = 0; i < sourceModel.getRowCount(); i++) {
             String ma = sourceModel.getValueAt(i, 0).toString();
             String ten = sourceModel.getValueAt(i, 1).toString();
@@ -110,7 +108,6 @@ public class XacNhanBanHangDialog extends JDialog {
 
         add(new JScrollPane(tblReview), "grow, wrap");
 
-        // Panel hiển thị tổng tiền
         JPanel pnlTotal = new JPanel(new MigLayout("fillx", "[grow][right]"));
         pnlTotal.setBackground(new Color(245, 245, 245));
         pnlTotal.putClientProperty("FlatLaf.style", "arc: 15");
@@ -126,7 +123,6 @@ public class XacNhanBanHangDialog extends JDialog {
         pnlTotal.add(lblTongTien);
         add(pnlTotal, "growx, wrap, gaptop 10");
 
-        // Panel nút chức năng
         JPanel pnlButtons = new JPanel(new MigLayout("fillx, insets 5 0 0 0", "[left][grow][right]"));
         pnlButtons.setBackground(Color.WHITE);
 
@@ -160,16 +156,13 @@ public class XacNhanBanHangDialog extends JDialog {
                 String maPX = pxBUS.getNewMaPhieu();
                 Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
-                // FIX TẠI ĐÂY: Lấy mã nhân viên từ Session thực tế
-                String maNV = "NV01"; // Mặc định nếu session lỗi
+                String maNV = "NV01"; 
                 if (Session.currentAccount != null) {
                     maNV = Session.currentAccount.getMaNV();
                 }
 
-                // Tạo đối tượng Phiếu Xuất
                 PhieuXuat phieuXuat = new PhieuXuat(maPX, currentTime, maNV, maKH, maKMSelected, finalTotalValue, true);
 
-                // Tạo danh sách chi tiết phiếu xuất
                 ArrayList<ChiTietPhieuXuat> dsChiTiet = new ArrayList<>();
                 for (int i = 0; i < modelReview.getRowCount(); i++) {
                     String maPB = modelReview.getValueAt(i, 1).toString();
@@ -180,7 +173,6 @@ public class XacNhanBanHangDialog extends JDialog {
                     dsChiTiet.add(new ChiTietPhieuXuat(maPX, maPB, sl, gia, 0.0));
                 }
 
-                // Gọi BUS xử lý thanh toán (Lưu DB, trừ tồn kho, v.v.)
                 if (pxBUS.thanhToan(phieuXuat, dsChiTiet)) {
                     int choice = JOptionPane.showConfirmDialog(this, 
                         "Bán hàng thành công! Bạn có muốn xuất hóa đơn PDF không?",
@@ -190,7 +182,6 @@ public class XacNhanBanHangDialog extends JDialog {
                         XuatPDFHoaDonXuat.xuatHoaDonNhap(phieuXuat, modelReview);
                     }
 
-                    // Refresh lại các bảng dữ liệu liên quan
                     if (this.phieuXuatTable != null) this.phieuXuatTable.loadData("");
                     if (this.baoHanhTable != null) this.baoHanhTable.loadData();
                     if (this.sidebar != null) this.sidebar.clearCart();
