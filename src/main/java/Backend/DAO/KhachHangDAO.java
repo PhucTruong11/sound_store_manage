@@ -1,9 +1,12 @@
 package Backend.DAO;
 
-import Backend.DatabaseHelper;
-import Backend.DTO.KhachHang;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import Backend.DTO.KhachHang;
+import Backend.DatabaseHelper;
 
 public class KhachHangDAO implements DAOInterface<KhachHang> {
 
@@ -76,7 +79,7 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
             if(rs.next()) {
                 String lastMa = rs.getString("ID");
                 int num = Integer.parseInt(lastMa.substring(3));
-                return String.format("KH%03d", num + 1);
+                return String.format("KH%02d", num + 1);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,9 @@
 package Frontend.GUI.NhanVien;
 
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+
 import Backend.BUS.NhanVienBUS;
 import Backend.DTO.NhanVien;
 import Frontend.Compoent.BaseThaoTacDialog;
@@ -70,6 +73,12 @@ public class NhanVienFixDialog extends BaseThaoTacDialog {
                     luong,
                     true
             );
+            String validationMsg = nvBUS.validate(nv, false); // false cho Update
+            if (!validationMsg.equals("OK")) {
+                JOptionPane.showMessageDialog(this, validationMsg, "Lỗi dữ liệu", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             if (nvBUS.update(nv)) {
                 JOptionPane.showMessageDialog(this, "Cập nhật nhân viên thành công!");
                 dispose();
