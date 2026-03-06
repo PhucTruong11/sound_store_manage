@@ -7,6 +7,7 @@ import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -19,6 +20,8 @@ public class NCCTable extends JPanel {
     private JScrollPane scrollPane;
     private NhaCungCapBUS nccBUS;
     private JComboBox<NhaCungCap> cboNCC;
+    private TableRowSorter<DefaultTableModel> sorter;
+
 
     public NCCTable() {
         nccBUS = new NhaCungCapBUS();
@@ -46,7 +49,7 @@ public class NCCTable extends JPanel {
                 if (selected.getMaNCC().equals("All")) {
                     loadData();
                 } else {
-                    loadDataByFilter(selected.getMaNCC());
+                    loadDataByFilter(selected.getTenNCC());
                 }
             }
         });
@@ -68,6 +71,8 @@ public class NCCTable extends JPanel {
 
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -109,13 +114,13 @@ public class NCCTable extends JPanel {
         }
     }
 
-    public void loadDataByFilter(String maNCC) {
+    public void loadDataByFilter(String tenNCC) {
         tblModel.setRowCount(0);
         ArrayList<NhaCungCap> listNCC = nccBUS.getAllNhaCungCap();
 
         int stt = 1;
         for (NhaCungCap ncc : listNCC) {
-            if (ncc.getMaNCC().equals(maNCC)) {
+            if (ncc.getTenNCC().equals(tenNCC)) {
                 Object[] row = {
                         stt++,
                         ncc.getMaNCC(),
@@ -133,14 +138,19 @@ public class NCCTable extends JPanel {
     }
 
     public void loadComboBox() {
-        if (cboNCC == null)
-            return;
+        if (cboNCC == null) return;
+
         Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại để sau khi nạp lại không nhảy
         cboNCC.removeAllItems(); // Xóa sạch dữ liệu cũ
         cboNCC.addItem(new NhaCungCap("All", "Tất cả", "", "")); // Thêm lại item mặc định
-        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap(); // Lấy dữ liệu mới nhất từ Database qua BUS
+        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
+        ArrayList<String> addNames = new ArrayList<>();
         for (NhaCungCap ncc : list) {
-            cboNCC.addItem(ncc);
+            String currentName = ncc.getTenNCC().trim();
+            if (!addNames.contains(currentName)) {
+                cboNCC.addItem(ncc);
+                addNames.add(currentName);
+            }
         }
 
         if (selected != null)

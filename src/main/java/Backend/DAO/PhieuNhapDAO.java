@@ -118,11 +118,11 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
         return list;
     }
 
-    public ArrayList<PhieuNhap> selectByFilter(String maNCC, Date from, Date to, long minPrice, long maxPrice) {
+    public ArrayList<PhieuNhap> selectByFilter(/*String maNCC,*/ Date from, Date to, long minPrice, long maxPrice) {
         ArrayList<PhieuNhap> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM PhieuNhap WHERE TrangThai = TRUE");
 
-        if(!maNCC.equals("All")) sql.append(" AND MaNCC = ?");
+        // if(!maNCC.equals("All")) sql.append(" AND MaNCC = ?");
         if(from != null) sql.append(" AND NgayNhap >= ?");
         if(to != null) sql.append(" AND NgayNhap <= ?");
         if(minPrice >= 0) sql.append(" AND TongTien >= ?");
@@ -133,7 +133,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
             int index = 1;
-            if(!maNCC.equals("All")) stmt.setString(index++, maNCC);
+            // if(!maNCC.equals("All")) stmt.setString(index++, maNCC);
             if (from != null) stmt.setTimestamp(index++, new Timestamp(from.getTime()));
             if (to != null) stmt.setTimestamp(index++, new Timestamp(to.getTime()));
             if (minPrice >= 0) stmt.setLong(index++, minPrice);

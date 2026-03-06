@@ -6,6 +6,7 @@ import Frontend.Compoent.Table;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -16,6 +17,7 @@ public class PhanQuyenTable extends JPanel {
       private JTable tbl;
       private DefaultTableModel tblModel;
       private NhomQuyenBUS nqBUS = new NhomQuyenBUS();
+      private TableRowSorter<DefaultTableModel> sorter;
 
       public PhanQuyenTable() {
             setLayout(new MigLayout("fill, insets 0", "[grow]", "[grow]"));
@@ -35,6 +37,8 @@ public class PhanQuyenTable extends JPanel {
 
             tbl = new Table();
             tbl.setModel(tblModel);
+            sorter = new TableRowSorter<>(tblModel);
+            tbl.setRowSorter(sorter);
 
             DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
             centerRenderer.setHorizontalAlignment(JLabel.CENTER);

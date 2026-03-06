@@ -29,42 +29,42 @@ public class PhieuNhapSidebar extends JPanel{
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
-        initNhanVienNhap();
-        initNhaCungCap();
+        // initNhanVienNhap();
+        // initNhaCungCap();
         initDate();
         initPrice();
     }
 
-    private void initNhanVienNhap() {
-        add(new JLabel("Nhân viên nhập"), "gaptop 10");
-        cbxNhanVien = new JComboBox<>(new String[] { "Tất cả", "Phuc truong", "Van Nam" });
-        add(cbxNhanVien, "h 35!");
-    }
+    // private void initNhanVienNhap() {
+    //     add(new JLabel("Nhân viên nhập"), "gaptop 10");
+    //     cbxNhanVien = new JComboBox<>(new String[] { "Tất cả", "Phuc truong", "Van Nam" });
+    //     add(cbxNhanVien, "h 35!");
+    // }
 
-    private void initNhaCungCap() {
-        add(new JLabel("Nhà cung cấp"), "gaptop 10");
-        cbxNhaCungCap = new JComboBox<>();
+    // private void initNhaCungCap() {
+    //     add(new JLabel("Nhà cung cấp"), "gaptop 10");
+    //     cbxNhaCungCap = new JComboBox<>();
 
-        NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
+    //     NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+    //     ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
 
-        DefaultComboBoxModel<NhaCungCap> model = new DefaultComboBoxModel<>();
-        model.addElement(new NhaCungCap("All", "Tất cả", " ", ""));
+    //     DefaultComboBoxModel<NhaCungCap> model = new DefaultComboBoxModel<>();
+    //     model.addElement(new NhaCungCap("All", "Tất cả", " ", ""));
 
-        for(NhaCungCap ncc : list) {
-            model.addElement(ncc);
-        }
-        cbxNhaCungCap.setModel(model);
+    //     for(NhaCungCap ncc : list) {
+    //         model.addElement(ncc);
+    //     }
+    //     cbxNhaCungCap.setModel(model);
 
-        cbxNhaCungCap.addActionListener(e -> { onFilterChange(); });
+    //     cbxNhaCungCap.addActionListener(e -> { onFilterChange(); });
 
-        add(cbxNhaCungCap, "h 35!");
-    }
+    //     add(cbxNhaCungCap, "h 35!");
+    // }
 
     private void onFilterChange() {
-        NhaCungCap ncc = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
-        String maNCC = (ncc != null) ? ncc.getMaNCC() : "All";
-        table.filter(maNCC, dateFrom.getDate(), dateTo.getDate(), txtMinPrice.getText(), txtMaxPrice.getText());
+        // NhaCungCap ncc = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
+        // String maNCC = (ncc != null) ? ncc.getMaNCC() : "All";
+        table.filter(/*maNCC,*/ dateFrom.getDate(), dateTo.getDate(), txtMinPrice.getText(), txtMaxPrice.getText());
     }
 
     private void initDate() {

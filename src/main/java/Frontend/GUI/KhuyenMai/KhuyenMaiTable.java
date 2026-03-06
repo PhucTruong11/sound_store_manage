@@ -7,6 +7,8 @@ import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class KhuyenMaiTable extends JPanel {
     private KhuyenMaiBUS kmBUS;
     private JComboBox<String> cboKM;
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public KhuyenMaiTable() {
         kmBUS = new KhuyenMaiBUS();
@@ -58,6 +61,8 @@ public class KhuyenMaiTable extends JPanel {
         };
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
         
         scrollPane = new JScrollPane(tbl);
         add(scrollPane, "grow");

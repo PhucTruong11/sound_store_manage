@@ -6,6 +6,7 @@ import Frontend.Compoent.Table;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -21,6 +22,7 @@ public class NhapHangTable extends JScrollPane {
     private String currentSearchQuery = "";
     private String currentMaLoai = "All";
     private String currentMaNCC = "All";
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public NhapHangTable(NhapHangSidebar sidebar) {
         phienbansanphamBUS = new PhienBanSanPhamBUS();
@@ -44,6 +46,8 @@ public class NhapHangTable extends JScrollPane {
         
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         tbl.getColumnModel().getColumn(0).setPreferredWidth(60);
         tbl.getColumnModel().getColumn(0).setMaxWidth(70);

@@ -6,11 +6,16 @@ import org.jfree.chart.*;
 import org.jfree.chart.plot.*;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+
+import Backend.BUS.ThongKeBUS;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 
 public class ProductChartPanel extends JPanel {
     private JComboBox<String> cbFilter;
+    private final ThongKeBUS tkBUS = new ThongKeBUS();
+    private DefaultCategoryDataset barDataset;
+    private DefaultPieDataset pieDataset;
 
     public ProductChartPanel() {
         setLayout(new MigLayout("fill, insets 0", "[60%]15[40%]", "[grow]"));
@@ -19,16 +24,27 @@ public class ProductChartPanel extends JPanel {
     }
 
     private void initComponents() {
-        // Cột trái: Sản phẩm bán chạy (Bar Chart)
         JPanel pnlBar = createChartWrapper("Sản Phẩm Bán Chạy");
         pnlBar.add(createBarChart(), BorderLayout.CENTER);
         
-        // Cột phải: Phân loại sản phẩm (Pie Chart)
         JPanel pnlPie = createChartWrapper("Tỷ Lệ Phân Loại");
         pnlPie.add(createPieChart(), BorderLayout.CENTER);
 
         add(pnlBar, "grow");
         add(pnlPie, "grow");
+
+        cbFilter.addActionListener(e -> {
+            String selectedType = cbFilter.getSelectedItem().toString();
+            refreshCharts(selectedType);
+        });
+    }
+
+    private void refreshCharts(String type) {
+        // Gọi BUS nạp lại dữ liệu vào Dataset hiện tại [cite: 2026-02-20]
+        tkBUS.nạpDữLiệuTop5(barDataset, type);
+        tkBUS.nạpDữLiệuTỉTrọng(pieDataset, type);
+        
+        // JFreeChart tự động vẽ lại khi Dataset thay đổi
     }
 
     private JPanel createChartWrapper(String title) {
@@ -53,23 +69,19 @@ public class ProductChartPanel extends JPanel {
     }
 
     private ChartPanel createBarChart() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        dataset.addValue(50, "Đã bán", "Loa Marshall");
-        dataset.addValue(42, "Đã bán", "Tai nghe Sony");
-        dataset.addValue(35, "Đã bán", "Loa JBL");
-        
-        JFreeChart chart = ChartFactory.createBarChart("", "", "Số lượng", dataset);
+        barDataset = new DefaultCategoryDataset();
+        tkBUS.nạpDữLiệuTop5(barDataset, "Tháng"); // Mặc định là Tháng
+
+        JFreeChart chart = ChartFactory.createBarChart("TOP 5 SẢN PHẨM", "", "Số lượng", barDataset);
         formatBasicChart(chart);
         return new ChartPanel(chart);
     }
 
     private ChartPanel createPieChart() {
-        DefaultPieDataset dataset = new DefaultPieDataset();
-        dataset.setValue("Loa Bluetooth", 45);
-        dataset.setValue("Tai nghe", 30);
-        dataset.setValue("Phụ kiện", 25);
-        
-        JFreeChart chart = ChartFactory.createPieChart("", dataset, true, true, false);
+        pieDataset = new DefaultPieDataset();
+        tkBUS.nạpDữLiệuTỉTrọng(pieDataset, "Tháng"); // Mặc định là Tháng
+
+        JFreeChart chart = ChartFactory.createPieChart("TỶ LỆ DOANH THU", pieDataset, true, true, false);
         formatBasicChart(chart);
         return new ChartPanel(chart);
     }

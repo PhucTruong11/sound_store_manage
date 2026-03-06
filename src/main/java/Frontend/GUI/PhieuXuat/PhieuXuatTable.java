@@ -5,6 +5,7 @@ import Backend.DTO.PhieuXuat;
 import Frontend.Compoent.Table;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -18,6 +19,7 @@ public class PhieuXuatTable extends JScrollPane {
     private JTable tbl;
     private DefaultTableModel tblModel;
     private PhieuXuatBUS phieuXuatBUS;
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public PhieuXuatTable() {
         phieuXuatBUS = new PhieuXuatBUS();
@@ -37,6 +39,8 @@ public class PhieuXuatTable extends JScrollPane {
 
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
