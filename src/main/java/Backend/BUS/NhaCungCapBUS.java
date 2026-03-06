@@ -27,4 +27,12 @@ public class NhaCungCapBUS {
     public boolean delete(String id) {
         return nccDAO.delete(id) > 0;
     }
+
+    public ArrayList<String> getMaSPByNCC(String maNCC) {
+        return nccDAO.getMaSPByNCC(maNCC);
+    }
+
+    public boolean saveSanPhamCungCap(String maNCC, ArrayList<String> dsMaSP) {
+        return nccDAO.updateSanPhamCungCap(maNCC, dsMaSP);
+    }
 }

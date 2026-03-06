@@ -179,6 +179,19 @@ public class NhanVienTable extends JPanel {
         scrollPane = new JScrollPane(tbl);
         scrollPane.setBorder(null);
         add(scrollPane, "grow");
+        // Thêm MouseListener để bắt sự kiện Double Click
+        tbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) { // Kiểm tra double click
+                    showDetail();
+                }
+            }
+        });
+
+        scrollPane = new JScrollPane(tbl);
+        scrollPane.setBorder(null);
+        add(scrollPane, "grow");
     }
 
     public void loadData() {
@@ -320,4 +333,30 @@ public class NhanVienTable extends JPanel {
                 cboChucVu.addItem(cv);
             }
         }
+// Thêm hàm này vào cuối file NhanVienTable.java
+    private void showDetail() {
+        int selectedRow = tbl.getSelectedRow();
+        if (selectedRow != -1) {
+            // Chuyển đổi index từ View sang Model (quan trọng khi Table đang được Sort/Filter)
+            int modelRow = tbl.convertRowIndexToModel(selectedRow);
+            
+            // Lấy mã NV từ cột số 1
+            String maNV = tblModel.getValueAt(modelRow, 1).toString();
+            
+            // Tìm đối tượng NhanVien đầy đủ từ BUS
+            NhanVien selectedNV = null;
+            for (NhanVien nv : nvBUS.getAllNhanVien()) {
+                if (nv.getId().equals(maNV)) {
+                    selectedNV = nv;
+                    break;
+                }
+            }
+
+            if (selectedNV != null) {
+                // Hiển thị Dialog chi tiết
+                NhanVienDetailDialog dialog = new NhanVienDetailDialog(selectedNV);
+                dialog.setVisible(true);
+            }
+        }
+    }
 }

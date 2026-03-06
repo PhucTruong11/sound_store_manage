@@ -28,9 +28,13 @@ public class BaoHanhBUS {
         ChiTietBaoHanhBUS ctbhBUS = new ChiTietBaoHanhBUS();
 
         // Bước 1: Dọn dẹp bảng con trước để gỡ bỏ ràng buộc khóa ngoại
-        ctbhBUS.deleteAllByMaBH(id);
+        ctbhBUS.delete(id);
 
         // Bước 2: Xóa bảng cha (BaoHanh)
         return bhDAO.delete(id) > 0;
+    }
+
+    public String getNewMaBH() {
+        return bhDAO.generateMaBH();
     }
 }

@@ -159,7 +159,6 @@ public class KhachHangTable extends JPanel {
                         kh.getSdt(),
                         kh.getDiaChi()
                 };
-                // Bị thiếu ở đây, cần thêm vào bảng
                 tblModel.addRow(row);
             }
         }

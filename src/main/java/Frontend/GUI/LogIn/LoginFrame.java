@@ -1,6 +1,11 @@
 package Frontend.GUI.LogIn;
 
 import Frontend.Compoent.Theme;
+import Frontend.Compoent.CustomButton;
+import Backend.BUS.TaiKhoanBUS;
+import Backend.DTO.TaiKhoan;
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,88 +14,67 @@ public class LoginFrame extends JFrame {
 
     private JTextField txtUsername;
     private JPasswordField txtPassword;
-    private JButton btnLogin;
-    private JLabel lblForgotPassword;
+    private CustomButton btnLogin;
+    private TaiKhoanBUS taiKhoanBUS = new TaiKhoanBUS();
 
     public LoginFrame() {
         initUI();
     }
 
     private void initUI() {
-        setTitle("Đăng nhập hệ thống");
-        setSize(400, 250);
-        setLocationRelativeTo(null); // căn giữa màn hình
+        setTitle("Đăng nhập hệ thống - Sound Store");
+        setSize(500, 500);
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
 
-        // Panel chính
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-        panel.setBackground(Color.WHITE);
-        add(panel);
+        JPanel mainPanel = new JPanel(new MigLayout("fill, insets 20", "[center]", "[center]"));
+        mainPanel.setBackground(Color.WHITE);
 
-        // Tiêu đề
+        JPanel formPanel = new JPanel(new MigLayout("wrap 1, fillx, insets 40 40 40 40", "[grow]"));
+        formPanel.setOpaque(false);
+
         JLabel lblTitle = new JLabel("ĐĂNG NHẬP");
-        lblTitle.setFont(new Font("Arial", Font.BOLD, 24));
-        lblTitle.setBounds(130, 20, 200, 30);
-        panel.add(lblTitle);
+        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        lblTitle.setForeground(Theme.PRIMARY_COLOR);
+        formPanel.add(lblTitle, "center, gapbottom 20");
 
-        // Username
-        JLabel lblUsername = new JLabel("Username:");
-        lblUsername.setBounds(50, 70, 80, 25);
-        panel.add(lblUsername);
+        JLabel lblUsername = new JLabel("Tên đăng nhập:");
+        lblUsername.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblUsername.setForeground(new Color(100, 100, 100));
+        formPanel.add(lblUsername, "gaptop 10");
 
         txtUsername = new JTextField();
-        txtUsername.setBounds(140, 70, 200, 25);
-        panel.add(txtUsername);
+        txtUsername.putClientProperty("FlatLaf.style", "margin: 5,10,5,10; arc: 10");
+        formPanel.add(txtUsername, "growx, h 45!");
 
-        // Password
-        JLabel lblPassword = new JLabel("Password:");
-        lblPassword.setBounds(50, 110, 80, 25);
-        panel.add(lblPassword);
+        JLabel lblPassword = new JLabel("Mật khẩu:");
+        lblPassword.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblPassword.setForeground(new Color(100, 100, 100));
+        formPanel.add(lblPassword, "gaptop 15");
 
         txtPassword = new JPasswordField();
-        txtPassword.setBounds(140, 110, 200, 25);
-        panel.add(txtPassword);
+        txtPassword.putClientProperty("FlatLaf.style", "margin: 5,10,5,10; arc: 10");
+        formPanel.add(txtPassword, "growx, h 45!");
 
-        // Nút Login
-        btnLogin = new JButton("Đăng nhập");
-        btnLogin.setBounds(140, 150, 200, 30);
-        btnLogin.setBackground(new Color(0, 123, 255));
-        btnLogin.setForeground(Color.WHITE);
-        btnLogin.setFocusPainted(false);
-        panel.add(btnLogin);
+        btnLogin = new CustomButton("ĐĂNG NHẬP", Theme.PRIMARY_COLOR);
+        formPanel.add(btnLogin, "growx, h 45!, gaptop 30");
 
-        // Quên mật khẩu
-        lblForgotPassword = new JLabel("<HTML><U>Quên mật khẩu?</U></HTML>");
-        lblForgotPassword.setBounds(140, 190, 200, 25);
-        lblForgotPassword.setForeground(Color.BLUE);
-        lblForgotPassword.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        panel.add(lblForgotPassword);
+        mainPanel.add(formPanel, "w 340!");
+        setContentPane(mainPanel);
 
-        // Action listener cho login
         btnLogin.addActionListener(e -> doLogin());
 
-        // Click quên mật khẩu
-        lblForgotPassword.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(LoginFrame.this,
-                        "Đang phát triển chức năng Quên mật khẩu",
-                        "Quên mật khẩu",
-                        JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        // Enter trên password cũng login
-        txtPassword.addKeyListener(new KeyAdapter() {
+        KeyAdapter enterSubmit = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     doLogin();
                 }
             }
-        });
+        };
+        txtUsername.addKeyListener(enterSubmit);
+        txtPassword.addKeyListener(enterSubmit);
     }
 
     private void doLogin() {
@@ -98,27 +82,35 @@ public class LoginFrame extends JFrame {
         String password = new String(txtPassword.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Vui lòng nhập đầy đủ thông tin",
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // MOCK: đăng nhập thành công nếu username = admin / password = 123
-        if (username.equals("admin") && password.equals("123")) {
-            JOptionPane.showMessageDialog(this,
-                    "Đăng nhập thành công");
+        btnLogin.setEnabled(false);
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-            // Mở MainFrame (chưa cần truyền TaiKhoan thật)
-            new Frontend.GUI.MainFrame().setVisible(true);
-            dispose();
+        TaiKhoan tk = taiKhoanBUS.login(username, password);
+
+        if (tk != null) {
+            // Lưu vào Session để dùng toàn cục
+            Backend.DTO.Session.currentAccount = tk;
+
+            // Lấy thông tin nhân viên thật
+            Backend.BUS.NhanVienBUS nvBUS = new Backend.BUS.NhanVienBUS();
+            Backend.DTO.NhanVien nv = nvBUS.getById(tk.getMaNV()); 
+            Backend.DTO.Session.currentNhanVien = nv;
+
+            String displayName = (nv != null) ? nv.getHoTen() : tk.getUsername();
+
+            // JOptionPane.showMessageDialog(this, "Chào mừng " + displayName + " quay trở lại!");
+            
+            new Frontend.GUI.MainFrame(displayName, tk.getMaNhomQuyen()).setVisible(true);
+            this.dispose();
         } else {
-            JOptionPane.showMessageDialog(this,
-                    "Sai tài khoản hoặc mật khẩu",
-                    "Lỗi",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            btnLogin.setEnabled(true);
+            setCursor(Cursor.getDefaultCursor());
+            txtPassword.setText("");
         }
-    }
-}
-
+    } // Đóng doLogin
+} // Đóng class LoginFrame

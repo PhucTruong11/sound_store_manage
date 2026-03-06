@@ -1,63 +1,36 @@
 package Backend.DTO;
 
-import java.time.LocalDate;
-import java.util.Objects;
+import java.util.Date;
 
 public class KhuyenMai {
     private String maKM;
     private String tenKM;
-    private double dieuKienGiam;
     private double phanTramGiam;
-    private LocalDate ngayBatDau;
-    private LocalDate ngayKetThuc;
+    private Date ngayBD;
+    private Date ngayKT;
+    private int trangThai; // 1: Đang hoạt động, 0: Ngừng hoạt động
 
-    public KhuyenMai() {
-    }
+    public KhuyenMai() {}
 
-    public KhuyenMai(String maKM, String tenKM, double dieuKienGiam, double phanTramGiam, LocalDate ngayBatDau, LocalDate ngayKetThuc) {
+    public KhuyenMai(String maKM, String tenKM, double phanTramGiam, Date ngayBD, Date ngayKT, int trangThai) {
         this.maKM = maKM;
         this.tenKM = tenKM;
-        this.dieuKienGiam = dieuKienGiam;
         this.phanTramGiam = phanTramGiam;
-        this.ngayBatDau = ngayBatDau;
-        this.ngayKetThuc = ngayKetThuc;
+        this.ngayBD = ngayBD;
+        this.ngayKT = ngayKT;
+        this.trangThai = trangThai;
     }
 
     public String getMaKM() { return maKM; }
     public void setMaKM(String maKM) { this.maKM = maKM; }
-
     public String getTenKM() { return tenKM; }
     public void setTenKM(String tenKM) { this.tenKM = tenKM; }
-
-    public double getDieuKienGiam() { return dieuKienGiam; }
-    public void setDieuKienGiam(double dieuKienGiam) { this.dieuKienGiam = dieuKienGiam; }
-
     public double getPhanTramGiam() { return phanTramGiam; }
     public void setPhanTramGiam(double phanTramGiam) { this.phanTramGiam = phanTramGiam; }
-
-    public LocalDate getNgayBatDau() { return ngayBatDau; }
-    public void setNgayBatDau(LocalDate ngayBatDau) { this.ngayBatDau = ngayBatDau; }
-
-    public LocalDate getNgayKetThuc() { return ngayKetThuc; }
-    public void setNgayKetThuc(LocalDate ngayKetThuc) { this.ngayKetThuc = ngayKetThuc; }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        KhuyenMai that = (KhuyenMai) obj;
-        return Objects.equals(maKM, that.maKM);
-    }
-
-    @Override
-    public String toString() {
-        return "KhuyenMai{" +
-                "maKM='" + maKM + '\'' +
-                ", tenKM='" + tenKM + '\'' +
-                ", dieuKienGiam=" + dieuKienGiam +
-                ", phanTramGiam=" + phanTramGiam +
-                ", ngayBatDau=" + ngayBatDau +
-                ", ngayKetThuc=" + ngayKetThuc +
-                '}';
-    }
+    public Date getNgayBD() { return ngayBD; }
+    public void setNgayBD(Date ngayBD) { this.ngayBD = ngayBD; }
+    public Date getNgayKT() { return ngayKT; }
+    public void setNgayKT(Date ngayKT) { this.ngayKT = ngayKT; }
+    public int getTrangThai() { return trangThai; }
+    public void setTrangThai(int trangThai) { this.trangThai = trangThai; }
 }

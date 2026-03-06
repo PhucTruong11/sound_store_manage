@@ -82,7 +82,7 @@ public class BaoHanhToolbar extends JPanel {
                     "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
 
             if (opt == JOptionPane.YES_OPTION) {
-                if (baoHanhBUS.delete(maBH)) { // Giả sử hàm delete trả về boolean
+                if (baoHanhBUS.delete(maBH)) {
                     JOptionPane.showMessageDialog(this, "Đã xóa thành công phiếu: " + maBH);
                     table.loadData();
                 } else {

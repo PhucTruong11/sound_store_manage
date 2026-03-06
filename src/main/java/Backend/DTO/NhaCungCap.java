@@ -7,8 +7,17 @@ public class NhaCungCap {
     private String tenNCC;
     private String diaChi;
     private String sdt;
+    private boolean trangThai;
 
     public NhaCungCap() {
+    }
+
+    public NhaCungCap(String maNCC, String tenNCC, String diaChi, String sdt, boolean trangThai) {
+        this.maNCC = maNCC;
+        this.tenNCC = tenNCC;
+        this.diaChi = diaChi;
+        this.sdt = sdt;
+        this.trangThai = trangThai;
     }
 
     public NhaCungCap(String maNCC, String tenNCC, String diaChi, String sdt) {
@@ -16,6 +25,7 @@ public class NhaCungCap {
         this.tenNCC = tenNCC;
         this.diaChi = diaChi;
         this.sdt = sdt;
+        this.trangThai = true;
     }
 
     // Getters & Setters
@@ -30,6 +40,9 @@ public class NhaCungCap {
 
     public String getSdt() { return sdt; }
     public void setSdt(String sdt) { this.sdt = sdt; }
+
+    public boolean isTrangThai() { return trangThai; }
+    public void setTrangThai( boolean trangThai) { this.trangThai = trangThai; }
 
     @Override
     public boolean equals(Object obj) {

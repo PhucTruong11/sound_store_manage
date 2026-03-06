@@ -13,8 +13,8 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
     public ArrayList<KhachHang> selectAll() {
         ArrayList<KhachHang> list = new ArrayList<>();
         String sql = "SELECT c.ID, c.HoTen, c.SDT, c.DiaChi, k.TrangThai " +
-                     "FROM ConNguoi c JOIN KhachHang k ON c.ID = k.ID " +
-                     "WHERE k.TrangThai = TRUE";
+                "FROM ConNguoi c JOIN KhachHang k ON c.ID = k.ID " +
+                "WHERE k.TrangThai = TRUE";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement st = conn.prepareStatement(sql);
                 ResultSet rs = st.executeQuery()) {

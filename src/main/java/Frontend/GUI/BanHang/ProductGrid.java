@@ -1,47 +1,138 @@
 package Frontend.GUI.BanHang;
 
 import javax.swing.*;
-import Backend.BUS.AmthanhBUS;
-import Backend.DTO.Amthanh;
+
+import Backend.BUS.PhienBanSanPhamBUS;
+import Backend.BUS.SanPhamBUS;
+import Backend.DTO.PhienBanSanPham;
+import Backend.DTO.SanPham;
 import java.awt.*;
-import net.miginfocom.swing.MigLayout;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import net.miginfocom.swing.MigLayout;
 
 public class ProductGrid extends JPanel {
     private JPanel mainPanel;
-    private AmthanhBUS amthanhBUS = new AmthanhBUS();
+    private ArrayList<PhienBanSanPham> fullList = new ArrayList<>();
+    private PaginationPanel pagination;
+    private BanHangSidebar sidebar;
 
-    public ProductGrid(BanHangSidebar sidebar) {
+    private String currentSearchQuery = "";
+    private String currentMaLoai = "";
+    private PhienBanSanPhamBUS phienbansanphamBUS;
+
+
+    public ProductGrid(BanHangSidebar sidebar, PaginationPanel pagination) {
+        phienbansanphamBUS = new PhienBanSanPhamBUS();
+        this.sidebar = sidebar;
+
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        mainPanel = new JPanel(new MigLayout("ins 10, wrap 3, fillx",
-                "[fill, grow]15[fill, grow]15[fill, grow]", "[]15[]"));
-        mainPanel.setBackground(Color.WHITE);
+        mainPanel = new JPanel(new MigLayout("ins 15, wrap 3, fillx, gap 15",
+                "[grow, fill][grow, fill][grow, fill]", ""));
+        mainPanel.setBackground(new Color(245, 245, 245));
 
         JScrollPane scrollPane = new JScrollPane(mainPanel);
         scrollPane.setBorder(null);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         add(scrollPane, BorderLayout.CENTER);
 
-        loadData(1, sidebar);
+        loadData();
     }
 
-    public void loadData(int page, BanHangSidebar sidebar) {
-        mainPanel.removeAll();
-        for (int i = 1; i <= 9; i++) {
-            String ma = "SP" + page + i;
-            String ten = "Sản phẩm trang " + page + " số " + i;
-            String gia = "10.500.000";
-            String anh = "";
+    // public void loadData() {
+    //     PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
+    //     this.fullList = pbBUS.getAllPhienBanSanPham();
+    //     displayAll();
+    // }
 
-            InfoPanel card = new InfoPanel(ma, ten, gia, anh, sidebar);
-            mainPanel.add(card);
+    // public void loadSearchData(String text) {
+    //     PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
+    //     this.fullList = pbBUS.search(text);
+    //     displayAll();
+    // }
+
+    // public void loadByCategoryData(String tenLoai) {
+    //     PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
+    //     if (tenLoai.equals("Tất cả sản phẩm")) {
+    //         loadData();
+    //     } else {
+    //         this.fullList = pbBUS.getByLoai(tenLoai);
+    //         displayAll();
+    //     }
+    // }
+
+    // public void displayAll() {
+    //     mainPanel.removeAll();
+
+    //     for (PhienBanSanPham pb : fullList) {
+    //         InfoPanel card = new InfoPanel(
+    //                 pb.getMaPhienBan(),
+    //                 pb.getTenSP(),
+    //                 String.format("%,.0f", pb.getGiaBan()),
+    //                 pb.getHinhAnh(),
+    //                 sidebar);
+    //         mainPanel.add(card);
+    //     }
+
+    //     mainPanel.revalidate();
+    //     mainPanel.repaint();
+    // }
+
+    // public void loadDataByLoai(String maLoai) {
+    //     PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
+    //     if (maLoai.equals("All")) {
+    //         loadData();
+    //     } else {
+    //         this.fullList = pbBUS.getByLoai(maLoai);
+    //         displayAll();
+    //     }
+    // }
+
+    public void loadData() {
+        this.currentMaLoai = "All";
+        this.currentSearchQuery = "";
+        applyFiltersBanHang();
+    }
+
+    public void applyFiltersBanHang() {
+        this.fullList = phienbansanphamBUS.getFilteredListBanHang(currentMaLoai, currentSearchQuery);
+        displayAll();
+    }
+
+    public void displayAll() {
+        mainPanel.removeAll();
+
+        if (fullList == null || fullList.isEmpty()) {
+            mainPanel.add(new JLabel("Không tìm thấy sản phẩm phù hợp"));
+        } else {
+            for (PhienBanSanPham pb : fullList) {
+                InfoPanel card = new InfoPanel(
+                        pb.getMaPhienBan(),
+                        pb.getTenSP(),
+                        String.format("%,.0f", pb.getGiaBan()),
+                        pb.getHinhAnh(),
+                        sidebar);
+                mainPanel.add(card);
+            }
         }
 
         mainPanel.revalidate();
         mainPanel.repaint();
+    }
+
+    public void loadDataSearch(String query) {
+        this.currentSearchQuery = query;
+        applyFiltersBanHang();
+    }
+
+    public void loadDataByLoai(String maLoai) {
+        this.currentMaLoai = maLoai;
+        applyFiltersBanHang();
     }
 }

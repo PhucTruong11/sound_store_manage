@@ -5,27 +5,29 @@ import Backend.DTO.ChiTietBaoHanh;
 import java.util.ArrayList;
 import java.sql.*;
 
-public class ChiTietBaoHanhDAO {
+public class ChiTietBaoHanhDAO implements ChiTietInterface<ChiTietBaoHanh> {
 
-    public int insert(ChiTietBaoHanh ctbh) {
-        String sql = "INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES (?, ?, ?, ?)";
+    @Override
+    public int insert(ArrayList<ChiTietBaoHanh> list) {
+        int count = 0;
+        String sql = "INSERT INTO ChiTietBaoHanh VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, ctbh.getMaCTBH());
-            stmt.setString(2, ctbh.getMaBH());
-            stmt.setString(3, ctbh.getNoiDung());
-            stmt.setString(4, ctbh.getTinhTrang());
-
-            System.out.println("Inserting ChiTietBaoHanh: " + ctbh.getMaCTBH());
-            return stmt.executeUpdate();
+            for (ChiTietBaoHanh ctbh : list) {
+                stmt.setString(1, ctbh.getMaCTBH());
+                stmt.setString(2, ctbh.getMaBH());
+                stmt.setString(3, ctbh.getNoiDung());
+                stmt.setString(4, ctbh.getTinhTrang());
+                count += stmt.executeUpdate();
+            }
         } catch (Exception e) {
-            System.err.println("Lỗi insert ChiTietBaoHanh:");
             e.printStackTrace();
-            return 0;
         }
+        return count;
     }
 
-    public ArrayList<ChiTietBaoHanh> selectByMaBH(String maBH) {
+    @Override
+    public ArrayList<ChiTietBaoHanh> selectAll(String maBH) {
         ArrayList<ChiTietBaoHanh> list = new ArrayList<>();
         String sql = "SELECT c.*, sp.TenSP " +
                 "FROM ChiTietBaoHanh c " +
@@ -45,7 +47,7 @@ public class ChiTietBaoHanhDAO {
                 ChiTietBaoHanh ctbh = new ChiTietBaoHanh();
                 ctbh.setMaCTBH(rs.getString("MaCTBH"));
                 ctbh.setMaBH(rs.getString("MaBH"));
-                ctbh.setTenSP(rs.getString("TenSP")); // Lấy từ JOIN
+                ctbh.setTenSP(rs.getString("TenSP"));
                 ctbh.setNoiDung(rs.getString("NoiDung"));
                 ctbh.setTinhTrang(rs.getString("TinhTrang"));
                 list.add(ctbh);
@@ -70,28 +72,29 @@ public class ChiTietBaoHanhDAO {
         }
     }
 
-    public int delete(String maCTBH) {
-        String sql = "DELETE FROM ChiTietBaoHanh WHERE MaCTBH = ?";
-        try (Connection conn = DatabaseHelper.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, maCTBH);
-            return stmt.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0;
-        }
+    @Override
+    public int delete(String id) {
+        return 0;
     }
 
-    public int deleteAllByMaBH(String maBH) {
-        String sql = "DELETE FROM ChiTietBaoHanh WHERE MaBH = ?";
-        try (Connection conn = DatabaseHelper.getConnection();
-                PreparedStatement stmt = conn.prepareStatement(sql)) {
+    @Override
+    public int update(ArrayList<ChiTietBaoHanh> t, String pk) {
+        return 0;
+    }
 
-            stmt.setString(1, maBH);
-            return stmt.executeUpdate();
+    public String generateMaCTBH() {
+        String sql = "SELECT MaCTBH FROM ChiTietBaoHanh ORDER BY CAST(SUBSTRING(MaCTBH, 5) AS UNSIGNED) DESC LIMIT 1";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                String lastMa = rs.getString("MaCTBH");
+                int num = Integer.parseInt(lastMa.substring(4)); // Cắt bỏ 'CTBH'
+                return String.format("CTBH%02d", num + 1); // Trả về CTBH01, CTBH02...
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
         }
+        return "CTBH01"; 
     }
 }

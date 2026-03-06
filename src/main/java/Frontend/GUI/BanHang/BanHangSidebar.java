@@ -1,14 +1,17 @@
 package Frontend.GUI.BanHang;
 
 import Frontend.Compoent.Theme;
-import Frontend.GUI.Nhaphang.XacNhanNhapHangDialog;
+import Frontend.GUI.BaoHanh.BaoHanhTable;
+import Frontend.GUI.PhieuXuat.PhieuXuatTable;
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.awt.*;
+import Backend.DTO.Session; // Đảm bảo đã import Session
 
 public class BanHangSidebar extends JPanel {
 
@@ -16,15 +19,26 @@ public class BanHangSidebar extends JPanel {
     private JSpinner spnSoLuongBan;
     private JTable tblBan;
     private DefaultTableModel modelBan;
-    private JComboBox<String> cbxNhanVien;
+    private JTextField txtNhanVien; // Đổi từ JComboBox sang JTextField
+    private PhieuXuatTable phieuXuatTable;
+    private BaoHanhTable baoHanhTable;
 
-    public BanHangSidebar() {
+    private String currentMa = "";
+    private String currentGia = "";
+    private JLabel lblKhachHang;
+    private String maKHSelected = "";
+    private String currentMauSac = "";
+
+    public BanHangSidebar(PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable) {
+        this.phieuXuatTable = phieuXuatTable;
+        this.baoHanhTable = baoHanhTable;
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(280, 0));
         putClientProperty("FlatLaf.style", "arc: 15");
 
         initHeader();
+        add(new JSeparator(), "growx, gaptop 5, gapbottom 5");
         initProductSelection();
         initMiniTable();
         initConfirmButton();
@@ -32,59 +46,102 @@ public class BanHangSidebar extends JPanel {
 
     private void initHeader() {
         add(new JLabel("Nhân viên bán"), "gaptop 5");
-        cbxNhanVien = new JComboBox<>(new String[] { "Phúc Trương" });
-        cbxNhanVien.setEnabled(false); // Auto lấy tên user, không cho chỉnh
-        add(cbxNhanVien, "h 30!");
+        
+        // Lấy họ tên từ Session giống bên Nhập hàng
+        String tenHienThi = "Chưa đăng nhập";
+        if (Session.currentNhanVien != null) {
+            tenHienThi = Session.currentNhanVien.getHoTen();
+        } else if (Session.currentAccount != null) {
+            tenHienThi = Session.currentAccount.getUsername();
+        }
 
-        add(new JSeparator(), "gaptop 5, gapbottom 5");
+        // Khởi tạo JTextField thay vì JComboBox
+        txtNhanVien = new JTextField(tenHienThi);
+        txtNhanVien.setEditable(false);
+        txtNhanVien.setFocusable(false);
+        txtNhanVien.setBackground(new Color(245, 245, 245)); // Màu nền xám nhẹ để phân biệt field chỉ đọc
+        add(txtNhanVien, "h 30!");
+
+        add(new JLabel("Khách hàng"), "gaptop 10");
+        lblKhachHang = new JLabel("Chưa chọn khách hàng");
+        lblKhachHang.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+        lblKhachHang.setForeground(Color.GRAY);
+        add(lblKhachHang);
+
+        CustomButton btnChonKH = new CustomButton("Chọn khách hàng", new Color(127, 140, 141));
+        btnChonKH.addActionListener(e -> {
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+            ChonKhachHangDialog dialog = new ChonKhachHangDialog(parent);
+            dialog.setVisible(true);
+
+            if (dialog.getSelectedKH() != null) {
+                lblKhachHang.setText(dialog.getSelectedKH().tenKH);
+                lblKhachHang.setFont(new Font("Segoe UI", Font.BOLD, 13));
+                lblKhachHang.setForeground(Theme.PRIMARY_COLOR);
+                this.maKHSelected = dialog.getSelectedKH().maKH;
+            }
+        });
+        add(btnChonKH, "h 30!");
     }
+
+    // ... (Các hàm initProductSelection, initMiniTable, initConfirmButton giữ nguyên như cũ) ...
 
     private void initProductSelection() {
         lblTenSP = new JLabel("Chọn sản phẩm");
-        lblTenSP.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblTenSP.setFont(new Font("Segoe UI", Font.BOLD, 16));
         lblTenSP.setForeground(Theme.PRIMARY_COLOR);
 
-        lblMaSP = new JLabel("Mã: -");
-        lblGia = new JLabel("Giá nhập: 0");
         lblTonKho = new JLabel("Tồn kho hiện tại: 0");
 
         add(lblTenSP);
-        add(lblMaSP, "split 2, growx");
-        add(lblGia);
         add(lblTonKho);
-        add(new JSeparator(), "growx, gaptop 5, gapbottom 5");
+        add(new JSeparator(), "growx, gaptop 10, gapbottom 10");
 
         add(new JLabel("Số lượng bán:"), "gaptop 5");
-        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
-        add(spnSoLuongBan, "split 2, w 120!, h 30!");
+        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, 10000, 1));
+        add(spnSoLuongBan, "split 2, w 100!, h 35!");
 
-        CustomButton btnThem = new CustomButton("THÊM", new Color(52, 152, 219));
+        CustomButton btnThem = new CustomButton("THÊM", new Color(0, 153, 255));
         btnThem.addActionListener(e -> addProductToTable());
-        add(btnThem, "growx, h 30!");
+        add(btnThem, "growx, h 35!");
     }
 
     private void initMiniTable() {
-        add(new JLabel("Danh sách chờ bán:"), "gaptop 15");
+        add(new JLabel("Danh sách chờ bán:"), "gaptop 10");
         String[] cols = { "Mã SP", "Tên SP", "SL", "Đơn giá" };
-        modelBan = new DefaultTableModel(cols, 0);
+        
+        modelBan = new DefaultTableModel(cols, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tblBan = new JTable(modelBan);
-        tblBan.setRowHeight(25);
+        tblBan.setRowHeight(30);
+        tblBan.setRowSelectionAllowed(true);
 
-        // ẨN CỘT Tên SP (index 1) và Đơn giá (index 3)
+        tblBan.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selected = tblBan.getSelectedRow();
+                if(e.getClickCount() == 2 && selected != -1) {
+                    modelBan.removeRow(selected);
+                }
+            }
+        });
+
+        // Ẩn mã SP và đơn giá trong bảng phụ
         tblBan.getColumnModel().getColumn(1).setMinWidth(0);
         tblBan.getColumnModel().getColumn(1).setMaxWidth(0);
-        tblBan.getColumnModel().getColumn(1).setPreferredWidth(0);
-
         tblBan.getColumnModel().getColumn(3).setMinWidth(0);
         tblBan.getColumnModel().getColumn(3).setMaxWidth(0);
-        tblBan.getColumnModel().getColumn(3).setPreferredWidth(0);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblBan.setDefaultRenderer(Object.class, centerRenderer);
 
         JScrollPane scroll = new JScrollPane(tblBan);
-        add(scroll, "h 180!, gaptop 5");
+        add(scroll, "h 110!, gaptop 5");
     }
 
     private void initConfirmButton() {
@@ -95,41 +152,100 @@ public class BanHangSidebar extends JPanel {
                 return;
             }
 
-            // Mở Dialog xác nhận
+            if (maKHSelected == null || maKHSelected.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn khách hàng trước khi xác nhận bán!",
+                        "Yêu cầu chọn khách hàng", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-            XacNhanNhapHangDialog dialog = new XacNhanNhapHangDialog(parent, modelBan);
+            XacNhanBanHangDialog dialog = new XacNhanBanHangDialog(
+                    parent,
+                    modelBan,
+                    maKHSelected,
+                    this.phieuXuatTable,
+                    this.baoHanhTable,
+                    this);
             dialog.setVisible(true);
         });
-        add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");
+        add(btnXacNhan, "gaptop 5, growx, h 40!, pushy, aligny bottom");
     }
 
     private void addProductToTable() {
-        if (lblMaSP.getText().equals("Mã: -")) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm từ bảng bên phải!");
+        if (currentMa.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm trước!");
             return;
         }
 
-        String ma = lblMaSP.getText();
-        String ten = lblTenSP.getText();
+        int slBanMoi = (int) spnSoLuongBan.getValue();
+        boolean found = false;
+
         int sl = (int) spnSoLuongBan.getValue();
-        String gia = lblGia.getText().replace("Giá bán: ", "");
+        String ten = lblTenSP.getText();
 
-        modelBan.addRow(new Object[] { ma, ten, sl, gia });
+        for (int i = 0; i < modelBan.getRowCount(); i++) {
+            String maTrongBang = modelBan.getValueAt(i, 0).toString();
 
-        resetSelection(); // Reset phần chọn sau khi thêm
+            if(maTrongBang.equals(currentMa)) {
+                int slCu = (int) modelBan.getValueAt(i, 2);
+                modelBan.setValueAt(slCu + slBanMoi, i, 2);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            modelBan.addRow(new Object[]{currentMa, ten, sl, currentGia});
+        }
+
+        // int sl = (int) spnSoLuongBan.getValue();
+        // String ten = lblTenSP.getText();
+        // modelBan.addRow(new Object[] { currentMa, ten, sl, currentGia });
+        resetSelection();
     }
 
     private void resetSelection() {
-        lblMaSP.setText("Mã: -");
+        this.currentMa = "";
+        this.currentGia = "";
         lblTenSP.setText("Chưa chọn sản phẩm");
-        lblGia.setText("Giá nhập: 0");
+        lblTonKho.setText("Tồn kho hiện tại: 0");
         spnSoLuongBan.setValue(1);
     }
 
-    // Các hàm cập nhật thông tin từ bên ngoài
-    public void updateInfo(String ma, String ten, String gia) {
-        lblMaSP.setText("Mã: " + ma);
+    public void clearCart() {
+        modelBan.setRowCount(0);
+        maKHSelected = "";
+        lblKhachHang.setText("Chưa chọn khách hàng");
+        lblKhachHang.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+        lblKhachHang.setForeground(Color.GRAY);
+        resetSelection();
+    }
+
+    public void updateInfo(String ma, String ten, String gia, String ton) {
+        this.currentMa = ma;
+        this.currentGia = gia;
         lblTenSP.setText(ten);
-        lblGia.setText("Giá: " + gia);
+
+        try {
+            String cleanTon = ton.replaceAll("[^0-9]", "");
+            int tonInt = Integer.parseInt(cleanTon);
+
+            lblTonKho.setText("Tồn kho hiện tại: " + tonInt);
+            lblTonKho.setForeground(tonInt > 0 ? Color.BLACK : Color.RED);
+
+            if (tonInt > 0) {
+                spnSoLuongBan.setModel(new SpinnerNumberModel(1, 1, tonInt, 1));
+                spnSoLuongBan.setEnabled(true);
+            } else {
+                spnSoLuongBan.setModel(new SpinnerNumberModel(0, 0, 0, 0));
+                spnSoLuongBan.setEnabled(false);
+            }
+        } catch (Exception e) {
+            lblTonKho.setText("Tồn kho hiện tại: 0");
+            spnSoLuongBan.setEnabled(false);
+        }
+
+        this.revalidate();
+        this.repaint();
     }
 }
