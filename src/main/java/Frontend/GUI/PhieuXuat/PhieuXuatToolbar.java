@@ -24,11 +24,11 @@ public class PhieuXuatToolbar extends JPanel {
                 table.loadData(keyword); 
             }
         });
-        ButtonXuatPdf btnPdf = new ButtonXuatPdf("Xuất PDF");
+        // ButtonXuatPdf btnPdf = new ButtonXuatPdf("Xuất PDF");
 
-        btnPdf.addActionListener(e -> {
-            Frontend.Compoent.XuatPDF.xuat(table.getTable(), "DANH SACH PHIEU XUAT HANG");
-        });
+        // btnPdf.addActionListener(e -> {
+        //     Frontend.Compoent.XuatPDF.xuat(table.getTable(), "DANH SACH PHIEU XUAT HANG");
+        // });
 
         ButtonXuatExcel btnExcel = new ButtonXuatExcel("Xuất EXCEL");
 
@@ -37,7 +37,7 @@ public class PhieuXuatToolbar extends JPanel {
         });
 
         add(txtSearch, "growx, h 35!");
-        add(btnPdf, "w 105!, h 35!");
+        // add(btnPdf, "w 105!, h 35!");
         add(btnExcel, "w 105!, h 35!");
     }
 }

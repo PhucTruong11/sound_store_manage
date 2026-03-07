@@ -6,9 +6,13 @@ import org.jfree.chart.*;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
+
+import Backend.BUS.ThongKeBUS;
 import net.miginfocom.swing.MigLayout;
 
 public class TrendChartPanel extends JPanel {
+    private final ThongKeBUS tkBUS = new ThongKeBUS();
+    private DefaultCategoryDataset dataset;
 
     public TrendChartPanel() {
         setLayout(new BorderLayout());
@@ -17,24 +21,30 @@ public class TrendChartPanel extends JPanel {
         initComponents();
     }
 
-    private void initComponents() {
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        for(int i = 1; i <= 15; i++) {
-            dataset.addValue(20 + Math.random() * 50, "Khách hàng", i + "/03");
-            dataset.addValue(10 + Math.random() * 40, "Đơn hàng", i + "/03");
-        }
+   private void initComponents() {
+        dataset = new DefaultCategoryDataset();
+        tkBUS.napDuLieuXuHuong(dataset);
 
-        JFreeChart chart = ChartFactory.createLineChart("XU HƯỚNG BÁN HÀNG TRONG THÁNG", "", "Số lượng", dataset);
+        JFreeChart chart = ChartFactory.createLineChart("BIẾN ĐỘNG GIAO DỊCH (15 NGÀY GẦN NHẤT)", "", "Số lượng", dataset);
         chart.setBackgroundPaint(Color.WHITE);
         
         CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(Color.WHITE);
+        plot.setRangeGridlinePaint(new Color(230, 230, 230));
         
         LineAndShapeRenderer renderer = new LineAndShapeRenderer();
-        renderer.setSeriesPaint(0, new Color(52, 152, 219)); // Blue
+        // Màu cho đường "Khách hàng"
+        renderer.setSeriesPaint(0, new Color(52, 152, 219));
         renderer.setSeriesStroke(0, new BasicStroke(3.0f));
+        
+        // Màu cho đường "Đơn hàng"
+        renderer.setSeriesPaint(1, new Color(46, 204, 113));
+        renderer.setSeriesStroke(1, new BasicStroke(3.0f));
+        
         plot.setRenderer(renderer);
 
-        add(new ChartPanel(chart), BorderLayout.CENTER);
+        ChartPanel chartPanel = new ChartPanel(chart);
+        chartPanel.setPreferredSize(new Dimension(0, 300));
+        add(chartPanel, BorderLayout.CENTER);
     }
 }

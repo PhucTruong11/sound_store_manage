@@ -413,25 +413,25 @@ INSERT INTO ChiTietQuyen (MaNhomQuyen, MaChucNang, HanhDong) VALUES
 ('NQ03', 'NHACUNGCAP', 'create');
 
 INSERT INTO ConNguoi (ID, HoTen, SDT, DiaChi) VALUES 
-('NV01', 'Trương Phúc', '0909123456', 'Đà Nẵng'),
-('NV02', 'Lê Văn Nam', '0909123457', 'Hà Nội'),
-('NV03', 'Nguyễn Văn Kho', '0909999888', 'Hải Phòng'),
-('KH01', 'Nguyễn Khách', '0912345678', 'TP.HCM'),
-('KH02', 'Trần VIP', '0987654321', 'Cần Thơ');
+('NV001', 'Trương Phúc', '0909123456', 'Đà Nẵng'),
+('NV002', 'Lê Văn Nam', '0909123457', 'Hà Nội'),
+('NV003', 'Nguyễn Văn Kho', '0909999888', 'Hải Phòng'),
+('KH001', 'Nguyễn Khách', '0912345678', 'TP.HCM'),
+('KH002', 'Trần VIP', '0987654321', 'Cần Thơ');
 
 INSERT INTO NhanVien (ID, ChucVu, Email, Luong) VALUES 
-('NV01', 'Quản lý', 'phuc@sw.com', 20000000),
-('NV02', 'Nhân viên bán hàng', 'nam@sw.com', 10000000),
-('NV03', 'Nhân viên kho', 'kho@sw.com', 12000000);
+('NV001', 'Quản lý', 'phuc@sw.com', 20000000),
+('NV002', 'Nhân viên bán hàng', 'nam@sw.com', 10000000),
+('NV003', 'Nhân viên kho', 'kho@sw.com', 12000000);
 
 INSERT INTO KhachHang (ID) VALUES 
-('KH01'),
-('KH02');
+('KH001'),
+('KH002');
 
 INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai) VALUES 
-('admin', '123456', 'NV01', 'NQ01', 1), 
-('nhanvien', '123456', 'NV02', 'NQ02', 1),
-('kho', '123456', 'NV03', 'NQ03', 1);
+('admin', '123456', 'NV001', 'NQ01', 1), 
+('nhanvien', '123456', 'NV002', 'NQ02', 1),
+('kho', '123456', 'NV003', 'NQ03', 1);
 -- --------------------------------------------------------
 
 INSERT INTO LoaiSP VALUES 
@@ -445,166 +445,275 @@ INSERT INTO HangSX VALUES
 ('H03', 'JBL', 'Mỹ');
 
 INSERT INTO SanPham (MaSP, TenSP, MaLoai, MaHang, MoTa, ThoiGianBaoHanh, TrangThai, HinhAnh) VALUES 
-('SP01', 'Marshall Stanmore III', 'L01', 'H01', 'Loa decor cực đẹp', 12, TRUE, 'marshall.jpg'),
-('SP02', 'Sony WH-1000XM5', 'L02', 'H02', 'Chống ồn đỉnh cao', 12, TRUE, 'sony_xm5.jpg'),
-('SP03', 'JBL Boombox 3', 'L01', 'H03', 'Loa di động công suất lớn, kháng nước IP67', 12, TRUE, 'jbl_boombox3.jpg'),
-('SP04', 'Marshall Emberton II', 'L01', 'H01', 'Loa cầm tay nhỏ gọn, pin 30h', 12, TRUE, 'marshall_emberton_2.jpg'),
-('SP05', 'Marshall Middleton', 'L01', 'H01', 'Loa Bluetooth 4 loa cực mạnh', 12, TRUE, 'marshall_middleton.jpg'),
-('SP06', 'Sony SRS-XE300', 'L01', 'H02', 'Loa chống nước, âm thanh rộng', 12, TRUE, 'sony_xe300.jpg'),
-('SP07', 'Sony WH-CH720N', 'L02', 'H02', 'Tai nghe chống ồn giá rẻ', 12, TRUE, 'sony_ch720n.jpg'),
-('SP08', 'JBL Charge 5', 'L01', 'H03', 'Loa Bluetooth kiêm sạc dự phòng', 12, TRUE, 'jbl_charge5.jpg'),
-('SP09', 'JBL PartyBox Encore', 'L01', 'H03', 'Loa kèm 2 Micro hát karaoke', 12, TRUE, 'jbl_encore.jpg'),
-('SP10', 'JBL Flip 6', 'L01', 'H03', 'Loa di động âm thanh 2 đường tiếng', 12, TRUE, 'jbl_flip6.jpg'),
+('SP001', 'Marshall Stanmore III', 'L01', 'H01', 'Loa decor cực đẹp', 12, TRUE, 'marshall.jpg'),
+('SP002', 'Sony WH-1000XM5', 'L02', 'H02', 'Chống ồn đỉnh cao', 12, TRUE, 'sony_xm5.jpg'),
+('SP003', 'JBL Boombox 3', 'L01', 'H03', 'Loa di động công suất lớn, kháng nước IP67', 12, TRUE, 'jbl_boombox3.jpg'),
+('SP004', 'Marshall Emberton II', 'L01', 'H01', 'Loa cầm tay nhỏ gọn, pin 30h', 12, TRUE, 'marshall_emberton_2.jpg'),
+('SP005', 'Marshall Middleton', 'L01', 'H01', 'Loa Bluetooth 4 loa cực mạnh', 12, TRUE, 'marshall_middleton.jpg'),
+('SP006', 'Sony SRS-XE300', 'L01', 'H02', 'Loa chống nước, âm thanh rộng', 12, TRUE, 'sony_xe300.jpg'),
+('SP007', 'Sony WH-CH720N', 'L02', 'H02', 'Tai nghe chống ồn giá rẻ', 12, TRUE, 'sony_ch720n.jpg'),
+('SP008', 'JBL Charge 5', 'L01', 'H03', 'Loa Bluetooth kiêm sạc dự phòng', 12, TRUE, 'jbl_charge5.jpg'),
+('SP009', 'JBL PartyBox Encore', 'L01', 'H03', 'Loa kèm 2 Micro hát karaoke', 12, TRUE, 'jbl_encore.jpg'),
+('SP010', 'JBL Flip 6', 'L01', 'H03', 'Loa di động âm thanh 2 đường tiếng', 12, TRUE, 'jbl_flip6.jpg'),
 
-('SP11', 'JBL Go 3', 'L01', 'H03', 'Loa mini chống nước', 12, TRUE, 'jbl_go3.jpg'),
-('SP12', 'Apple AirPods Pro 2', 'L02', 'H03', 'Chống ồn chủ động', 12, TRUE, 'airpods_pro.jpg'),
-('SP13', 'Sennheiser HD 450BT', 'L02', 'H02', 'Âm thanh chi tiết, pin 30h', 24, TRUE, 'sennheiser_hd450.jpg'),
-('SP14', 'Bose QuietComfort 45', 'L02', 'H03', 'Khử tiếng ồn đỉnh cao', 12, TRUE, 'bose_qc45.jpg'),
-('SP15', 'JBL Tune 510BT', 'L02', 'H03', 'Bass mạnh, giá sinh viên', 12, TRUE, 'jbl_510bt.jpg'),
-('SP16', 'Sony WH-1000XM4', 'L02', 'H02', 'Bản nâng cấp huyền thoại', 12, TRUE, 'sony_xm4.jpg'),
-('SP17', 'Marshall Major IV', 'L02', 'H01', 'Pin 80h, sạc không dây', 12, TRUE, 'marshall_major4.jpg'),
-('SP18', 'AirPods Max', 'L02', 'H03', 'Tai nghe Over-ear cao cấp', 12, TRUE, 'airpods_max.jpg'),
-('SP19', 'Micro Shure SM58', 'L03', 'H03', 'Micro vocal chuyên nghiệp', 12, TRUE, 'shure_sm58.jpg'),
-('SP20', 'Cáp Audio 3.5mm Ugreen', 'L03', 'H02', 'Dây bọc dù chống nhiễu', 6, TRUE, 'ugreen_35.jpg'),
-('SP21', 'Giá treo tai nghe Gỗ', 'L03', 'H01', 'Decor gỗ Walnut sang trọng', 0, TRUE, 'stand_wood.jpg'),
-('SP22', 'Bao da Marshall Willen', 'L03', 'H01', 'Bao bảo vệ silicon', 3, TRUE, 'case_willen.jpg'),
-('SP23', 'Micro JBL PBM100', 'L03', 'H03', 'Micro karaoke có dây', 12, TRUE, 'jbl_pbm100.jpg'),
-('SP24', 'Cáp sạc Type-C bọc thép', 'L03', 'H02', 'Sạc siêu bền cho loa', 6, TRUE, 'cable_c.jpg'),
-('SP25', 'Bộ vệ sinh tai nghe 3 in 1', 'L03', 'H02', 'Dạng bút vệ sinh tiện lợi', 0, TRUE, 'cleaning_kit.jpg'),
-('SP26', 'Jack chuyển 6.35mm sang 3.5mm', 'L03', 'H02', 'Mạ vàng cao cấp', 6, TRUE, 'jack_convert.jpg'),
-('SP27', 'Túi đựng loa JBL Charge', 'L03', 'H03', 'Chống sốc EVA cao cấp', 3, TRUE, 'bag_jbl.jpg');
+('SP011', 'JBL Go 3', 'L01', 'H03', 'Loa mini chống nước', 12, TRUE, 'jbl_go3.jpg'),
+('SP012', 'Apple AirPods Pro 2', 'L02', 'H03', 'Chống ồn chủ động', 12, TRUE, 'airpods_pro.jpg'),
+('SP013', 'Sennheiser HD 450BT', 'L02', 'H02', 'Âm thanh chi tiết, pin 30h', 24, TRUE, 'sennheiser_hd450.jpg'),
+('SP014', 'Bose QuietComfort 45', 'L02', 'H03', 'Khử tiếng ồn đỉnh cao', 12, TRUE, 'bose_qc45.jpg'),
+('SP015', 'JBL Tune 510BT', 'L02', 'H03', 'Bass mạnh, giá sinh viên', 12, TRUE, 'jbl_510bt.jpg'),
+('SP016', 'Sony WH-1000XM4', 'L02', 'H02', 'Bản nâng cấp huyền thoại', 12, TRUE, 'sony_xm4.jpg'),
+('SP017', 'Marshall Major IV', 'L02', 'H01', 'Pin 80h, sạc không dây', 12, TRUE, 'marshall_major4.jpg'),
+('SP018', 'AirPods Max', 'L02', 'H03', 'Tai nghe Over-ear cao cấp', 12, TRUE, 'airpods_max.jpg'),
+('SP019', 'Micro Shure SM58', 'L03', 'H03', 'Micro vocal chuyên nghiệp', 12, TRUE, 'shure_sm58.jpg'),
+('SP020', 'Cáp Audio 3.5mm Ugreen', 'L03', 'H02', 'Dây bọc dù chống nhiễu', 6, TRUE, 'ugreen_35.jpg'),
+('SP021', 'Giá treo tai nghe Gỗ', 'L03', 'H01', 'Decor gỗ Walnut sang trọng', 0, TRUE, 'stand_wood.jpg'),
+('SP022', 'Bao da Marshall Willen', 'L03', 'H01', 'Bao bảo vệ silicon', 3, TRUE, 'case_willen.jpg'),
+('SP023', 'Micro JBL PBM100', 'L03', 'H03', 'Micro karaoke có dây', 12, TRUE, 'jbl_pbm100.jpg'),
+('SP024', 'Cáp sạc Type-C bọc thép', 'L03', 'H02', 'Sạc siêu bền cho loa', 6, TRUE, 'cable_c.jpg'),
+('SP025', 'Bộ vệ sinh tai nghe 3 in 1', 'L03', 'H02', 'Dạng bút vệ sinh tiện lợi', 0, TRUE, 'cleaning_kit.jpg'),
+('SP026', 'Jack chuyển 6.35mm sang 3.5mm', 'L03', 'H02', 'Mạ vàng cao cấp', 6, TRUE, 'jack_convert.jpg'),
+('SP027', 'Túi đựng loa JBL Charge', 'L03', 'H03', 'Chống sốc EVA cao cấp', 3, TRUE, 'bag_jbl.jpg');
 
 
 INSERT INTO PhienBanSP VALUES 
-('PB01', 'SP01', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 10, TRUE, 'marshall.jpg'),
-('PB02', 'SP02', 'Đen (Black)', 'N/A', '30h', 'Bluetooth 5.2', 7000000, 9500000, 10, TRUE, 'sony_xm5.jpg'),
-('PB03', 'SP03', 'Đen (Black)', '180W', '24h', 'Bluetooth 5.3', 8500000, 11900000, 10, TRUE, 'jbl_boombox3.jpg'),
-('PB04', 'SP04', 'Đen Brass', '20W', '30h', 'Bluetooth 5.1', 3200000, 4500000, 10, TRUE, 'marshall_emberton_2.jpg'),
-('PB05', 'SP05', 'Đen (Black)', '60W', '20h', 'Bluetooth 5.1', 6500000, 8500000, 10, TRUE, 'marshall_middleton.jpg'),
-('PB06', 'SP06', 'Xám (Grey)', '30W', '24h', 'Bluetooth 5.2', 2800000, 3900000, 10, TRUE, 'sony_xe300.jpg'),
-('PB07', 'SP07', 'Xanh (Blue)', 'N/A', '35h', 'Bluetooth 5.2', 1800000, 2500000, 15, TRUE, 'sony_ch720n.jpg'),
-('PB08', 'SP08', 'Đen (Black)', '40W', '20h', 'Bluetooth 5.1', 3000000, 3900000, 12, TRUE, 'jbl_charge5.jpg'),
-('PB09', 'SP09', 'Đen (Black)', '100W', '10h', 'Bluetooth 5.1', 5800000, 7500000,10 , TRUE, 'jbl_encore.jpg'),
-('PB10', 'SP10', 'Đỏ (Red)', '20W', '12h', 'Bluetooth 5.1', 2200000, 2900000, 20, TRUE, 'jbl_flip6.jpg'),
-('PB11', 'SP11', 'Xanh quân đội', '4.2W', '5h', 'Bluetooth 5.1', 800000, 1050000, 20, TRUE, 'jbl_go3.jpg'),
-('PB12', 'SP12', 'Trắng', 'N/A', '6h', 'Bluetooth 5.3', 4500000, 5900000, 15, TRUE, 'airpods_pro.jpg'),
-('PB13', 'SP13', 'Đen', 'N/A', '30h', 'Bluetooth 5.0', 2800000, 3500000, 10, TRUE, 'sennheiser_hd450.jpg'),
-('PB14', 'SP14', 'Trắng', 'N/A', '24h', 'Bluetooth 5.1', 5500000, 7200000, 8, TRUE, 'bose_qc45.jpg'),
-('PB15', 'SP15', 'Hồng', 'N/A', '40h', 'Bluetooth 5.0', 700000, 1200000, 30, TRUE, 'jbl_510bt.jpg'),
-('PB16', 'SP16', 'Bạc', 'N/A', '30h', 'Bluetooth 5.0', 5000000, 6500000, 12, TRUE, 'sony_xm4.jpg'),
-('PB17', 'SP17', 'Nâu da', 'N/A', '80h', 'Bluetooth 5.0', 3000000, 4200000, 10, TRUE, 'marshall_major4.jpg'),
-('PB18', 'SP18', 'Xanh Sky', 'N/A', '20h', 'Bluetooth 5.0', 10000000, 13500000, 5, TRUE, 'airpods_max.jpg'),
-('PB19', 'SP19', 'Xám', 'N/A', 'N/A', 'XLR', 2100000, 2800000, 10, TRUE, 'shure_sm58.jpg'),
-('PB20', 'SP20', 'Đen', 'N/A', 'N/A', '3.5mm', 150000, 250000, 100, TRUE, 'ugreen_35.jpg'),
-('PB21', 'SP21', 'Gỗ Walnut', 'N/A', 'N/A', 'N/A', 300000, 550000, 15, TRUE, 'stand_wood.jpg'),
-('PB22', 'SP22', 'Đen', 'N/A', 'N/A', 'Silicon', 100000, 190000, 50, TRUE, 'case_willen.jpg'),
-('PB23', 'SP23', 'Đen', 'N/A', 'N/A', 'Cáp 3m', 700000, 950000, 20, TRUE, 'jbl_pbm100.jpg'),
-('PB24', 'SP24', 'Đỏ', '60W', 'N/A', 'Type-C', 120000, 220000, 80, TRUE, 'cable_c.jpg'),
-('PB25', 'SP25', 'Nhiều màu', 'N/A', 'N/A', 'N/A', 50000, 95000, 200, TRUE, 'cleaning_kit.jpg'),
-('PB26', 'SP26', 'Vàng', 'N/A', 'N/A', 'Mạ vàng', 80000, 150000, 60, TRUE, 'jack_convert.jpg'),
-('PB27', 'SP27', 'Đen', 'N/A', 'N/A', 'Vải Canvas', 200000, 350000, 40, TRUE, 'bag_jbl.jpg');
+('PB001', 'SP001', 'Kem (Cream)', '80W', 'N/A', 'Bluetooth 5.2', 7000000, 9500000, 10, TRUE, 'marshall.jpg'),
+('PB002', 'SP002', 'Đen (Black)', 'N/A', '30h', 'Bluetooth 5.2', 7000000, 9500000, 10, TRUE, 'sony_xm5.jpg'),
+('PB003', 'SP003', 'Đen (Black)', '180W', '24h', 'Bluetooth 5.3', 8500000, 11900000, 10, TRUE, 'jbl_boombox3.jpg'),
+('PB004', 'SP004', 'Đen Brass', '20W', '30h', 'Bluetooth 5.1', 3200000, 4500000, 10, TRUE, 'marshall_emberton_2.jpg'),
+('PB005', 'SP005', 'Đen (Black)', '60W', '20h', 'Bluetooth 5.1', 6500000, 8500000, 10, TRUE, 'marshall_middleton.jpg'),
+('PB006', 'SP006', 'Xám (Grey)', '30W', '24h', 'Bluetooth 5.2', 2800000, 3900000, 10, TRUE, 'sony_xe300.jpg'),
+('PB007', 'SP007', 'Xanh (Blue)', 'N/A', '35h', 'Bluetooth 5.2', 1800000, 2500000, 15, TRUE, 'sony_ch720n.jpg'),
+('PB008', 'SP008', 'Đen (Black)', '40W', '20h', 'Bluetooth 5.1', 3000000, 3900000, 12, TRUE, 'jbl_charge5.jpg'),
+('PB009', 'SP009', 'Đen (Black)', '100W', '10h', 'Bluetooth 5.1', 5800000, 7500000,10 , TRUE, 'jbl_encore.jpg'),
+('PB010', 'SP010', 'Đỏ (Red)', '20W', '12h', 'Bluetooth 5.1', 2200000, 2900000, 20, TRUE, 'jbl_flip6.jpg'),
+('PB011', 'SP011', 'Xanh quân đội', '4.2W', '5h', 'Bluetooth 5.1', 800000, 1050000, 20, TRUE, 'jbl_go3.jpg'),
+('PB012', 'SP012', 'Trắng', 'N/A', '6h', 'Bluetooth 5.3', 4500000, 5900000, 15, TRUE, 'airpods_pro.jpg'),
+('PB013', 'SP013', 'Đen', 'N/A', '30h', 'Bluetooth 5.0', 2800000, 3500000, 10, TRUE, 'sennheiser_hd450.jpg'),
+('PB014', 'SP014', 'Trắng', 'N/A', '24h', 'Bluetooth 5.1', 5500000, 7200000, 8, TRUE, 'bose_qc45.jpg'),
+('PB015', 'SP015', 'Hồng', 'N/A', '40h', 'Bluetooth 5.0', 700000, 1200000, 30, TRUE, 'jbl_510bt.jpg'),
+('PB016', 'SP016', 'Bạc', 'N/A', '30h', 'Bluetooth 5.0', 5000000, 6500000, 12, TRUE, 'sony_xm4.jpg'),
+('PB017', 'SP017', 'Nâu da', 'N/A', '80h', 'Bluetooth 5.0', 3000000, 4200000, 10, TRUE, 'marshall_major4.jpg'),
+('PB018', 'SP018', 'Xanh Sky', 'N/A', '20h', 'Bluetooth 5.0', 10000000, 13500000, 5, TRUE, 'airpods_max.jpg'),
+('PB019', 'SP019', 'Xám', 'N/A', 'N/A', 'XLR', 2100000, 2800000, 10, TRUE, 'shure_sm58.jpg'),
+('PB020', 'SP020', 'Đen', 'N/A', 'N/A', '3.5mm', 150000, 250000, 100, TRUE, 'ugreen_35.jpg'),
+('PB021', 'SP021', 'Gỗ Walnut', 'N/A', 'N/A', 'N/A', 300000, 550000, 15, TRUE, 'stand_wood.jpg'),
+('PB022', 'SP022', 'Đen', 'N/A', 'N/A', 'Silicon', 100000, 190000, 50, TRUE, 'case_willen.jpg'),
+('PB023', 'SP023', 'Đen', 'N/A', 'N/A', 'Cáp 3m', 700000, 950000, 20, TRUE, 'jbl_pbm100.jpg'),
+('PB024', 'SP024', 'Đỏ', '60W', 'N/A', 'Type-C', 120000, 220000, 80, TRUE, 'cable_c.jpg'),
+('PB025', 'SP025', 'Nhiều màu', 'N/A', 'N/A', 'N/A', 50000, 95000, 200, TRUE, 'cleaning_kit.jpg'),
+('PB026', 'SP026', 'Vàng', 'N/A', 'N/A', 'Mạ vàng', 80000, 150000, 60, TRUE, 'jack_convert.jpg'),
+('PB027', 'SP027', 'Đen', 'N/A', 'N/A', 'Vải Canvas', 200000, 350000, 40, TRUE, 'bag_jbl.jpg');
+
 -- --------------------------------------------------------
 
 INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt) VALUES 
-('NCC01', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333089'),
-('NCC02', 'B&O', 'Q7, TP.HCM', '0961254087'),
-('NCC03', 'Bose', 'Hà Nội', '0991299099');
+('NCC001', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333089'),
+('NCC002', 'B&O', 'Q7, TP.HCM', '0961254087'),
+('NCC003', 'Bose', 'Hà Nội', '0991299099');
 
 INSERT INTO PhieuNhap (MaPhieuNhap, MaNV, MaNCC) VALUES 
-('PN01', 'NV01', 'NCC01');
+('PN001', 'NV001', 'NCC001');
+
+INSERT INTO PhieuNhap (MaPhieuNhap, NgayNhap, MaNV, MaNCC, TongTien) VALUES 
+('PN002', '2026-01-10 08:00:00', 'NV001', 'NCC001', 150000000),
+('PN003', '2026-01-20 14:00:00', 'NV001', 'NCC003', 85000000),
+('PN004', '2026-02-05 10:30:00', 'NV001', 'NCC002', 120000000),
+('PN005', '2026-02-25 16:00:00', 'NV001', 'NCC001', 95000000),
+('PN006', '2026-03-02 09:00:00', 'NV001', 'NCC003', 210000000),
+('PN007', '2026-03-05 13:00:00', 'NV001', 'NCC001', 45000000);
 
 INSERT INTO ChiTietPhieuNhap (MaPhieuNhap, MaPhienBan, SoLuong, DonGia) VALUES 
-('PN01', 'PB01', 3, 7000000),
-('PN01', 'PB02', 2, 7000000);
+('PN001', 'PB001', 3, 7000000),
+('PN001', 'PB002', 2, 7000000),
+('PN002', 'PB003', 10, 8500000), 
+('PN002', 'PB027', 10, 7000000),
+('PN003', 'PB012', 15, 4500000), 
+('PN004', 'PB002', 10, 7000000),
+('PN006', 'PB018', 15, 10000000), 
+('PN002', 'PB001', 20, 7000000),
+('PN003', 'PB002', 20, 7000000),
+('PN004', 'PB003', 20, 8500000),
+('PN006', 'PB004', 20, 3200000),
+('PN007', 'PB005', 20, 6500000);
 
 INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
-('111222333', 'PB01', 'PN01', 'Trong kho'),
-('444555666', 'PB01', 'PN01', 'Trong kho'),
-('777888999', 'PB01', 'PN01', 'Trong kho'), 
-('840100001', 'PB01', 'PN01', 'Trong kho'), 
-('840100002', 'PB01', 'PN01', 'Trong kho'),
-('840100003', 'PB01', 'PN01', 'Trong kho'),
-('123123123', 'PB02', 'PN01', 'Trong kho'),
-('456456456', 'PB02', 'PN01', 'Trong kho'),
-('999888777', 'PB02', 'PN01', 'Đã bán'),
-('333111001', 'PB03', 'PN01', 'Trong kho');
+('111222333', 'PB001', 'PN001', 'Trong kho'),
+('444555666', 'PB001', 'PN001', 'Trong kho'),
+('777888999', 'PB001', 'PN001', 'Trong kho'), 
+('840100001', 'PB001', 'PN001', 'Trong kho'), 
+('840100002', 'PB001', 'PN001', 'Trong kho'),
+('840100003', 'PB001', 'PN001', 'Trong kho'),
+('123123123', 'PB002', 'PN001', 'Trong kho'),
+('456456456', 'PB002', 'PN001', 'Trong kho'),
+('999888777', 'PB002', 'PN001', 'Đã bán'),
+('333111001', 'PB003', 'PN001', 'Trong kho');
+
+-- IMEI cho Phiên bản PB001 (Marshall Stanmore III) - Phiếu nhập PN002
+INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
+('100000001', 'PB001', 'PN002', 'Trong kho'), ('100000002', 'PB001', 'PN002', 'Trong kho'),
+('100000003', 'PB001', 'PN002', 'Trong kho'), ('100000004', 'PB001', 'PN002', 'Trong kho'),
+('100000005', 'PB001', 'PN002', 'Trong kho'), ('100000006', 'PB001', 'PN002', 'Trong kho'),
+('100000007', 'PB001', 'PN002', 'Trong kho'), ('100000008', 'PB001', 'PN002', 'Trong kho'),
+('100000009', 'PB001', 'PN002', 'Trong kho'), ('100000010', 'PB001', 'PN002', 'Trong kho'),
+('100000011', 'PB001', 'PN002', 'Trong kho'), ('100000012', 'PB001', 'PN002', 'Trong kho'),
+('100000013', 'PB001', 'PN002', 'Trong kho'), ('100000014', 'PB001', 'PN002', 'Trong kho'),
+('100000015', 'PB001', 'PN002', 'Trong kho'), ('100000016', 'PB001', 'PN002', 'Trong kho'),
+('100000017', 'PB001', 'PN002', 'Trong kho'), ('100000018', 'PB001', 'PN002', 'Trong kho'),
+('100000019', 'PB001', 'PN002', 'Trong kho'), ('100000020', 'PB001', 'PN002', 'Trong kho');
+
+-- IMEI cho Phiên bản PB002 (Sony WH-1000XM5) - Phiếu nhập PN003
+INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
+('200000001', 'PB002', 'PN003', 'Trong kho'), ('200000002', 'PB002', 'PN003', 'Trong kho'),
+('200000003', 'PB002', 'PN003', 'Trong kho'), ('200000004', 'PB002', 'PN003', 'Trong kho'),
+('200000005', 'PB002', 'PN003', 'Trong kho'), ('200000006', 'PB002', 'PN003', 'Trong kho'),
+('200000007', 'PB002', 'PN003', 'Trong kho'), ('200000008', 'PB002', 'PN003', 'Trong kho'),
+('200000009', 'PB002', 'PN003', 'Trong kho'), ('200000010', 'PB002', 'PN003', 'Trong kho'),
+('200000011', 'PB002', 'PN003', 'Trong kho'), ('200000012', 'PB002', 'PN003', 'Trong kho'),
+('200000013', 'PB002', 'PN003', 'Trong kho'), ('200000014', 'PB002', 'PN003', 'Trong kho'),
+('200000015', 'PB002', 'PN003', 'Trong kho'), ('200000016', 'PB002', 'PN003', 'Trong kho'),
+('200000017', 'PB002', 'PN003', 'Trong kho'), ('200000018', 'PB002', 'PN003', 'Trong kho'),
+('200000019', 'PB002', 'PN003', 'Trong kho'), ('200000020', 'PB002', 'PN003', 'Trong kho');
+
+-- IMEI cho Phiên bản PB003 (JBL Boombox 3) - Phiếu nhập PN004
+INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
+('300000001', 'PB003', 'PN004', 'Trong kho'), ('300000002', 'PB003', 'PN004', 'Trong kho'),
+('300000003', 'PB003', 'PN004', 'Trong kho'), ('300000004', 'PB003', 'PN004', 'Trong kho'),
+('300000005', 'PB003', 'PN004', 'Trong kho'), ('300000006', 'PB003', 'PN004', 'Trong kho'),
+('300000007', 'PB003', 'PN004', 'Trong kho'), ('300000008', 'PB003', 'PN004', 'Trong kho'),
+('300000009', 'PB003', 'PN004', 'Trong kho'), ('300000010', 'PB003', 'PN004', 'Trong kho'),
+('300000011', 'PB003', 'PN004', 'Trong kho'), ('300000012', 'PB003', 'PN004', 'Trong kho'),
+('300000013', 'PB003', 'PN004', 'Trong kho'), ('300000014', 'PB003', 'PN004', 'Trong kho'),
+('300000015', 'PB003', 'PN004', 'Trong kho'), ('300000016', 'PB003', 'PN004', 'Trong kho'),
+('300000017', 'PB003', 'PN004', 'Trong kho'), ('300000018', 'PB003', 'PN004', 'Trong kho'),
+('300000019', 'PB003', 'PN004', 'Trong kho'), ('300000020', 'PB003', 'PN004', 'Trong kho');
+
+-- IMEI cho Phiên bản PB004 (Marshall Emberton II) - Phiếu nhập PN006
+INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
+('400000001', 'PB004', 'PN006', 'Trong kho'), ('400000002', 'PB004', 'PN006', 'Trong kho'),
+('400000003', 'PB004', 'PN006', 'Trong kho'), ('400000004', 'PB004', 'PN006', 'Trong kho'),
+('400000005', 'PB004', 'PN006', 'Trong kho'), ('400000006', 'PB004', 'PN006', 'Trong kho'),
+('400000007', 'PB004', 'PN006', 'Trong kho'), ('400000008', 'PB004', 'PN006', 'Trong kho'),
+('400000009', 'PB004', 'PN006', 'Trong kho'), ('400000010', 'PB004', 'PN006', 'Trong kho'),
+('400000011', 'PB004', 'PN006', 'Trong kho'), ('400000012', 'PB004', 'PN006', 'Trong kho'),
+('400000013', 'PB004', 'PN006', 'Trong kho'), ('400000014', 'PB004', 'PN006', 'Trong kho'),
+('400000015', 'PB004', 'PN006', 'Trong kho'), ('400000016', 'PB004', 'PN006', 'Trong kho'),
+('400000017', 'PB004', 'PN006', 'Trong kho'), ('400000018', 'PB004', 'PN006', 'Trong kho'),
+('400000019', 'PB004', 'PN006', 'Trong kho'), ('400000020', 'PB004', 'PN006', 'Trong kho');
+
+-- IMEI cho Phiên bản PB005 (Marshall Middleton) - Phiếu nhập PN007
+INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES 
+('500000001', 'PB005', 'PN007', 'Trong kho'), ('500000002', 'PB005', 'PN007', 'Trong kho'),
+('500000003', 'PB005', 'PN007', 'Trong kho'), ('500000004', 'PB005', 'PN007', 'Trong kho'),
+('500000005', 'PB005', 'PN007', 'Trong kho'), ('500000006', 'PB005', 'PN007', 'Trong kho'),
+('500000007', 'PB005', 'PN007', 'Trong kho'), ('500000008', 'PB005', 'PN007', 'Trong kho'),
+('500000009', 'PB005', 'PN007', 'Trong kho'), ('500000010', 'PB005', 'PN007', 'Trong kho'),
+('500000011', 'PB005', 'PN007', 'Trong kho'), ('500000012', 'PB005', 'PN007', 'Trong kho'),
+('500000013', 'PB005', 'PN007', 'Trong kho'), ('500000014', 'PB005', 'PN007', 'Trong kho'),
+('500000015', 'PB005', 'PN007', 'Trong kho'), ('500000016', 'PB005', 'PN007', 'Trong kho'),
+('500000017', 'PB005', 'PN007', 'Trong kho'), ('500000018', 'PB005', 'PN007', 'Trong kho'),
+('500000019', 'PB005', 'PN007', 'Trong kho'), ('500000020', 'PB005', 'PN007', 'Trong kho');
 -- ------------------------------------------------------
 
 INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc, TrangThai) VALUES 
-('KM01', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31', 1), 
-('KM02', 'Siêu sale Black Friday', 5000000, 20, '2026-11-20', '2026-11-30', 1),
-('KM03', 'Hè rực rỡ', 0, 5, '2026-06-01', '2026-08-31', 1),
-('KM04', 'Chào năm mới 2027', 2000000, 15, '2026-12-25', '2027-01-05', 1),
-('KM05', 'Tri ân khách hàng VIP', 10000000, 25, '2026-01-01', '2026-12-31', 1),
-('KM06', 'Giảm giá cuối tháng', 1000000, 8, '2026-03-25', '2026-03-31', 1);
+('KM001', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31', 1), 
+('KM002', 'Siêu sale Black Friday', 5000000, 20, '2026-11-20', '2026-11-30', 1),
+('KM003', 'Hè rực rỡ', 0, 5, '2026-06-01', '2026-08-31', 1),
+('KM004', 'Chào năm mới 2027', 2000000, 15, '2026-12-25', '2027-01-05', 1),
+('KM005', 'Tri ân khách hàng VIP', 10000000, 25, '2026-01-01', '2026-12-31', 1),
+('KM006', 'Giảm giá cuối tháng', 1000000, 8, '2026-03-25', '2026-03-31', 1);
 
 INSERT INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, MaKM) VALUES 
-('PX01', 'NV01', 'KH01', 'KM01');
+('PX001', 'NV001', 'KH001', 'KM001');
+
+INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien) VALUES 
+('PX003', '2026-02-22 15:00:00', 'NV001', 'KH001', 'KM001', 19000000),
+('PX004', '2026-02-25 10:20:00', 'NV001', 'KH002', 'KM005', 25000000),
+('PX005', '2026-02-28 18:00:00', 'NV001', 'KH001', NULL, 11900000),
+('PX006', '2026-03-01 09:15:00', 'NV001', 'KH001', 'KM003', 8500000),
+('PX007', '2026-03-02 11:30:00', 'NV001', 'KH002', NULL, 12500000),
+('PX008', '2026-03-03 16:45:00', 'NV001', 'KH001', 'KM006', 7500000),
+('PX009', '2026-03-04 10:00:00', 'NV001', 'KH002', 'KM001', 9500000),
+('PX010', '2026-03-05 14:20:00', 'NV001', 'KH001', NULL, 21000000),
+('PX011', '2026-03-06 17:10:00', 'NV001', 'KH002', 'KM006', 15000000),
+('PX012', '2026-03-07 08:30:00', 'NV001', 'KH001', 'KM001', 28500000);
+
 
 INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES 
-('PX01', 'PB01', 1, 8550000);
+('PX001', 'PB001', 1, 8550000),
+('PX006', 'PB001', 1, 8500000), 
+('PX007', 'PB003', 1, 12500000),
+('PX008', 'PB009', 1, 7500000), 
+('PX009', 'PB002', 1, 9500000),
+('PX010', 'PB018', 2, 10500000), 
+('PX011', 'PB002', 2, 7500000),
+('PX012', 'PB001', 3, 9500000);
+
 
 UPDATE ChiTietSP 
 SET TinhTrang = 'Trong kho', MaPhieuXuat = NULL 
 WHERE MaImei IN ('111222333', '444555666', '777888999');
 
 UPDATE ChiTietSP 
-SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
+SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX001' 
 WHERE MaImei = '111222333';
 
+
 INSERT IGNORE INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, TongTien) VALUES 
-('PX01', 'NV01', 'KH01', 8550000);
+('PX001', 'NV001', 'KH001', 8550000);
 -- --------------------------------------------------------
 
 INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, TongTien) VALUES 
-('PX02', '2026-02-20 10:30:00', 'NV02', 'KH02', 30900000);
+('PX002', '2026-02-20 10:30:00', 'NV002', 'KH002', 30900000);
 
-UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' WHERE MaImei IN ('111222333', '444555666', '777888999');
-UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX02' WHERE MaImei IN ('123123123', '456456456', '333111001');
+UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX001' WHERE MaImei IN ('111222333', '444555666', '777888999');
+UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX002' WHERE MaImei IN ('123123123', '456456456', '333111001');
+UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX012' WHERE MaImei IN ('100000001', '100000002', '100000003');
+UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX011' WHERE MaImei IN ('200000001', '200000002');
+UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX007' WHERE MaImei IN ('300000001');
 
 INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc, TinhTrang) VALUES 
-('BH01', '111222333', 'PX01', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH), 'Đang sửa chữa'),
-('BH02', '444555666', 'PX01', '2026-01-10', '2027-01-10', 'Đã trả máy'),
-('BH03', '777888999', 'PX01', '2026-02-05', '2027-02-05', 'Đang sửa chữa'), 
-('BH04', '123123123', 'PX02', '2026-02-22', '2027-02-22', 'Hoàn thành'),
-('BH05', '456456456', 'PX02', '2026-02-24', '2027-02-24', 'Đang sửa chữa');
+('BH001', '111222333', 'PX001', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH), 'Đang sửa chữa'),
+('BH002', '444555666', 'PX001', '2026-01-10', '2027-01-10', 'Đã trả máy'),
+('BH003', '777888999', 'PX001', '2026-02-05', '2027-02-05', 'Đang sửa chữa'), 
+('BH004', '123123123', 'PX002', '2026-02-22', '2027-02-22', 'Hoàn thành'),
+('BH005', '456456456', 'PX002', '2026-02-24', '2027-02-24', 'Đang sửa chữa');
 
 INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES 
-('CTBH01', 'BH01', 'Loa bị rè bass', 'Đang sửa chữa'),
-('CTBH02', 'BH02', 'Lỗi kết nối Bluetooth chập chờn', 'Đã trả máy'),
-('CTBH03', 'BH03', 'Vệ sinh chân sạc miễn phí', 'Đã trả máy'),
-('CTBH04', 'BH04', 'Hỏng pin - Sạc không vào điện', 'Đang sửa chữa'),
-('CTBH05', 'BH05', 'Khách báo chống ồn ANC hoạt động chập chờn', 'Đang sửa chữa');
+('CTBH001', 'BH001', 'Loa bị rè bass', 'Đang sửa chữa'),
+('CTBH002', 'BH002', 'Lỗi kết nối Bluetooth chập chờn', 'Đã trả máy'),
+('CTBH003', 'BH003', 'Vệ sinh chân sạc miễn phí', 'Đã trả máy'),
+('CTBH004', 'BH004', 'Hỏng pin - Sạc không vào điện', 'Đang sửa chữa'),
+('CTBH005', 'BH005', 'Khách báo chống ồn ANC hoạt động chập chờn', 'Đang sửa chữa');
 -- ('CTBH06', 'BH06', 'Cập nhật lại Firmware phiên bản mới nhất', 'Hoàn thành'),
 -- ('CTBH07', 'BH07', 'Hỏng da đệm tai (Earpads)', 'Đang sửa chữa'),
 
 INSERT INTO NCC_SanPham VALUES 
-('NCC01', 'SP01'), 
-('NCC03', 'SP03'),
-('NCC01', 'SP04'), 
-('NCC01', 'SP05'), 
-('NCC02', 'SP06'), 
-('NCC02', 'SP07'), 
-('NCC03', 'SP08'), 
-('NCC03', 'SP09'), 
-('NCC03', 'SP10'),
-('NCC03', 'SP11'), 
-('NCC03', 'SP12'), 
-('NCC02', 'SP13'), 
-('NCC03', 'SP14'), 
-('NCC03', 'SP15'), 
-('NCC02', 'SP16'), 
-('NCC01', 'SP17'), 
-('NCC03', 'SP18'), 
-('NCC03', 'SP19'), 
-('NCC02', 'SP20'), 
-('NCC01', 'SP21'), 
-('NCC01', 'SP22'), 
-('NCC03', 'SP23'), 
-('NCC02', 'SP24'), 
-('NCC02', 'SP25'), 
-('NCC02', 'SP26'), 
-('NCC03', 'SP27');
+('NCC001', 'SP001'), 
+('NCC003', 'SP003'),
+('NCC001', 'SP004'), 
+('NCC001', 'SP005'), 
+('NCC002', 'SP006'), 
+('NCC002', 'SP007'), 
+('NCC003', 'SP008'), 
+('NCC003', 'SP009'), 
+('NCC003', 'SP010'),
+('NCC003', 'SP011'), 
+('NCC003', 'SP012'), 
+('NCC002', 'SP013'), 
+('NCC003', 'SP014'), 
+('NCC003', 'SP015'), 
+('NCC002', 'SP016'), 
+('NCC001', 'SP017'), 
+('NCC003', 'SP018'), 
+('NCC003', 'SP019'), 
+('NCC002', 'SP020'), 
+('NCC001', 'SP021'), 
+('NCC001', 'SP022'), 
+('NCC003', 'SP023'), 
+('NCC002', 'SP024'), 
+('NCC002', 'SP025'), 
+('NCC002', 'SP026'), 
+('NCC003', 'SP027');
 
 INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang)
 SELECT 

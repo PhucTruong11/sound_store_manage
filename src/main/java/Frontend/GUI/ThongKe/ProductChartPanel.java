@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import org.jfree.chart.*;
 import org.jfree.chart.plot.*;
+import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
@@ -15,7 +16,7 @@ public class ProductChartPanel extends JPanel {
     private JComboBox<String> cbFilter;
     private final ThongKeBUS tkBUS = new ThongKeBUS();
     private DefaultCategoryDataset barDataset;
-    private DefaultPieDataset pieDataset;
+    private DefaultPieDataset<String> pieDataset;
 
     public ProductChartPanel() {
         setLayout(new MigLayout("fill, insets 0", "[60%]15[40%]", "[grow]"));
@@ -40,11 +41,8 @@ public class ProductChartPanel extends JPanel {
     }
 
     private void refreshCharts(String type) {
-        // Gọi BUS nạp lại dữ liệu vào Dataset hiện tại [cite: 2026-02-20]
-        tkBUS.nạpDữLiệuTop5(barDataset, type);
-        tkBUS.nạpDữLiệuTỉTrọng(pieDataset, type);
-        
-        // JFreeChart tự động vẽ lại khi Dataset thay đổi
+        tkBUS.napDuLieuTop5(barDataset, type);
+        tkBUS.napDuLieuTiTrong(pieDataset, type);
     }
 
     private JPanel createChartWrapper(String title) {
@@ -70,16 +68,29 @@ public class ProductChartPanel extends JPanel {
 
     private ChartPanel createBarChart() {
         barDataset = new DefaultCategoryDataset();
-        tkBUS.nạpDữLiệuTop5(barDataset, "Tháng"); // Mặc định là Tháng
+        tkBUS.napDuLieuTop5(barDataset, "Tháng"); 
 
-        JFreeChart chart = ChartFactory.createBarChart("TOP 5 SẢN PHẨM", "", "Số lượng", barDataset);
+        JFreeChart chart = ChartFactory.createBarChart(
+            "TOP 5 SẢN PHẨM BÁN CHẠY", 
+            "",              // Trục tung (Tên SP)
+            "Số lượng bán",  // Trục hoành (Giá trị)
+            barDataset, 
+            PlotOrientation.HORIZONTAL, 
+            false, true, false
+        );
+        
         formatBasicChart(chart);
+        
+        CategoryPlot plot = chart.getCategoryPlot();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setSeriesPaint(0, new Color(52, 152, 219));
+        
         return new ChartPanel(chart);
     }
 
     private ChartPanel createPieChart() {
-        pieDataset = new DefaultPieDataset();
-        tkBUS.nạpDữLiệuTỉTrọng(pieDataset, "Tháng"); // Mặc định là Tháng
+        pieDataset = new DefaultPieDataset<>();
+        tkBUS.napDuLieuTiTrong(pieDataset, "Tháng");
 
         JFreeChart chart = ChartFactory.createPieChart("TỶ LỆ DOANH THU", pieDataset, true, true, false);
         formatBasicChart(chart);
