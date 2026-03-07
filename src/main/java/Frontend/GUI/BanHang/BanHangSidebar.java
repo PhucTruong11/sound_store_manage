@@ -1,14 +1,17 @@
 package Frontend.GUI.BanHang;
 
 import Frontend.Compoent.Theme;
-import Frontend.GUI.Nhaphang.XacNhanNhapHangDialog;
+import Frontend.GUI.BaoHanh.BaoHanhTable;
+import Frontend.GUI.PhieuXuat.PhieuXuatTable;
 import Frontend.Compoent.CustomButton;
 import net.miginfocom.swing.MigLayout;
-
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.awt.*;
+import Backend.DTO.Session; // Đảm bảo đã import Session
 
 public class BanHangSidebar extends JPanel {
 
@@ -16,7 +19,9 @@ public class BanHangSidebar extends JPanel {
     private JSpinner spnSoLuongBan;
     private JTable tblBan;
     private DefaultTableModel modelBan;
-    private JComboBox<String> cbxNhanVien;
+    private JTextField txtNhanVien; // Đổi từ JComboBox sang JTextField
+    private PhieuXuatTable phieuXuatTable;
+    private BaoHanhTable baoHanhTable;
 
     private String currentMa = "";
     private String currentGia = "";
@@ -24,7 +29,9 @@ public class BanHangSidebar extends JPanel {
     private String maKHSelected = "";
     private String currentMauSac = "";
 
-    public BanHangSidebar() {
+    public BanHangSidebar(PhieuXuatTable phieuXuatTable, BaoHanhTable baoHanhTable) {
+        this.phieuXuatTable = phieuXuatTable;
+        this.baoHanhTable = baoHanhTable;
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]"));
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(280, 0));
@@ -39,11 +46,21 @@ public class BanHangSidebar extends JPanel {
 
     private void initHeader() {
         add(new JLabel("Nhân viên bán"), "gaptop 5");
-        cbxNhanVien = new JComboBox<>(new String[] { "Phúc Trương" });
-        cbxNhanVien.setEnabled(false);
-        add(cbxNhanVien, "h 30!");
 
-        add(new JLabel("Khách hàng"), "gaptop 5");
+        String tenHienThi = "Chưa đăng nhập";
+        if (Session.currentNhanVien != null) {
+            tenHienThi = Session.currentNhanVien.getHoTen();
+        } else if (Session.currentAccount != null) {
+            tenHienThi = Session.currentAccount.getUsername();
+        }
+
+        txtNhanVien = new JTextField(tenHienThi);
+        txtNhanVien.setEditable(false);
+        txtNhanVien.setFocusable(false);
+        txtNhanVien.setBackground(new Color(245, 245, 245));
+        add(txtNhanVien, "h 30!");
+
+        add(new JLabel("Khách hàng"), "gaptop 10");
         lblKhachHang = new JLabel("Chưa chọn khách hàng");
         lblKhachHang.setFont(new Font("Segoe UI", Font.ITALIC, 13));
         lblKhachHang.setForeground(Color.GRAY);
@@ -77,7 +94,10 @@ public class BanHangSidebar extends JPanel {
         add(new JSeparator(), "growx, gaptop 10, gapbottom 10");
 
         add(new JLabel("Số lượng bán:"), "gaptop 5");
-        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
+
+        // Dùng model không giới hạn max, việc kiểm tra tồn kho sẽ làm thủ công
+        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+
         add(spnSoLuongBan, "split 2, w 100!, h 35!");
 
         CustomButton btnThem = new CustomButton("THÊM", new Color(0, 153, 255));
@@ -85,13 +105,53 @@ public class BanHangSidebar extends JPanel {
         add(btnThem, "growx, h 35!");
     }
 
+    // private void validateSpinnerInput(JTextField spinnerTxt) {
+    // if (currentMa.isEmpty())
+    // return;
+
+    // String cleanTon = lblTonKho.getText().replaceAll("[^0-9]", "");
+    // if (cleanTon.isEmpty())
+    // return;
+    // int tonKho = Integer.parseInt(cleanTon);
+
+    // try {
+    // int nhap = Integer.parseInt(spinnerTxt.getText().trim());
+    // if (nhap > tonKho) {
+    // JOptionPane.showMessageDialog(
+    // BanHangSidebar.this,
+    // "Số lượng bán vượt quá tồn kho! Tồn kho hiện tại: " + tonKho);
+    // spnSoLuongBan.setValue(tonKho);
+    // }
+    // } catch (NumberFormatException ex) {
+    // spnSoLuongBan.setValue(1);
+    // }
+    // }
+
     private void initMiniTable() {
         add(new JLabel("Danh sách chờ bán:"), "gaptop 10");
         String[] cols = { "Mã SP", "Tên SP", "SL", "Đơn giá" };
-        modelBan = new DefaultTableModel(cols, 0);
+
+        modelBan = new DefaultTableModel(cols, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
         tblBan = new JTable(modelBan);
         tblBan.setRowHeight(30);
+        tblBan.setRowSelectionAllowed(true);
 
+        tblBan.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selected = tblBan.getSelectedRow();
+                if (e.getClickCount() == 2 && selected != -1) {
+                    modelBan.removeRow(selected);
+                }
+            }
+        });
+
+        // Ẩn mã SP và đơn giá trong bảng phụ
         tblBan.getColumnModel().getColumn(1).setMinWidth(0);
         tblBan.getColumnModel().getColumn(1).setMaxWidth(0);
         tblBan.getColumnModel().getColumn(3).setMinWidth(0);
@@ -120,17 +180,16 @@ public class BanHangSidebar extends JPanel {
             }
 
             JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
-            XacNhanBanHangDialog dialog = new XacNhanBanHangDialog(parent, modelBan, maKHSelected, null);
+            XacNhanBanHangDialog dialog = new XacNhanBanHangDialog(
+                    parent,
+                    modelBan,
+                    maKHSelected,
+                    this.phieuXuatTable,
+                    this.baoHanhTable,
+                    this);
             dialog.setVisible(true);
         });
-        add(btnXacNhan, "gaptop 5, growx, h 40!, , pushy, aligny bottom");
-    }
-
-    public void updateInfo(String ma, String ten, String gia) {
-        this.currentMa = ma;
-        this.currentGia = gia;
-
-        lblTenSP.setText(ten);
+        add(btnXacNhan, "gaptop 5, growx, h 40!, pushy, aligny bottom");
     }
 
     private void addProductToTable() {
@@ -139,10 +198,56 @@ public class BanHangSidebar extends JPanel {
             return;
         }
 
-        int sl = (int) spnSoLuongBan.getValue();
+        try {
+            spnSoLuongBan.commitEdit();
+        } catch (java.text.ParseException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String cleanTon = lblTonKho.getText().replaceAll("[^0-9]", "");
+        int tonKho = Integer.parseInt(cleanTon);
+
+        if (tonKho <= 0) {
+            JOptionPane.showMessageDialog(this, "Sản phẩm này đã hết hàng!", "Hết hàng", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int slBanMoi = (int) spnSoLuongBan.getValue();
+
+        if (slBanMoi > tonKho) {
+            JOptionPane.showMessageDialog(this,
+                    "Số lượng bán vượt quá tồn kho! Tồn kho hiện tại: " + tonKho,
+                    "Không đủ hàng",
+                    JOptionPane.ERROR_MESSAGE);
+            return; 
+        }
+
+        boolean found = false;
         String ten = lblTenSP.getText();
 
-        modelBan.addRow(new Object[] { currentMa, ten, sl, currentGia });
+        for (int i = 0; i < modelBan.getRowCount(); i++) {
+            String maTrongBang = modelBan.getValueAt(i, 0).toString();
+            if (maTrongBang.equals(currentMa)) {
+                int slCu = (int) modelBan.getValueAt(i, 2);
+
+                if (slCu + slBanMoi > tonKho) {
+                    JOptionPane.showMessageDialog(this,
+                            "Bạn đã có " + slCu + " món trong giỏ. Vượt quá tồn kho (" + tonKho + ")!",
+                            "Không đủ hàng",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                modelBan.setValueAt(slCu + slBanMoi, i, 2);
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            modelBan.addRow(new Object[] { currentMa, ten, slBanMoi, currentGia });
+        }
 
         resetSelection();
     }
@@ -151,6 +256,43 @@ public class BanHangSidebar extends JPanel {
         this.currentMa = "";
         this.currentGia = "";
         lblTenSP.setText("Chưa chọn sản phẩm");
+        lblTonKho.setText("Tồn kho hiện tại: 0");
         spnSoLuongBan.setValue(1);
+    }
+
+    public void clearCart() {
+        modelBan.setRowCount(0);
+        maKHSelected = "";
+        lblKhachHang.setText("Chưa chọn khách hàng");
+        lblKhachHang.setFont(new Font("Segoe UI", Font.ITALIC, 13));
+        lblKhachHang.setForeground(Color.GRAY);
+        resetSelection();
+    }
+
+    public void updateInfo(String ma, String ten, String gia, String ton) {
+        this.currentMa = ma;
+        this.currentGia = gia;
+        lblTenSP.setText(ten);
+
+        try {
+            String cleanTon = ton.replaceAll("[^0-9]", "");
+            int tonInt = Integer.parseInt(cleanTon);
+
+            lblTonKho.setText("Tồn kho hiện tại: " + tonInt);
+            lblTonKho.setForeground(tonInt > 0 ? Color.BLACK : Color.RED);
+
+            if (tonInt > 0) {
+                spnSoLuongBan.setModel(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+                spnSoLuongBan.setEnabled(true);
+            } else {
+                spnSoLuongBan.setModel(new SpinnerNumberModel(0, 0, 0, 0));
+                spnSoLuongBan.setEnabled(false);
+            }
+        } catch (Exception e) {
+            lblTonKho.setText("Tồn kho hiện tại: 0");
+            spnSoLuongBan.setEnabled(false);
+        }
+
+        this.repaint();
     }
 }

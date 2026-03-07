@@ -23,6 +23,12 @@ public class BaoHanhTable extends JPanel {
     private TableRowSorter<DefaultTableModel> sorter;
     private String currentKeyword = "";
 
+    // Danh sách trạng thái khớp chính xác với giá trị lưu trong DB
+    private static final String STATUS_ALL = "Tất cả trạng thái";
+    private static final String STATUS_FIXING = "Đang sửa chữa";
+    private static final String STATUS_DONE = "Hoàn thành";
+    private static final String STATUS_RETURNED = "Đã trả máy";
+
     public BaoHanhTable() {
         setLayout(new MigLayout("wrap 1, fill, insets 10", "[grow]", "[]15[grow]"));
         setBackground(Color.WHITE);
@@ -30,7 +36,6 @@ public class BaoHanhTable extends JPanel {
 
         initHeader();
         initTable();
-
         loadData();
         addTableEvents();
     }
@@ -42,10 +47,9 @@ public class BaoHanhTable extends JPanel {
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
         cboStatus = new JComboBox<>(new String[] {
-                "Tất cả trạng thái", "Đang sửa chữa", "Đã trả máy"
+                STATUS_ALL, STATUS_FIXING, STATUS_DONE, STATUS_RETURNED
         });
         cboStatus.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
-
         cboStatus.addActionListener(e -> applyFilters());
 
         pnlHeader.add(lblTitle);
@@ -69,6 +73,7 @@ public class BaoHanhTable extends JPanel {
         sorter = new TableRowSorter<>(tblModel);
         tbl.setRowSorter(sorter);
 
+        // Ẩn cột "Tình trạng" (dùng để filter, không hiển thị)
         tbl.getColumnModel().getColumn(6).setMinWidth(0);
         tbl.getColumnModel().getColumn(6).setMaxWidth(0);
         tbl.getColumnModel().getColumn(6).setPreferredWidth(0);
@@ -87,22 +92,25 @@ public class BaoHanhTable extends JPanel {
     }
 
     public void applyFilters() {
-        String status = cboStatus.getSelectedItem().toString();
-        String keyword = currentKeyword.toLowerCase();
+        String selected = cboStatus.getSelectedItem().toString().trim();
+        String keyword = currentKeyword.toLowerCase().trim();
 
         sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
             @Override
             public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                // Cột 6 là tình trạng thực tế lấy từ ChiTietBaoHanh (ẩn khỏi màn hình)
+                String trangThai = entry.getStringValue(6).trim();
+
                 String maBH = entry.getStringValue(1).toLowerCase();
                 String imei = entry.getStringValue(2).toLowerCase();
-                String trangThai = entry.getStringValue(6);
 
                 boolean matchSearch = keyword.isEmpty()
                         || maBH.contains(keyword)
                         || imei.contains(keyword);
 
-                boolean matchStatus = status.equals("Tất cả trạng thái")
-                        || trangThai.equalsIgnoreCase(status);
+                // So sánh không phân biệt hoa/thường để tránh mismatch encoding
+                boolean matchStatus = selected.equals(STATUS_ALL)
+                        || trangThai.equalsIgnoreCase(selected);
 
                 return matchSearch && matchStatus;
             }
@@ -113,16 +121,22 @@ public class BaoHanhTable extends JPanel {
         tblModel.setRowCount(0);
         int stt = 1;
         for (BaoHanh bh : list) {
-            Object[] row = {
+            // Nếu tình trạng null/rỗng thì mặc định "Hoàn thành"
+            // (khớp với trạng thái ChiTietBaoHanh khi vừa bán hàng xong)
+            String trangThaiThuc = bh.getTinhTrang();
+            if (trangThaiThuc == null || trangThaiThuc.trim().isEmpty()) {
+                trangThaiThuc = STATUS_DONE;
+            }
+
+            tblModel.addRow(new Object[] {
                     stt++,
                     bh.getMaBH(),
                     bh.getMaImei(),
                     bh.getMaPhieuXuat(),
                     bh.getNgayBatDau(),
                     bh.getNgayKetThuc(),
-                    bh.getTinhTrang()
-            };
-            tblModel.addRow(row);
+                    trangThaiThuc // lưu vào cột ẩn để filter
+            });
         }
     }
 
@@ -152,3 +166,4 @@ public class BaoHanhTable extends JPanel {
         });
     }
 }
+

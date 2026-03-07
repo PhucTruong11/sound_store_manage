@@ -16,7 +16,7 @@ public class KhuyenMaiPanel extends JPanel {
 
         initComponents();
     }
-
+    
     private void initComponents() {
         // --- 1. THANH CÔNG CỤ (SEARCH & FILTER) ---
         JPanel pnlToolBar = new JPanel(new MigLayout("insets 10, fillx", "[grow]10[]10[]10[]", "[]"));

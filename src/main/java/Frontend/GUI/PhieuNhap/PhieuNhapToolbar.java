@@ -18,17 +18,25 @@ public class PhieuNhapToolbar extends JPanel{
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC );
 
         SearchTextField txtSearch = new SearchTextField("Tìm phiếu nhập hàng ...");
-        ButtonXuatPdf btnPdf = new ButtonXuatPdf("Xuất PDF");
+        // ButtonXuatPdf btnPdf = new ButtonXuatPdf("Xuất PDF");
         ButtonXuatExcel btnExcel = new ButtonXuatExcel("Xuất EXCEL");
         
 
         add(txtSearch, "growx, h 35!");
-        add(btnPdf, "w 105!, h 35!");
+        // add(btnPdf, "w 105!, h 35!");
         add(btnExcel, "w 105!, h 35!");
 
-        btnPdf.addActionListener(e -> {
-            Frontend.Compoent.XuatPDF.xuat(table.getTable(), "DANH SÁCH PHIẾU NHẬP HÀNG");
+        txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            @Override
+            public void keyReleased(java.awt.event.KeyEvent e) {
+                String query = txtSearch.getText().trim();
+                table.loadDataBySearch(query);
+            }
         });
+
+        // btnPdf.addActionListener(e -> {
+        //     Frontend.Compoent.XuatPDF.xuat(table.getTable(), "DANH SÁCH PHIẾU NHẬP HÀNG");
+        // });
 
         btnExcel.addActionListener(e -> {
             Frontend.Compoent.XuatExcel.xuat(table.getTable());

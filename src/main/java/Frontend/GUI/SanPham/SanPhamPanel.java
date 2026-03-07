@@ -24,12 +24,12 @@ public class SanPhamPanel extends JPanel {
     }
 
     private void initComponents() {
+        table = new SanPhamTable();
         toolbar = new SanPhamToolbar(this);
         toolbar.putClientProperty("FlatLaf.style", "arc: 15"); 
         add(toolbar, "growx, wrap");
 
-        table = new SanPhamTable();
-        toolbar.putClientProperty("FlatLaf.style", "arc: 15");
+        table.putClientProperty("FlatLaf.style", "arc: 15");
         add(table, "grow"); 
 
         JTable tbl=table.getTable();

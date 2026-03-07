@@ -5,6 +5,7 @@ import Backend.DTO.PhieuXuat;
 import Frontend.Compoent.Table;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -18,6 +19,7 @@ public class PhieuXuatTable extends JScrollPane {
     private JTable tbl;
     private DefaultTableModel tblModel;
     private PhieuXuatBUS phieuXuatBUS;
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public PhieuXuatTable() {
         phieuXuatBUS = new PhieuXuatBUS();
@@ -37,6 +39,8 @@ public class PhieuXuatTable extends JScrollPane {
 
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -92,28 +96,30 @@ public class PhieuXuatTable extends JScrollPane {
         dialog.setVisible(true);
     }
 
-    public void filterData(Date start, Date end, String nv, String ncc, double minPrice, double maxPrice) {
+    public void filterData(Date start, Date end, String nv, double minPrice, double maxPrice) {
         tblModel.setRowCount(0);
-        ArrayList<PhieuXuat> listPX = phieuXuatBUS.getAllPhieuXuat();
+        ArrayList<PhieuXuat> listPX = phieuXuatBUS.selectAll(); // Lấy tất cả để lọc
 
         DecimalFormat df = new DecimalFormat("#,### VNĐ");
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         int stt = 1;
         for (PhieuXuat px : listPX) {
-            boolean matchDate = (px.getNgayXuat().after(start) || px.getNgayXuat().equals(start))
-                    && (px.getNgayXuat().before(end) || px.getNgayXuat().equals(end));
+            boolean matchDate = true;
+            if (start != null && px.getNgayXuat().before(start))
+                matchDate = false;
+            if (end != null && px.getNgayXuat().after(end))
+                matchDate = false;
 
             boolean matchNV = nv.equals("Tất cả") || px.getMaNV().equalsIgnoreCase(nv);
-            boolean matchNCC = ncc.equals("Tất cả") || px.getMaKH().equalsIgnoreCase(ncc);
 
             boolean matchPrice = px.getTongTien() >= minPrice && px.getTongTien() <= maxPrice;
 
-            if (matchDate && matchNV && matchNCC && matchPrice) {
+            if (matchDate && matchNV && matchPrice) {
                 Object[] row = {
                         stt++,
                         px.getMaPhieuXuat(),
-                        sdf.format(px.getNgayXuat()),
+                        px.getNgayXuat() != null ? sdf.format(px.getNgayXuat()) : "N/A",
                         px.getMaNV(),
                         px.getMaKH(),
                         df.format(px.getTongTien())

@@ -1,17 +1,26 @@
 package Frontend.GUI.KhachHang;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 import Backend.BUS.KhachHangBUS;
 import Backend.DTO.KhachHang;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
-import java.util.ArrayList;
 
 public class KhachHangTable extends JPanel {
     private JTable tbl;
@@ -58,7 +67,7 @@ public class KhachHangTable extends JPanel {
         // pnlHeader.add(cboKH, "w 150!, h 35!");
         // add(pnlHeader, "growx");
         cboSort = new JComboBox<>(new String[]{
-                "Mặc định",
+                "Tên mặc định",
                 "Tên A - Z",
                 "Tên Z - A"
         });
@@ -162,7 +171,7 @@ public class KhachHangTable extends JPanel {
             return;
         }
 
-        String text = keyword.toLowerCase();
+        String[] words = keyword.toLowerCase().trim().split("\\s+");
 
         sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
             @Override
@@ -170,10 +179,16 @@ public class KhachHangTable extends JPanel {
                 String ma = entry.getStringValue(1).toLowerCase();   // Mã NV
                 String ten = entry.getStringValue(2).toLowerCase();  // Tên NV
                 String sdt = entry.getStringValue(3).toLowerCase();  // SĐT
+                String diaChi = entry.getStringValue(4).toLowerCase();
+                
+                String fullInfo = ma + " " + ten + " " + sdt + " " + diaChi;
 
-                return ma.contains(text)
-                    || ten.contains(text)
-                    || sdt.contains(text);
+                for (String word : words) {
+                    if (!fullInfo.contains(word)) {
+                        return false;
+                    }
+                }
+                return true;
             }
         });
     }

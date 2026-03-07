@@ -30,10 +30,15 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
     @Override
     public ArrayList<BaoHanh> selectAll() {
         ArrayList<BaoHanh> list = new ArrayList<>();
-        String sql = "SELECT bh.*, " +
-                "(SELECT TinhTrang FROM ChiTietBaoHanh WHERE MaBH = bh.MaBH ORDER BY MaCTBH DESC LIMIT 1) AS TinhTrang "
-                +
-                "FROM BaoHanh bh ORDER BY bh.NgayBatDau DESC";
+        String sql = "SELECT bh.MaBH, bh.MaImei, bh.MaPhieuXuat, bh.NgayBatDau, bh.NgayKetThuc, " +
+                "COALESCE(ct.TinhTrang, bh.TinhTrang, 'Hoàn thành') AS TinhTrangCuoi " +
+                "FROM BaoHanh bh " +
+                "LEFT JOIN ChiTietBaoHanh ct ON ct.MaCTBH = (" +
+                "    SELECT MaCTBH FROM ChiTietBaoHanh " +
+                "    WHERE MaBH = bh.MaBH " +
+                "    ORDER BY MaCTBH DESC LIMIT 1" +
+                ") " +
+                "ORDER BY CAST(SUBSTRING(bh.MaBH, 3) AS UNSIGNED) ASC";
 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
@@ -46,8 +51,8 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
                 bh.setMaPhieuXuat(rs.getString("MaPhieuXuat"));
                 bh.setNgayBatDau(rs.getDate("NgayBatDau").toLocalDate());
                 bh.setNgayKetThuc(rs.getDate("NgayKetThuc").toLocalDate());
-                bh.setTinhTrang(rs.getString("TinhTrang"));
-
+                String tt = rs.getString("TinhTrangCuoi");
+                bh.setTinhTrang(tt != null ? tt : "Hoàn thành");
                 list.add(bh);
             }
         } catch (Exception e) {
@@ -111,14 +116,18 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
 
     public ArrayList<BaoHanh> selectAllWithDetails() {
         ArrayList<BaoHanh> list = new ArrayList<>();
-        String sql = "SELECT bh.*, sp.TenSP, " +
-                "(SELECT TinhTrang FROM ChiTietBaoHanh WHERE MaBH = bh.MaBH ORDER BY MaCTBH DESC LIMIT 1) AS TinhTrang "
-                +
+        String sql = "SELECT bh.MaBH, bh.MaImei, bh.MaPhieuXuat, bh.NgayBatDau, bh.NgayKetThuc, sp.TenSP, " +
+                "COALESCE(ct.TinhTrang, bh.TinhTrang, 'Hoàn thành') AS TinhTrang " +
                 "FROM BaoHanh bh " +
+                "LEFT JOIN ChiTietBaoHanh ct ON ct.MaCTBH = (" +
+                "    SELECT MaCTBH FROM ChiTietBaoHanh " +
+                "    WHERE MaBH = bh.MaBH " +
+                "    ORDER BY MaCTBH DESC LIMIT 1" +
+                ") " +
                 "LEFT JOIN ChiTietSP ctsp ON bh.MaImei = ctsp.MaImei " +
                 "LEFT JOIN PhienBanSP pb ON ctsp.MaPhienBan = pb.MaPhienBan " +
                 "LEFT JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
-                "ORDER BY bh.NgayBatDau DESC";
+                "ORDER BY CAST(SUBSTRING(bh.MaBH, 3) AS UNSIGNED) ASC";
 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
@@ -129,18 +138,11 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
                 bh.setMaBH(rs.getString("MaBH"));
                 bh.setMaImei(rs.getString("MaImei"));
                 bh.setMaPhieuXuat(rs.getString("MaPhieuXuat"));
-
-                Date bd = rs.getDate("NgayBatDau");
-                if (bd != null)
-                    bh.setNgayBatDau(bd.toLocalDate());
-
-                Date kt = rs.getDate("NgayKetThuc");
-                if (kt != null)
-                    bh.setNgayKetThuc(kt.toLocalDate());
-
+                bh.setNgayBatDau(rs.getDate("NgayBatDau").toLocalDate());
+                bh.setNgayKetThuc(rs.getDate("NgayKetThuc").toLocalDate());
                 bh.setTenSP(rs.getString("TenSP"));
-                bh.setTinhTrang(rs.getString("TinhTrang"));
-
+                String tt = rs.getString("TinhTrang");
+                bh.setTinhTrang(tt != null ? tt : "Hoàn thành");
                 list.add(bh);
             }
         } catch (Exception e) {
@@ -162,5 +164,21 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public String generateMaBH() {
+        String sql = "SELECT MaBH FROM BaoHanh ORDER BY CAST(SUBSTRING(MaBH, 3) AS UNSIGNED) DESC LIMIT 1";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                String lastMa = rs.getString("MaBH");
+                int num = Integer.parseInt(lastMa.substring(2));
+                return String.format("BH%02d", num + 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "BH00";
     }
 }

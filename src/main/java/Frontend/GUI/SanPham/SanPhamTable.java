@@ -8,6 +8,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.table.TableRowSorter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ public class SanPhamTable extends JPanel {
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
     private JComboBox<String> cboPhanLoai;
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public SanPhamTable() {
         setLayout(new MigLayout("wrap 1, fill, insets 10", "[grow]", "[]15[grow]"));
@@ -81,6 +83,8 @@ public class SanPhamTable extends JPanel {
 
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tblModel);
         tbl.setRowSorter(sorter);

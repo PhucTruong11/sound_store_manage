@@ -111,4 +111,46 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
         }
         return "NCC000";
     }
+
+    public ArrayList<String> getMaSPByNCC(String maNCC) {
+        ArrayList<String> list = new ArrayList<>();
+        String sql = "SELECT MaSP FROM NCC_SanPham WHERE MaNCC = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+                stmt.setString(1, maNCC);
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) list.add(rs.getString("MaSP"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public boolean updateSanPhamCungCap(String maNCC, ArrayList<String> dsMaSP) {
+        String sqlDelete = "DELETE FROM NCC_SanPham WHERE MaNCC = ?";
+        String sqlInsert = "INSERT INTO NCC_SanPham (MaNCC, MaSP) VALUES (?, ?)";
+        
+        try (Connection conn = DatabaseHelper.getConnection()) {
+            conn.setAutoCommit(false);
+            
+            // Xóa hết cũ
+            try (PreparedStatement psDel = conn.prepareStatement(sqlDelete)) {
+                psDel.setString(1, maNCC);
+                psDel.executeUpdate();
+            }
+            
+            // Thêm mới
+            try (PreparedStatement psIns = conn.prepareStatement(sqlInsert)) {
+                for (String maSP : dsMaSP) {
+                    psIns.setString(1, maNCC);
+                    psIns.setString(2, maSP);
+                    psIns.addBatch();
+                }
+                psIns.executeBatch();
+            }
+            
+            conn.commit();
+            return true;
+        } catch (Exception e) { e.printStackTrace(); return false; }
+    }
 }

@@ -4,6 +4,7 @@ import Backend.DatabaseHelper;
 import Backend.DTO.PhieuNhap;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
 
@@ -92,7 +93,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "PN000";
+        return "PN00";
     }
 
     public ArrayList<PhieuNhap> selectByNCC(String maNCC) {
@@ -117,33 +118,43 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
         return list;
     }
 
-    public ArrayList<PhieuNhap> selectByFilter(String maNCC, Date from, Date to, long minPrice, long maxPrice) {
+    public ArrayList<PhieuNhap> selectByFilter(/* String maNCC, */ Date from, Date to, long minPrice, long maxPrice) {
         ArrayList<PhieuNhap> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder("SELECT * FROM PhieuNhap WHERE TrangThai = TRUE");
 
-        if(!maNCC.equals("All")) sql.append(" AND MaNCC = ?");
-        if(from != null) sql.append(" AND NgayNhap >= ?");
-        if(to != null) sql.append(" NgayNhap <= ?");
-        if(minPrice >= 0) sql.append(" AND TongTien >= ?");
-        if(maxPrice > 0) sql.append(" AND TongTien <= ?");
+        // if(!maNCC.equals("All")) sql.append(" AND MaNCC = ?");
+        if (from != null)
+            sql.append(" AND NgayNhap >= ?");
+        if (to != null)
+            sql.append(" AND NgayNhap <= ?");
+        if (minPrice >= 0)
+            sql.append(" AND TongTien >= ?");
+        if (maxPrice > 0)
+            sql.append(" AND TongTien <= ?");
 
         sql.append(" ORDER BY NgayNhap DESC");
 
         try (Connection conn = DatabaseHelper.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
+                PreparedStatement stmt = conn.prepareStatement(sql.toString())) {
             int index = 1;
-            if (!maNCC.equals("All")) stmt.setString(index++, maNCC);
-            if (from != null) stmt.setTimestamp(index++, new Timestamp(from.getTime()));
-            if (to != null) stmt.setTimestamp(index++, new Timestamp(to.getTime()));
-            if (minPrice >= 0) stmt.setLong(index++, minPrice);
-            if (maxPrice > 0) stmt.setLong(index++, maxPrice);
+            // if(!maNCC.equals("All")) stmt.setString(index++, maNCC);
+            if (from != null)
+                stmt.setTimestamp(index++, new Timestamp(from.getTime()));
+            if (to != null)
+                stmt.setTimestamp(index++, new Timestamp(to.getTime()));
+            if (minPrice >= 0)
+                stmt.setLong(index++, minPrice);
+            if (maxPrice > 0)
+                stmt.setLong(index++, maxPrice);
 
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-            list.add(new PhieuNhap(rs.getString(1), rs.getTimestamp(2), rs.getString(3),
-                                   rs.getString(4), rs.getDouble(5), rs.getBoolean(6)));
-             }
-        } catch (Exception e) { e.printStackTrace(); }
+                list.add(new PhieuNhap(rs.getString(1), rs.getTimestamp(2), rs.getString(3),
+                        rs.getString(4), rs.getDouble(5), rs.getBoolean(6)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return list;
     }
 }

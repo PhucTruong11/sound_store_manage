@@ -6,7 +6,8 @@ import Frontend.Compoent.Table;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import Backend.BUS.PhieuNhapBUS;
 import Backend.DTO.ChiTietPhieuNhap;
 import Backend.DTO.PhieuNhap;
@@ -16,13 +17,19 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;
 
+import Frontend.Compoent.XuatPDFHoaDonNhap;
+
 public class XacNhanNhapHangDialog extends JDialog {
     private JTable tblReview;
     private DefaultTableModel modelReview;
     private JLabel lblTongSL, lblTongTien;
+    private NhapHangTable table;
+    private NhapHangSidebar sidebar;
 
-    public XacNhanNhapHangDialog(JFrame parent, DefaultTableModel sourceModel) {
+    public XacNhanNhapHangDialog(JFrame parent, DefaultTableModel sourceModel, NhapHangTable table, NhapHangSidebar sidebar) {
         super(parent, "Xác nhận phiếu nhập hàng", true);
+        this.table = table;
+        this.sidebar = sidebar;
         setLayout(new MigLayout("fill, insets 20", "[grow]", "[][grow][]"));
         setSize(800, 500);
         setLocationRelativeTo(parent);
@@ -41,8 +48,30 @@ public class XacNhanNhapHangDialog extends JDialog {
         String[] cols = { "STT", "Mã Phiên Bản", "Tên Sản Phẩm", "SL", "Đơn Giá", "Thành Tiền" };
         modelReview = new DefaultTableModel(cols, 0);
 
-        Table tblReview = new Table();
+        modelReview = new DefaultTableModel(cols, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Chặn chỉnh sửa ô, nhưng vẫn cho phép chọn dòng
+            }
+        };
+        tblReview = new Table();
         tblReview.setModel(modelReview);
+        tblReview.setRowSelectionAllowed(true);
+
+        tblReview.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selected = tblReview.getSelectedRow();
+                if(e.getClickCount() == 2 && selected != -1) {
+                    modelReview.removeRow(selected);
+                    for(int i = 0; i < modelReview.getRowCount(); i++) {
+                        modelReview.setValueAt(i + 1, i, 0);
+                    }
+                    calculateTotal();
+                }
+            }
+        });
+
 
         tblReview.getColumnModel().getColumn(0).setPreferredWidth(40);
         tblReview.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -114,8 +143,19 @@ public class XacNhanNhapHangDialog extends JDialog {
 
                 String maPN = pnBUS.getNewMaPhieu(); // Lấy mã phiếu nhập mới tự động
 
-                // Tạo đối tượng PhieuNhap (Mã NV, Mã NCC lấy từ logic của bạn)
-                PhieuNhap phieuNhap = new PhieuNhap(maPN, null, "NV01", "NCC01", 0.0, true);
+                String maNVThucTe = "NV001";
+                if (Backend.DTO.Session.currentNhanVien != null) {
+                    maNVThucTe = Backend.DTO.Session.currentNhanVien.getId();
+                } else if (Backend.DTO.Session.currentAccount != null) {
+                    maNVThucTe = Backend.DTO.Session.currentAccount.getMaNV();
+                }
+
+                String maNCCThucTe = "NCC001"; // Mặc định
+                if (this.sidebar != null) {
+                    maNCCThucTe = this.sidebar.getSelectedMaNCC(); 
+                }
+
+                PhieuNhap phieuNhap = new PhieuNhap(maPN, null, maNVThucTe, maNCCThucTe, 0.0, true);
 
                 // Chuyển dữ liệu từ bảng Review sang danh sách ChiTietPhieuNhap
                 ArrayList<ChiTietPhieuNhap> dsChiTiet = new ArrayList<>();
@@ -129,13 +169,25 @@ public class XacNhanNhapHangDialog extends JDialog {
                     dsChiTiet.add(new ChiTietPhieuNhap(maPN, maPB, sl, gia, 0.0));
                 }
 
-                // Gọi BUS để thực hiện lưu (Thanh toán)
                 if (pnBUS.thanhToan(phieuNhap, dsChiTiet)) {
-                    JOptionPane.showMessageDialog(this, "Nhập hàng thành công! Mã phiếu: " + maPN);
+                    int choice = JOptionPane.showConfirmDialog(this, 
+                    "Nhập hàng thành công! Bạn có muốn xuất hóa đơn PDF không?", 
+                    "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+                    if (choice == JOptionPane.YES_OPTION) {
+                        XuatPDFHoaDonNhap.xuatHoaDonNhap(phieuNhap, modelReview);
+                    }
+
+                    if(table != null) {
+                        table.loadData();
+                    }
+
+
+                    if(this.sidebar != null) {
+                        this.sidebar.clearCart();
+                    }
+
                     dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "Lỗi khi lưu dữ liệu vào hệ thống!", "Lỗi",
-                            JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

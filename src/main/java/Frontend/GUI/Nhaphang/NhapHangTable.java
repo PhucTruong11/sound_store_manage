@@ -6,6 +6,7 @@ import Frontend.Compoent.Table;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,6 +19,10 @@ public class NhapHangTable extends JScrollPane {
     private DefaultTableModel tblModel;
     private PhienBanSanPhamBUS phienbansanphamBUS;
     private NhapHangSidebar sidebar;
+    private String currentSearchQuery = "";
+    private String currentMaLoai = "All";
+    private String currentMaNCC = "All";
+    private TableRowSorter<DefaultTableModel> sorter;
 
     public NhapHangTable(NhapHangSidebar sidebar) {
         phienbansanphamBUS = new PhienBanSanPhamBUS();
@@ -41,6 +46,8 @@ public class NhapHangTable extends JScrollPane {
         
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         tbl.getColumnModel().getColumn(0).setPreferredWidth(60);
         tbl.getColumnModel().getColumn(0).setMaxWidth(70);
@@ -84,41 +91,17 @@ public class NhapHangTable extends JScrollPane {
     }
 
     public void loadData() {
+        applyFiltersNhapHang();
+    }
+    
+    public void applyFiltersNhapHang() {
         tblModel.setRowCount(0);
-        ArrayList<PhienBanSanPham> list = phienbansanphamBUS.getAllPhienBanSanPham();
 
-        DecimalFormat df = new DecimalFormat("#, ###");
-        
+        ArrayList<PhienBanSanPham> list = phienbansanphamBUS.getFilteredListNhapHang(currentMaNCC, currentMaLoai, currentSearchQuery);
+
+        DecimalFormat df = new DecimalFormat("#,###");
         int stt = 1;
         for (PhienBanSanPham pbsp : list) {
-           Object[] row = {
-            stt++,
-            pbsp.getMaPhienBan(),
-            pbsp.getTenSP(),
-            pbsp.getMauSac(),
-            df.format(pbsp.getGiaNhap()),
-            pbsp.getSoLuongTon(),
-           };
-           tblModel.addRow(row);
-        }
-    }
-
-
-    // Gọi hàm từ PhienBanSanPhamBUS
-    public void loadDataByNCC(String maNCC) {
-        tblModel.setRowCount(0);
-        ArrayList<PhienBanSanPham> list;
-
-        if(maNCC.equals("All")) {
-            list = phienbansanphamBUS.getAllPhienBanSanPham();
-        } else {
-            list = phienbansanphamBUS.getByNCC(maNCC);
-        }
-
-        DecimalFormat df = new DecimalFormat("#, ###");
-
-        int stt = 1;
-        for(PhienBanSanPham pbsp : list) {
             Object[] row = {
                 stt++,
                 pbsp.getMaPhienBan(),
@@ -129,5 +112,20 @@ public class NhapHangTable extends JScrollPane {
             };
             tblModel.addRow(row);
         }
+    }
+
+    public void loadDataBySearch(String query) {
+        this.currentSearchQuery = query;
+        applyFiltersNhapHang();
+    }
+
+    public void loadDataByLoai(String maLoai) {
+        this.currentMaLoai = maLoai;
+        applyFiltersNhapHang();
+    }
+
+    public void loadDataByNCC(String maNCC) {
+        this.currentMaNCC = maNCC;
+        applyFiltersNhapHang();
     }
 }

@@ -12,7 +12,6 @@ public class NCCAddDialog extends BaseThaoTacDialog{
     public NCCAddDialog() {
         super("THÊM NHÀ CUNG CẤP", 450, 350);
         
-        // Tự động lấy và điền mã mới
         String newMa = nccBUS.getNewMaNCC();
         txtMa.setText(newMa);
 
@@ -46,6 +45,13 @@ public class NCCAddDialog extends BaseThaoTacDialog{
     @Override
     protected void logicXacNhan() {
         NhaCungCap ncc = new NhaCungCap(txtMa.getText(), txtTen.getText(), txtDiaChi.getText(), txtSDT.getText());
+        String validationMsg = nccBUS.validate(ncc, true);
+
+        if (!validationMsg.equals("OK")) {
+            JOptionPane.showMessageDialog(this, validationMsg, "Lỗi dữ liệu", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         if(nccBUS.add(ncc)) {
             JOptionPane.showMessageDialog(this, "Thêm thành công!");
             dispose();

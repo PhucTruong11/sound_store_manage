@@ -1,4 +1,5 @@
 package Frontend.GUI.SanPham;
+
 import Backend.BUS.SanPhamBUS;
 import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonXuatExcel;
@@ -62,8 +63,8 @@ public class SanPhamToolbar extends JPanel {
         });
         // Các thao tác
         ButtonAdd btnAdd = new ButtonAdd("Thêm");
-        ButtonFix btnFix=new ButtonFix("Sửa");
-        ButtonDele btnDele=new ButtonDele("Xóa");
+        ButtonFix btnFix = new ButtonFix("Sửa");
+        ButtonDele btnDele = new ButtonDele("Xóa");
         ButtonRefresh btnRefresh = new ButtonRefresh("Làm Mới");
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
     
@@ -97,7 +98,7 @@ public class SanPhamToolbar extends JPanel {
             String mota = tbl.getValueAt(selectedRow, 6).toString();
             String baohanh = tbl.getValueAt(selectedRow, 7).toString();
 
-            //Mở Dialog Sửa và truyền dữ liệu vào
+            // Mở Dialog Sửa và truyền dữ liệu vào
             JFrame frameCha = (JFrame) SwingUtilities.getWindowAncestor(this);
             SuaSanPhamDialog dialog = new SuaSanPhamDialog(frameCha, ma, ten, sl, maLoai, maHang, mota, baohanh);
             dialog.setVisible(true);
@@ -112,7 +113,7 @@ public class SanPhamToolbar extends JPanel {
             int selectedRow = tbl.getSelectedRow();
 
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!");
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             String maSP = tbl.getValueAt(selectedRow, 1).toString();
@@ -132,10 +133,16 @@ public class SanPhamToolbar extends JPanel {
 
         btnRefresh.addActionListener(e -> {
             txtSearch.setText(""); 
-            parentPanel.getTable().getComboBox().setSelectedIndex(0);
+            JTable tbl = parentPanel.getTable().getTable();
+            if (tbl.getRowSorter() != null) {
+                @SuppressWarnings("unchecked")
+                TableRowSorter<DefaultTableModel> sorter = (TableRowSorter<DefaultTableModel>) tbl.getRowSorter();
+                sorter.setRowFilter(null);
+            }
+
             parentPanel.loadData();
         });
     }
+    
     public String getKeyword() { return txtSearch.getText(); }
-
 }

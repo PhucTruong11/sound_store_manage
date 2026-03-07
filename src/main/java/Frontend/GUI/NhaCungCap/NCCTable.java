@@ -7,8 +7,11 @@ import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class NCCTable extends JPanel {
@@ -17,6 +20,8 @@ public class NCCTable extends JPanel {
     private JScrollPane scrollPane;
     private NhaCungCapBUS nccBUS;
     private JComboBox<NhaCungCap> cboNCC;
+    private TableRowSorter<DefaultTableModel> sorter;
+
 
     public NCCTable() {
         nccBUS = new NhaCungCapBUS();
@@ -44,7 +49,7 @@ public class NCCTable extends JPanel {
                 if (selected.getMaNCC().equals("All")) {
                     loadData();
                 } else {
-                    loadDataByFilter(selected.getMaNCC());
+                    loadDataByFilter(selected.getTenNCC());
                 }
             }
         });
@@ -66,6 +71,8 @@ public class NCCTable extends JPanel {
 
         tbl = new Table();
         tbl.setModel(tblModel);
+        sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -74,6 +81,20 @@ public class NCCTable extends JPanel {
         scrollPane = new JScrollPane(tbl);
         scrollPane.setBorder(null);
         add(scrollPane, "grow");
+
+        tbl.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(e.getClickCount() == 2) {
+                    int row = tbl.getSelectedRow();
+                    String ma = tbl.getValueAt(row, 1).toString();
+                    String ten = tbl.getValueAt(row, 2).toString();
+
+                    JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(NCCTable.this);
+                    new NCCGanSPDialog(parent, ma, ten).setVisible(true);
+                }
+            }
+        });
     }
 
     public void loadData() {
@@ -93,13 +114,13 @@ public class NCCTable extends JPanel {
         }
     }
 
-    public void loadDataByFilter(String maNCC) {
+    public void loadDataByFilter(String tenNCC) {
         tblModel.setRowCount(0);
         ArrayList<NhaCungCap> listNCC = nccBUS.getAllNhaCungCap();
 
         int stt = 1;
         for (NhaCungCap ncc : listNCC) {
-            if (ncc.getMaNCC().equals(maNCC)) {
+            if (ncc.getTenNCC().equals(tenNCC)) {
                 Object[] row = {
                         stt++,
                         ncc.getMaNCC(),
@@ -117,41 +138,84 @@ public class NCCTable extends JPanel {
     }
 
     public void loadComboBox() {
-        if (cboNCC == null)
-            return;
+        if (cboNCC == null) return;
+
         Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại để sau khi nạp lại không nhảy
         cboNCC.removeAllItems(); // Xóa sạch dữ liệu cũ
         cboNCC.addItem(new NhaCungCap("All", "Tất cả", "", "")); // Thêm lại item mặc định
-        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap(); // Lấy dữ liệu mới nhất từ Database qua BUS
+        ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
+        ArrayList<String> addNames = new ArrayList<>();
         for (NhaCungCap ncc : list) {
-            cboNCC.addItem(ncc);
+            String currentName = ncc.getTenNCC().trim();
+            if (!addNames.contains(currentName)) {
+                cboNCC.addItem(ncc);
+                addNames.add(currentName);
+            }
         }
 
         if (selected != null)
             cboNCC.setSelectedItem(selected); // Khôi phục lại lựa chọn trước đó nếu nó vẫn còn tồn tại
     }
 
+    // public void loadDataBySearch(String query) {
+    //     tblModel.setRowCount(0);
+    //     ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
+
+    //     int stt = 1;
+    //     for (NhaCungCap ncc : list) {
+    //         boolean matchMa = ncc.getMaNCC().toLowerCase().contains(query);
+    //         boolean matchTen = ncc.getTenNCC().toLowerCase().contains(query);
+    //         if (matchMa || matchTen) {
+    //             Object[] row = {
+    //                     stt++,
+    //                     ncc.getMaNCC(),
+    //                     ncc.getTenNCC(),
+    //                     ncc.getDiaChi(),
+    //                     ncc.getSdt(),
+    //             };
+    //             tblModel.addRow(row);
+    //         }
+    //     }
+    //     if (query.isEmpty()) {
+    //         cboNCC.setSelectedIndex(0);
+    //     }
+    // }
+
     public void loadDataBySearch(String query) {
         tblModel.setRowCount(0);
         ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
 
+        String lowerQuery = query.toLowerCase().trim();
+        if(lowerQuery.isEmpty()) {
+            loadData();
+            return;
+        }
+        String[] keyWords = lowerQuery.split("\\s+");
+
         int stt = 1;
         for (NhaCungCap ncc : list) {
-            boolean matchMa = ncc.getMaNCC().toLowerCase().contains(query);
-            boolean matchTen = ncc.getTenNCC().toLowerCase().contains(query);
-            if (matchMa || matchTen) {
-                Object[] row = {
+            String infoToSearch = (ncc.getMaNCC() + " " +
+                                   ncc.getTenNCC() + " " +
+                                   ncc.getDiaChi() + " " +
+                                   ncc.getSdt()).toLowerCase();
+
+            boolean matchesAll = true;
+            for(String word : keyWords) {
+                if(!infoToSearch.contains(word)) {
+                    matchesAll = false;
+                    break;
+                }
+            }
+
+            if (matchesAll) {
+                tblModel.addRow(new Object[]{
                         stt++,
                         ncc.getMaNCC(),
                         ncc.getTenNCC(),
                         ncc.getDiaChi(),
                         ncc.getSdt(),
-                };
-                tblModel.addRow(row);
+                });
             }
-        }
-        if (query.isEmpty()) {
-            cboNCC.setSelectedIndex(0);
         }
     }
 }

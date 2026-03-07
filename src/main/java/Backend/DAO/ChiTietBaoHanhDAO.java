@@ -2,8 +2,6 @@ package Backend.DAO;
 
 import Backend.DatabaseHelper;
 import Backend.DTO.ChiTietBaoHanh;
-import Backend.DTO.ChiTietPhieuNhap;
-
 import java.util.ArrayList;
 import java.sql.*;
 
@@ -82,5 +80,21 @@ public class ChiTietBaoHanhDAO implements ChiTietInterface<ChiTietBaoHanh> {
     @Override
     public int update(ArrayList<ChiTietBaoHanh> t, String pk) {
         return 0;
+    }
+
+    public String generateMaCTBH() {
+        String sql = "SELECT MaCTBH FROM ChiTietBaoHanh ORDER BY CAST(SUBSTRING(MaCTBH, 5) AS UNSIGNED) DESC LIMIT 1";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                String lastMa = rs.getString("MaCTBH");
+                int num = Integer.parseInt(lastMa.substring(4)); // Cắt bỏ 'CTBH'
+                return String.format("CTBH%02d", num + 1); // Trả về CTBH01, CTBH02...
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "CTBH01"; 
     }
 }

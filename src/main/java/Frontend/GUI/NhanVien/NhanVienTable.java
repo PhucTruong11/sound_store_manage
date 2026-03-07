@@ -1,17 +1,27 @@
 package Frontend.GUI.NhanVien;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 import Backend.BUS.NhanVienBUS;
 import Backend.DTO.NhanVien;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
-import java.util.ArrayList;
 
 public class NhanVienTable extends JPanel {
     private JTable tbl;
@@ -62,7 +72,7 @@ public class NhanVienTable extends JPanel {
         // pnlHeader.add(cboNV, "w 150!, h 35!");
         // add(pnlHeader, "growx");
         cboSort = new JComboBox<>(new String[]{
-                "Mặc định",
+                "Tên mặc định",
                 "Tên A - Z",
                 "Tên Z - A"
         });
@@ -150,11 +160,34 @@ public class NhanVienTable extends JPanel {
         tbl.setModel(tblModel);
 
         sorter = new TableRowSorter<>(tblModel);
+        sorter.setComparator(7, (String s1, String s2) -> {
+            try {
+                // Loại bỏ dấu phẩy trước khi so sánh số
+                Double d1 = Double.parseDouble(s1.replace(",", ""));
+                Double d2 = Double.parseDouble(s2.replace(",", ""));
+                return d1.compareTo(d2);
+            } catch (Exception e) {
+                return 0;
+            }
+        });
         tbl.setRowSorter(sorter);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tbl.setDefaultRenderer(Object.class, centerRenderer);
+
+        scrollPane = new JScrollPane(tbl);
+        scrollPane.setBorder(null);
+        add(scrollPane, "grow");
+        // Thêm MouseListener để bắt sự kiện Double Click
+        tbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                if (e.getClickCount() == 2) { // Kiểm tra double click
+                    showDetail();
+                }
+            }
+        });
 
         scrollPane = new JScrollPane(tbl);
         scrollPane.setBorder(null);
@@ -165,8 +198,11 @@ public class NhanVienTable extends JPanel {
         tblModel.setRowCount(0);
         ArrayList<NhanVien> listNV = nvBUS.getAllNhanVien();
 
+        DecimalFormat df = new DecimalFormat("#,###");
+
         int stt = 1;
         for (NhanVien nv : listNV) {
+            String luongFormatted = df.format(nv.getLuong());
             Object[] row = {
                     stt++,
                     nv.getId(),
@@ -175,7 +211,7 @@ public class NhanVienTable extends JPanel {
                     nv.getDiaChi(),
                     nv.getChucVu(),
                     nv.getEmail(),
-                    nv.getLuong()
+                    luongFormatted
             };
             tblModel.addRow(row);
         }
@@ -204,15 +240,17 @@ public class NhanVienTable extends JPanel {
     }
 
     public JTable getTbl() { return tbl; }
-public void filterByKeyword(String keyword) {
-    currentKeyword = (keyword == null) ? "" : keyword.toLowerCase().trim();
-    applyFilters();
-}
+    public void filterByKeyword(String keyword) {
+        currentKeyword = (keyword == null) ? "" : keyword.toLowerCase().trim();
+        applyFilters();
+    }
 
 
     public void applyFilters() {
     String chucVu = cboChucVu.getSelectedItem().toString();
     String keyword = currentKeyword; // từ search
+
+    String[] keywords = keyword.isEmpty() ? new String[0] : keyword.split("\\s+");
 
     sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
         @Override
@@ -221,16 +259,21 @@ public void filterByKeyword(String keyword) {
             String ma = entry.getStringValue(1).toLowerCase();
             String ten = entry.getStringValue(2).toLowerCase();
             String sdt = entry.getStringValue(3).toLowerCase();
+            String diaChi = entry.getStringValue(4).toLowerCase();
             String cv  = entry.getStringValue(5);
 
-            boolean matchSearch =
-                    keyword.isEmpty()
-                    || ma.contains(keyword)
-                    || ten.contains(keyword)
-                    || sdt.contains(keyword);
+            String infoToSearch = ma + " " + ten + " " + sdt + " " + diaChi;
+
+            boolean matchSearch = true;
+            for (String word : keywords) {
+                if (!infoToSearch.contains(word)) {
+                    matchSearch = false;
+                    break;
+                }
+            }
 
             boolean matchChucVu =
-                    chucVu.equals("Tất cả")
+                    chucVu.equals("Tất cả chức vụ")
                     || cv.equalsIgnoreCase(chucVu);
 
             return matchSearch && matchChucVu;
@@ -277,7 +320,7 @@ public void filterByKeyword(String keyword) {
     // }
     private void loadComboBoxChucVu() {
             cboChucVu.removeAllItems();
-            cboChucVu.addItem("Tất cả");
+            cboChucVu.addItem("Tất cả chức vụ");
 
             ArrayList<NhanVien> list = nvBUS.getAllNhanVien();
             java.util.Set<String> set = new java.util.HashSet<>();
@@ -290,4 +333,30 @@ public void filterByKeyword(String keyword) {
                 cboChucVu.addItem(cv);
             }
         }
+// Thêm hàm này vào cuối file NhanVienTable.java
+    private void showDetail() {
+        int selectedRow = tbl.getSelectedRow();
+        if (selectedRow != -1) {
+            // Chuyển đổi index từ View sang Model (quan trọng khi Table đang được Sort/Filter)
+            int modelRow = tbl.convertRowIndexToModel(selectedRow);
+            
+            // Lấy mã NV từ cột số 1
+            String maNV = tblModel.getValueAt(modelRow, 1).toString();
+            
+            // Tìm đối tượng NhanVien đầy đủ từ BUS
+            NhanVien selectedNV = null;
+            for (NhanVien nv : nvBUS.getAllNhanVien()) {
+                if (nv.getId().equals(maNV)) {
+                    selectedNV = nv;
+                    break;
+                }
+            }
+
+            if (selectedNV != null) {
+                // Hiển thị Dialog chi tiết
+                NhanVienDetailDialog dialog = new NhanVienDetailDialog(selectedNV);
+                dialog.setVisible(true);
+            }
+        }
+    }
 }

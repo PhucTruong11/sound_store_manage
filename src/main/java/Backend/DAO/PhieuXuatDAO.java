@@ -101,7 +101,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "PX000";
+        return "PX00";
     }
 
     public ArrayList<PhieuXuat> search(String keyword) {
@@ -136,10 +136,9 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
         Connection conn = null;
         try {
             conn = DatabaseHelper.getConnection();
-            conn.setAutoCommit(false); // Bật chế độ giao dịch (Transaction)
+            conn.setAutoCommit(false);
 
-            // 1. Chèn vào bảng PhieuXuat
-            String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien) VALUES (?, ?, ?, ?, ?, ?)";
+            String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstPX = conn.prepareStatement(sqlPX);
             pstPX.setString(1, px.getMaPhieuXuat());
             pstPX.setTimestamp(2, px.getNgayXuat());
@@ -147,30 +146,135 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             pstPX.setString(4, px.getMaKH());
             pstPX.setString(5, px.getMaKM());
             pstPX.setDouble(6, px.getTongTien());
+            pstPX.setBoolean(7, true);
             pstPX.executeUpdate();
 
-            // 2. Chèn danh sách món hàng vào ChiTietPhieuXuat
             String sqlCT = "INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES (?, ?, ?, ?)";
+            String sqlSelectImei = "SELECT MaImei FROM ChiTietSP WHERE MaPhienBan = ? AND TinhTrang = 'Trong kho' LIMIT ?";
+            String sqlUpdateImei = "UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = ? WHERE MaImei = ?";
+            String sqlInsertBH = "INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc) VALUES (?, ?, ?, ?, ?)";
+
+            String sqlInsertCTBH = "INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES (?, ?, ?, ?)";
+
             PreparedStatement pstCT = conn.prepareStatement(sqlCT);
+            PreparedStatement pstUpImei = conn.prepareStatement(sqlUpdateImei);
+            PreparedStatement pstInsBH = conn.prepareStatement(sqlInsertBH);
+            PreparedStatement pstGetImei = conn.prepareStatement(sqlSelectImei);
+            PreparedStatement pstInsCTBH = conn.prepareStatement(sqlInsertCTBH);
+
+            int currentNumBH = Integer.parseInt(generateMaBaoHanh().substring(2));
+            int currentNumCTBH = Integer.parseInt(new ChiTietBaoHanhDAO().generateMaCTBH().substring(4));
+
             for (ChiTietPhieuXuat ct : dsChiTiet) {
                 pstCT.setString(1, ct.getMaPhieuXuat());
                 pstCT.setString(2, ct.getMaPhienBan());
                 pstCT.setInt(3, ct.getSoLuong());
                 pstCT.setDouble(4, ct.getDonGia());
                 pstCT.addBatch();
-            }
-            pstCT.executeBatch();
 
-            conn.commit(); // Hoàn tất giao dịch
+                pstGetImei.setString(1, ct.getMaPhienBan());
+                pstGetImei.setInt(2, ct.getSoLuong());
+                ResultSet rsImei = pstGetImei.executeQuery();
+
+                int countFound = 0;
+                while (rsImei.next()) {
+                    countFound++;
+                    String imeiReal = rsImei.getString("MaImei");
+
+                    pstUpImei.setString(1, px.getMaPhieuXuat());
+                    pstUpImei.setString(2, imeiReal);
+                    pstUpImei.addBatch();
+
+                    String maBH = String.format("BH%02d", currentNumBH++);
+                    pstInsBH.setString(1, maBH);
+                    pstInsBH.setString(2, imeiReal);
+                    pstInsBH.setString(3, px.getMaPhieuXuat());
+                    pstInsBH.setTimestamp(4, px.getNgayXuat());
+
+                    java.util.Calendar cal = java.util.Calendar.getInstance();
+                    cal.setTime(px.getNgayXuat());
+                    cal.add(java.util.Calendar.MONTH, 12);
+                    pstInsBH.setDate(5, new java.sql.Date(cal.getTimeInMillis()));
+                    pstInsBH.addBatch();
+
+                    String maCTBH = "CT" + maBH;
+                    pstInsCTBH.setString(1, maCTBH);
+                    pstInsCTBH.setString(2, maBH);
+                    pstInsCTBH.setString(3, "Thiết bị mới xuất kho - Kích hoạt bảo hành điện tử");
+                    pstInsCTBH.setString(4, "Hoàn thành");
+                    pstInsCTBH.addBatch();
+                }
+
+                if (countFound < ct.getSoLuong()) {
+                    throw new Exception("Sản phẩm mã " + ct.getMaPhienBan() + " không đủ máy trong kho!");
+                }
+            }
+
+            pstCT.executeBatch();
+            pstUpImei.executeBatch();
+            pstInsBH.executeBatch();
+            pstInsCTBH.executeBatch();
+
+            conn.commit();
             return true;
         } catch (Exception e) {
             if (conn != null)
                 try {
                     conn.rollback();
                 } catch (SQLException ex) {
-                } // Lỗi thì hoàn tác
-            e.printStackTrace();
-            return false;
+                }
+            throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public String generateMaBaoHanh() {
+        String sql = "SELECT MaBH FROM BaoHanh ORDER BY CAST(SUBSTRING(MaBH, 3) AS UNSIGNED) DESC LIMIT 1";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                String lastMa = rs.getString("MaBH");
+                int num = Integer.parseInt(lastMa.substring(2));
+                return String.format("BH%02d", num + 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "BH01";
+    }
+
+    public ArrayList<PhieuXuat> filterSQL(Timestamp from, Timestamp to, Double min, Double max) {
+        ArrayList<PhieuXuat> list = new ArrayList<>();
+        String sql = "SELECT * FROM PhieuXuat WHERE NgayXuat BETWEEN ? AND ? AND TongTien BETWEEN ? AND ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement pst = conn.prepareStatement(sql)) {
+            pst.setTimestamp(1, from != null ? from : Timestamp.valueOf("1970-01-01 00:00:00"));
+            pst.setTimestamp(2, to != null ? to : new Timestamp(System.currentTimeMillis()));
+            pst.setDouble(3, min);
+            pst.setDouble(4, max);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public double getDiscountPercentage(String maPX) {
+        String sql = "SELECT km.PhanTramGiam FROM PhieuXuat px " +
+                "JOIN KhuyenMai km ON px.MaKM = km.MaKM " +
+                "WHERE px.MaPhieuXuat = ?";
+
+        try (Connection conn = Backend.DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, maPX);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("PhanTramGiam");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
