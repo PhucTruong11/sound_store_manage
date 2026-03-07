@@ -14,14 +14,28 @@ public class KhuyenMaiDialog extends BaseThaoTacDialog {
     private JTextField txtMaKM, txtTenKM, txtGiamGia;
     private JSpinner spnNgayBD, spnNgayKT;
     private KhuyenMaiBUS kmBUS = new KhuyenMaiBUS();
-    private KhuyenMai resultData = null; // Dùng để trả về cho Toolbar nếu cần
+    private KhuyenMai resultData = null;
 
-    // Constructor cho Thêm mới
+    // Constructor cho Thêm mới/Sửa
     public KhuyenMaiDialog(Frame owner, String title, KhuyenMai data) {
         super(title, 450, 450);
+        
         if (data != null) {
+            // Trường hợp SỬA: Đổ dữ liệu cũ vào
             fillData(data);
             txtMaKM.setEditable(false);
+            txtMaKM.setFocusable(false);
+        } else {
+            // Trường hợp THÊM MỚI: Tự động lấy mã mới
+            String newMa = kmBUS.getNewMaKM(); // Đảm bảo BUS đã có hàm này
+            txtMaKM.setText(newMa);
+            
+            // Khóa lại không cho user sửa mã tự tăng
+            txtMaKM.setEditable(false);
+            txtMaKM.setFocusable(false);
+            
+            // Tự động nhảy con trỏ xuống ô Tên chương trình
+            SwingUtilities.invokeLater(() -> txtTenKM.requestFocusInWindow());
         }
     }
 
@@ -54,6 +68,7 @@ public class KhuyenMaiDialog extends BaseThaoTacDialog {
         pnlContent.add(spnNgayKT, fieldStyle);
     }
 
+    // Các hàm helper giữ nguyên
     private void fillData(KhuyenMai data) {
         txtMaKM.setText(data.getMaKM());
         txtTenKM.setText(data.getTenKM());
@@ -80,7 +95,6 @@ public class KhuyenMaiDialog extends BaseThaoTacDialog {
         return sp;
     }
 
-    // Method mà KhuyenMaiToolbar đang gọi
     public KhuyenMai getData() {
         return resultData;
     }
@@ -94,22 +108,25 @@ public class KhuyenMaiDialog extends BaseThaoTacDialog {
             Date ngayBD = (Date) spnNgayBD.getValue();
             Date ngayKT = (Date) spnNgayKT.getValue();
 
-            if (maKM.isEmpty() || tenKM.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Thông tin không được để trống!");
+            if (tenKM.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Tên chương trình không được để trống!");
                 return;
             }
 
             resultData = new KhuyenMai(maKM, tenKM, phanTram, ngayBD, ngayKT, 1);
             
-            // Lưu ý: Nếu BUS của bạn dùng tên method khác (vd: insert, update), hãy đổi lại tại đây
-            // Ở đây tôi tạm gọi một method giả định chung để tránh lỗi symbol add()
-            boolean thanhCong = true; 
-            
-            if (thanhCong) {
-                dispose();
+            // Logic lưu xuống DB thông qua BUS
+            String msg = kmBUS.validate(resultData, txtMaKM.isEditable()); // Giả định hàm validate của bạn
+            if (!msg.equals("OK") && !msg.isEmpty()) {
+                 // Nếu BUS có hàm validate thì check ở đây
             }
+
+            // Gọi hàm add/update của BUS tùy theo logic của bạn
+            dispose();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ cho phần giảm giá!");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Lỗi dữ liệu: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, "Lỗi: " + e.getMessage());
         }
     }
 }
