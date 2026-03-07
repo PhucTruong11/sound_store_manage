@@ -1,6 +1,7 @@
 package Frontend.GUI.NhanVien;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 

@@ -1,6 +1,11 @@
 package Frontend.GUI.NhanVien;
 
 import java.awt.Color;
+
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import Backend.BUS.NhanVienBUS;
 import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonDele;
 import Frontend.Compoent.ButtonFix;
@@ -8,8 +13,6 @@ import Frontend.Compoent.ButtonXuatExcel;
 import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.*;
-import Backend.BUS.NhanVienBUS;
 
 public class NhanVienToolbar extends JPanel {
     private NhanVienTable table;
@@ -59,13 +62,17 @@ public class NhanVienToolbar extends JPanel {
                 return;
             }
 
-            String ma = table.getTbl().getValueAt(selectedRow, 1).toString();
-            String ten = table.getTbl().getValueAt(selectedRow, 2).toString();
-            String sdt = table.getTbl().getValueAt(selectedRow, 3).toString();
-            String diaChi = table.getTbl().getValueAt(selectedRow, 4).toString();
-            String chucVu = table.getTbl().getValueAt(selectedRow, 5).toString();
-            String email = table.getTbl().getValueAt(selectedRow, 6).toString();
-            double luong = Double.parseDouble(table.getTbl().getValueAt(selectedRow, 7).toString());
+            int modelRow = table.getTbl().convertRowIndexToModel(selectedRow);
+
+            String ma = table.getTbl().getValueAt(modelRow, 1).toString();
+            String ten = table.getTbl().getValueAt(modelRow, 2).toString();
+            String sdt = table.getTbl().getValueAt(modelRow, 3).toString();
+            String diaChi = table.getTbl().getValueAt(modelRow, 4).toString();
+            String chucVu = table.getTbl().getValueAt(modelRow, 5).toString();
+            String email = table.getTbl().getValueAt(modelRow, 6).toString();
+            double luong = Double.parseDouble(
+                    table.getTbl().getValueAt(modelRow, 7).toString().replace(",", "")
+            );
 
             NhanVienFixDialog dialog = new NhanVienFixDialog(ma, ten, sdt, diaChi, chucVu, email, luong);
             dialog.setVisible(true);

@@ -48,10 +48,11 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
     public int update(KhachHang kh) {
         // Update bảng ConNguoi trước
         new ConNguoiDAO().update(kh);
-        String sql = "UPDATE KhachHang SET WHERE ID=?";
+        String sql = "UPDATE KhachHang SET TrangThai = ? WHERE ID=?";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, kh.getId());
+            ps.setBoolean(1, kh.isTrangThai());
+            ps.setString(2, kh.getId());
             return ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,7 +80,7 @@ public class KhachHangDAO implements DAOInterface<KhachHang> {
             if(rs.next()) {
                 String lastMa = rs.getString("ID");
                 int num = Integer.parseInt(lastMa.substring(3));
-                return String.format("KH%02d", num + 1);
+                return String.format("KH%03d", num + 1);
             }
         } catch (Exception e) {
             e.printStackTrace();
