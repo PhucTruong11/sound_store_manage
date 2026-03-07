@@ -143,8 +143,19 @@ public class XacNhanNhapHangDialog extends JDialog {
 
                 String maPN = pnBUS.getNewMaPhieu(); // Lấy mã phiếu nhập mới tự động
 
-                // Tạo đối tượng PhieuNhap (Mã NV, Mã NCC lấy từ logic của bạn)
-                PhieuNhap phieuNhap = new PhieuNhap(maPN, null, "NV01", "NCC01", 0.0, true);
+                String maNVThucTe = "NV001";
+                if (Backend.DTO.Session.currentNhanVien != null) {
+                    maNVThucTe = Backend.DTO.Session.currentNhanVien.getId();
+                } else if (Backend.DTO.Session.currentAccount != null) {
+                    maNVThucTe = Backend.DTO.Session.currentAccount.getMaNV();
+                }
+
+                String maNCCThucTe = "NCC001"; // Mặc định
+                if (this.sidebar != null) {
+                    maNCCThucTe = this.sidebar.getSelectedMaNCC(); 
+                }
+
+                PhieuNhap phieuNhap = new PhieuNhap(maPN, null, maNVThucTe, maNCCThucTe, 0.0, true);
 
                 // Chuyển dữ liệu từ bảng Review sang danh sách ChiTietPhieuNhap
                 ArrayList<ChiTietPhieuNhap> dsChiTiet = new ArrayList<>();
@@ -177,9 +188,6 @@ public class XacNhanNhapHangDialog extends JDialog {
                     }
 
                     dispose();
-                // } else {
-                //     JOptionPane.showMesssageDialog(this, "Lỗi khi lưu dữ liệu vào hệ thống!", "Lỗi",
-                //             JOptionPane.ERROR_MESSAGE);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();

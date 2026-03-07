@@ -23,11 +23,15 @@ public class ThongKeBUS {
         return tkDAO.getLoiNhuanThang(); 
     }
 
-    public void nạpDữLiệuTop5(DefaultCategoryDataset dataset, String type) {
+    public void napDuLieuTop5(DefaultCategoryDataset dataset, String type) {
         tkDAO.getTop5SanPham(dataset, type);
     }
 
-    public void nạpDữLiệuTỉTrọng(DefaultPieDataset dataset, String type) {
+    public void napDuLieuTiTrong(DefaultPieDataset dataset, String type) {
         tkDAO.getTiTrongDoanhThuLoai(dataset, type);
+    }
+
+    public void napDuLieuXuHuong(DefaultCategoryDataset dataset) {
+        tkDAO.getXuHuongTrongThang(dataset);
     }
 }

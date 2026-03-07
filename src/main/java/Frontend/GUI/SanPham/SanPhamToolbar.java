@@ -16,7 +16,9 @@ public class SanPhamToolbar extends JPanel {
     SanPhamBUS spBUS=new SanPhamBUS();
     private QuanlyamthanhPanel parentPanel;
     private SearchTextField txtSearch;
-    public SanPhamToolbar(QuanlyamthanhPanel parentPanel) {
+    private SanPhamTable table;
+    public SanPhamToolbar(QuanlyamthanhPanel parentPanel, SanPhamTable table) {
+        this.table = table;
         this.parentPanel = parentPanel;
         initComponents();
     }
@@ -103,7 +105,7 @@ public class SanPhamToolbar extends JPanel {
         });
 
         btnXuatExcel.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Chức năng xuất Excel đang phát triển");
+            Frontend.Compoent.XuatExcel.xuat(table.getTable());
         });
 
         btnRefresh.addActionListener(e -> {

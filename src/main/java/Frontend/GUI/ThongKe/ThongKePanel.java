@@ -7,12 +7,11 @@ import net.miginfocom.swing.MigLayout;
 public class ThongKePanel extends JPanel {
 
     public ThongKePanel() {
-        // Layout: Cards -> Product Charts -> Trend Chart [cite: 2025-12-25]
         setLayout(new MigLayout("fill, insets 20", "[grow, fill]", "[]20[350!]20[grow]"));
-        setBackground(Theme.BACKGROUND_COLOR); // Sử dụng màu nền dự án [cite: 2025-12-25]
+        setBackground(Theme.BACKGROUND_COLOR);
 
-        add(new KpiCardsPanel(), "wrap");
-        add(new ProductChartPanel(), "wrap");
+        add(new KpiCardsPanel(), "growx,wrap");
+        add(new ProductChartPanel(), "growx, wrap");
         add(new TrendChartPanel(), "grow");
     }
 }

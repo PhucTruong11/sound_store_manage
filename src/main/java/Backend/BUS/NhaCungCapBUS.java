@@ -48,6 +48,9 @@ public class NhaCungCapBUS {
         if (ncc.getSdt().matches("^\\d{9}$")) {
             return "SĐT phải có 10 chữ số và bắt đầu bằng số 0!";
         }
+        if (ncc.getSdt() == null) {
+            return "SĐT không được để trống!";
+        }
         ArrayList<NhaCungCap> list = getAllNhaCungCap();
         for (NhaCungCap oldNCC : list) {
             if (oldNCC.getSdt().equals(ncc.getSdt())) {

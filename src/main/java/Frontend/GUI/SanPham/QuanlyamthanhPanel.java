@@ -24,11 +24,11 @@ public class QuanlyamthanhPanel extends JPanel {
     }
 
     private void initComponents() {
-        toolbar = new SanPhamToolbar(this);
+        table = new SanPhamTable();
+        toolbar = new SanPhamToolbar(this, table);
         toolbar.putClientProperty("FlatLaf.style", "arc: 15"); 
         add(toolbar, "growx, wrap");
 
-        table = new SanPhamTable();
         toolbar.putClientProperty("FlatLaf.style", "arc: 15");
         add(table, "grow"); 
 
