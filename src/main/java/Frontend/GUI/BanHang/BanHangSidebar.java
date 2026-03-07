@@ -46,8 +46,7 @@ public class BanHangSidebar extends JPanel {
 
     private void initHeader() {
         add(new JLabel("Nhân viên bán"), "gaptop 5");
-        
-        // Lấy họ tên từ Session giống bên Nhập hàng
+
         String tenHienThi = "Chưa đăng nhập";
         if (Session.currentNhanVien != null) {
             tenHienThi = Session.currentNhanVien.getHoTen();
@@ -55,11 +54,10 @@ public class BanHangSidebar extends JPanel {
             tenHienThi = Session.currentAccount.getUsername();
         }
 
-        // Khởi tạo JTextField thay vì JComboBox
         txtNhanVien = new JTextField(tenHienThi);
         txtNhanVien.setEditable(false);
         txtNhanVien.setFocusable(false);
-        txtNhanVien.setBackground(new Color(245, 245, 245)); // Màu nền xám nhẹ để phân biệt field chỉ đọc
+        txtNhanVien.setBackground(new Color(245, 245, 245));
         add(txtNhanVien, "h 30!");
 
         add(new JLabel("Khách hàng"), "gaptop 10");
@@ -84,8 +82,6 @@ public class BanHangSidebar extends JPanel {
         add(btnChonKH, "h 30!");
     }
 
-    // ... (Các hàm initProductSelection, initMiniTable, initConfirmButton giữ nguyên như cũ) ...
-
     private void initProductSelection() {
         lblTenSP = new JLabel("Chọn sản phẩm");
         lblTenSP.setFont(new Font("Segoe UI", Font.BOLD, 16));
@@ -98,7 +94,10 @@ public class BanHangSidebar extends JPanel {
         add(new JSeparator(), "growx, gaptop 10, gapbottom 10");
 
         add(new JLabel("Số lượng bán:"), "gaptop 5");
-        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, 10000, 1));
+
+        // Dùng model không giới hạn max, việc kiểm tra tồn kho sẽ làm thủ công
+        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+
         add(spnSoLuongBan, "split 2, w 100!, h 35!");
 
         CustomButton btnThem = new CustomButton("THÊM", new Color(0, 153, 255));
@@ -106,10 +105,32 @@ public class BanHangSidebar extends JPanel {
         add(btnThem, "growx, h 35!");
     }
 
+    // private void validateSpinnerInput(JTextField spinnerTxt) {
+    // if (currentMa.isEmpty())
+    // return;
+
+    // String cleanTon = lblTonKho.getText().replaceAll("[^0-9]", "");
+    // if (cleanTon.isEmpty())
+    // return;
+    // int tonKho = Integer.parseInt(cleanTon);
+
+    // try {
+    // int nhap = Integer.parseInt(spinnerTxt.getText().trim());
+    // if (nhap > tonKho) {
+    // JOptionPane.showMessageDialog(
+    // BanHangSidebar.this,
+    // "Số lượng bán vượt quá tồn kho! Tồn kho hiện tại: " + tonKho);
+    // spnSoLuongBan.setValue(tonKho);
+    // }
+    // } catch (NumberFormatException ex) {
+    // spnSoLuongBan.setValue(1);
+    // }
+    // }
+
     private void initMiniTable() {
         add(new JLabel("Danh sách chờ bán:"), "gaptop 10");
         String[] cols = { "Mã SP", "Tên SP", "SL", "Đơn giá" };
-        
+
         modelBan = new DefaultTableModel(cols, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -124,7 +145,7 @@ public class BanHangSidebar extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 int selected = tblBan.getSelectedRow();
-                if(e.getClickCount() == 2 && selected != -1) {
+                if (e.getClickCount() == 2 && selected != -1) {
                     modelBan.removeRow(selected);
                 }
             }
@@ -177,17 +198,47 @@ public class BanHangSidebar extends JPanel {
             return;
         }
 
-        int slBanMoi = (int) spnSoLuongBan.getValue();
-        boolean found = false;
+        try {
+            spnSoLuongBan.commitEdit();
+        } catch (java.text.ParseException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-        int sl = (int) spnSoLuongBan.getValue();
+        String cleanTon = lblTonKho.getText().replaceAll("[^0-9]", "");
+        int tonKho = Integer.parseInt(cleanTon);
+
+        if (tonKho <= 0) {
+            JOptionPane.showMessageDialog(this, "Sản phẩm này đã hết hàng!", "Hết hàng", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int slBanMoi = (int) spnSoLuongBan.getValue();
+
+        if (slBanMoi > tonKho) {
+            JOptionPane.showMessageDialog(this,
+                    "Số lượng bán vượt quá tồn kho! Tồn kho hiện tại: " + tonKho,
+                    "Không đủ hàng",
+                    JOptionPane.ERROR_MESSAGE);
+            return; 
+        }
+
+        boolean found = false;
         String ten = lblTenSP.getText();
 
         for (int i = 0; i < modelBan.getRowCount(); i++) {
             String maTrongBang = modelBan.getValueAt(i, 0).toString();
-
-            if(maTrongBang.equals(currentMa)) {
+            if (maTrongBang.equals(currentMa)) {
                 int slCu = (int) modelBan.getValueAt(i, 2);
+
+                if (slCu + slBanMoi > tonKho) {
+                    JOptionPane.showMessageDialog(this,
+                            "Bạn đã có " + slCu + " món trong giỏ. Vượt quá tồn kho (" + tonKho + ")!",
+                            "Không đủ hàng",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 modelBan.setValueAt(slCu + slBanMoi, i, 2);
                 found = true;
                 break;
@@ -195,12 +246,9 @@ public class BanHangSidebar extends JPanel {
         }
 
         if (!found) {
-            modelBan.addRow(new Object[]{currentMa, ten, sl, currentGia});
+            modelBan.addRow(new Object[] { currentMa, ten, slBanMoi, currentGia });
         }
 
-        // int sl = (int) spnSoLuongBan.getValue();
-        // String ten = lblTenSP.getText();
-        // modelBan.addRow(new Object[] { currentMa, ten, sl, currentGia });
         resetSelection();
     }
 
@@ -234,7 +282,7 @@ public class BanHangSidebar extends JPanel {
             lblTonKho.setForeground(tonInt > 0 ? Color.BLACK : Color.RED);
 
             if (tonInt > 0) {
-                spnSoLuongBan.setModel(new SpinnerNumberModel(1, 1, tonInt, 1));
+                spnSoLuongBan.setModel(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
                 spnSoLuongBan.setEnabled(true);
             } else {
                 spnSoLuongBan.setModel(new SpinnerNumberModel(0, 0, 0, 0));
@@ -245,7 +293,6 @@ public class BanHangSidebar extends JPanel {
             spnSoLuongBan.setEnabled(false);
         }
 
-        this.revalidate();
         this.repaint();
     }
 }
