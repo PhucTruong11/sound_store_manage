@@ -13,7 +13,7 @@ import Frontend.Compoent.CustomButton;
 import Frontend.GUI.KhachHang.FromHienThiKhachHang;
 import Frontend.GUI.Nhaphang.MainHienThiNhapHang;
 import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
-import Frontend.GUI.SanPham.QuanlyamthanhPanel;
+import Frontend.GUI.SanPham.SanPhamPanel;
 import Frontend.GUI.ThongKe.ThongKePanel;
 import Frontend.GUI.BanHang.BanHangPanel;
 import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
@@ -78,7 +78,7 @@ public class Sidebar extends JPanel {
         btn.addActionListener(e -> {
             switch (text) {
                 case "Sản phẩm":
-                    parent.setPage(new QuanlyamthanhPanel());
+                    parent.setPage(new SanPhamPanel());
                     break;
                 case "Bán hàng":
                     parent.setPage(new BanHangPanel());

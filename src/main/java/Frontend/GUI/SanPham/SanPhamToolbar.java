@@ -1,4 +1,5 @@
 package Frontend.GUI.SanPham;
+
 import Backend.BUS.SanPhamBUS;
 import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonXuatExcel;
@@ -6,7 +7,12 @@ import Frontend.Compoent.ButtonRefresh;
 import Frontend.Compoent.ButtonFix;
 import Frontend.Compoent.ButtonDele;
 import Frontend.Compoent.SearchTextField;
+import Frontend.Compoent.XuatExcel;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -14,11 +20,9 @@ import net.miginfocom.swing.MigLayout;
 
 public class SanPhamToolbar extends JPanel {
     SanPhamBUS spBUS=new SanPhamBUS();
-    private QuanlyamthanhPanel parentPanel;
+    private SanPhamPanel parentPanel;
     private SearchTextField txtSearch;
-    private SanPhamTable table;
-    public SanPhamToolbar(QuanlyamthanhPanel parentPanel, SanPhamTable table) {
-        this.table = table;
+    public SanPhamToolbar(SanPhamPanel parentPanel) {
         this.parentPanel = parentPanel;
         initComponents();
     }
@@ -28,17 +32,39 @@ public class SanPhamToolbar extends JPanel {
         setOpaque(true);
         setLayout(new MigLayout("fillx, insets 15", "[grow]10[]10[]10[]10[]", "[]"));
 
-        txtSearch = new SearchTextField("Tìm kiếm theo tên sản phẩm...");
+        txtSearch = new SearchTextField("Tìm kiếm sản phẩm...");
         txtSearch.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyReleased(KeyEvent evt) {
-                parentPanel.loadData();
+        @Override
+        public void keyReleased(KeyEvent evt) {
+            String keyword = txtSearch.getText().trim();
+            JTable tbl = parentPanel.getTable().getTable();
+            
+            if (tbl.getRowSorter() != null) {
+                @SuppressWarnings("unchecked")
+                TableRowSorter<DefaultTableModel> sorter = (TableRowSorter<DefaultTableModel>) tbl.getRowSorter();
+                if (keyword.isEmpty()) {
+                    sorter.setRowFilter(null);
+                    return;
+                }
+                try {
+                String[] andWords = keyword.split("\\s+");
+                java.util.List<RowFilter<Object,Object>> andFilters = new java.util.ArrayList<>();
+                
+                for (String word : andWords) {
+                    andFilters.add(RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(word), 1, 2, 4, 5,7)); 
+                }
+                
+                sorter.setRowFilter(RowFilter.andFilter(andFilters));
+                    
+                } catch (Exception ex) {
+                }
             }
+        }
         });
         // Các thao tác
         ButtonAdd btnAdd = new ButtonAdd("Thêm");
-        ButtonFix btnFix=new ButtonFix("Sửa");
-        ButtonDele btnDele=new ButtonDele("Xóa");
+        ButtonFix btnFix = new ButtonFix("Sửa");
+        ButtonDele btnDele = new ButtonDele("Xóa");
         ButtonRefresh btnRefresh = new ButtonRefresh("Làm Mới");
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
     
@@ -57,7 +83,6 @@ public class SanPhamToolbar extends JPanel {
         });
 
         btnFix.addActionListener(e -> {
-            //Lấy bảng và dòng đang chọn
             JTable tbl = parentPanel.getTable().getTable();
             int selectedRow = tbl.getSelectedRow();
             if (selectedRow == -1) {
@@ -73,13 +98,13 @@ public class SanPhamToolbar extends JPanel {
             String mota = tbl.getValueAt(selectedRow, 6).toString();
             String baohanh = tbl.getValueAt(selectedRow, 7).toString();
 
-            //Mở Dialog Sửa và truyền dữ liệu vào
+            // Mở Dialog Sửa và truyền dữ liệu vào
             JFrame frameCha = (JFrame) SwingUtilities.getWindowAncestor(this);
             SuaSanPhamDialog dialog = new SuaSanPhamDialog(frameCha, ma, ten, sl, maLoai, maHang, mota, baohanh);
             dialog.setVisible(true);
 
             if (dialog.isSuccess()) {
-                //parentPanel.loadData();
+                parentPanel.loadData();
             }
         });
         
@@ -88,32 +113,36 @@ public class SanPhamToolbar extends JPanel {
             int selectedRow = tbl.getSelectedRow();
 
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!");
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn hàng cần xóa!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             String maSP = tbl.getValueAt(selectedRow, 1).toString();
-            int opt = JOptionPane.showConfirmDialog(this, 
-                    "Bạn có chắc muốn xóa: " + maSP + "?", 
-                    "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+            int opt = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa: " + maSP + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
 
             if (opt == JOptionPane.YES_OPTION) {
                 if(spBUS.delete(maSP)){
-                System.out.println("Xóa thành công");
+                JOptionPane.showMessageDialog(this,"Xóa thành công");
                 parentPanel.loadData();
                 }
             }
         });
 
         btnXuatExcel.addActionListener(e -> {
-            Frontend.Compoent.XuatExcel.xuat(table.getTable());
+            XuatExcel.xuat(parentPanel.getTable().getTable());
         });
 
         btnRefresh.addActionListener(e -> {
             txtSearch.setText(""); 
-            parentPanel.getTable().getComboBox().setSelectedIndex(0);
+            JTable tbl = parentPanel.getTable().getTable();
+            if (tbl.getRowSorter() != null) {
+                @SuppressWarnings("unchecked")
+                TableRowSorter<DefaultTableModel> sorter = (TableRowSorter<DefaultTableModel>) tbl.getRowSorter();
+                sorter.setRowFilter(null);
+            }
+
             parentPanel.loadData();
         });
     }
+    
     public String getKeyword() { return txtSearch.getText(); }
-
 }

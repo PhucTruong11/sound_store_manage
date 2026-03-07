@@ -29,24 +29,16 @@ public class SanPhamBUS {
         return false;
     }
 
-    public String getNextID(){
-        ArrayList<SanPham> list = spDAO.selectAll(); 
-        if (list == null || list.isEmpty()) {
-            return "SP01"; 
-        }
-        int maxId = 0;
-        for (SanPham sp : list) {
-            try {
-            // Cắt bỏ chữ "SP", lấy phần số
-                String so = sp.getMaSP().replaceAll("[^0-9]", "");
-                int id = Integer.parseInt(so);
-                if (id > maxId) {
-                maxId = id;
-            }
-            } catch (Exception e) {
-            }
-        }
-        return "SP" + String.format("%02d", maxId + 1);
+    // Hàm sinh mã tự động
+    public String getNextID() {
+        return spDAO.getNextID();
+    }
+    
+    public ArrayList<String> getDanhSachLoai(){
+        return spDAO.getDanhSachLoai();
+    }
+    public ArrayList<String> getDanhSachHang(){
+        return spDAO.getDanhSachHang();
     }
 }
 

@@ -1,9 +1,12 @@
 package Backend.DAO;
 
-import Backend.DatabaseHelper;
-import Backend.DTO.NhanVien;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import Backend.DTO.NhanVien;
+import Backend.DatabaseHelper;
 
 public class NhanVienDAO implements DAOInterface<NhanVien> {
     
@@ -84,7 +87,7 @@ String sql =
             if(rs.next()) {
                 String lastMa = rs.getString("ID");
                 int num = Integer.parseInt(lastMa.substring(3));
-                return String.format("NV%02d", num + 1);
+                return String.format("NV%03d", num + 1);
             }
         } catch (Exception e) {
             e.printStackTrace();

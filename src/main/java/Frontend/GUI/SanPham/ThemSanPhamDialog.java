@@ -6,11 +6,13 @@ import Backend.DTO.SanPham;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ThemSanPhamDialog extends ThaoTacDialog {
 
     private SanPhamBUS spBUS = new SanPhamBUS();
-    private JTextField txtMaSP, txtTenSP, txtMaLoai, txtMaHang, txtBaoHanh;
+    private JTextField txtMaSP, txtTenSP, txtBaoHanh;
+    private JComboBox<String> cboMaLoai,cboMaHang;
     private JTextArea txtMoTa;
     private boolean isSuccess = false;
     private JFrame parentFrame;
@@ -22,8 +24,9 @@ public class ThemSanPhamDialog extends ThaoTacDialog {
         txtMaSP.setText(spBUS.getNextID());
         txtMaSP.setEditable(false);
         txtMaSP.setFocusable(false);
-    }
 
+        loadDataComboBox();
+    }
 
     @Override
     protected void initForm() {
@@ -36,15 +39,17 @@ public class ThemSanPhamDialog extends ThaoTacDialog {
         pnlContent.add(txtTenSP, "growx, h 35!");
 
         pnlContent.add(new JLabel("Mã loại: "));
-        txtMaLoai = new JTextField();
-        pnlContent.add(txtMaLoai, "growx, h 35!");
+        cboMaLoai=new JComboBox<>();
+        cboMaLoai.setBackground(Color.WHITE);
+        pnlContent.add(cboMaLoai, "growx, h 35!");
 
         pnlContent.add(new JLabel("Mã Hãng: "));
-        txtMaHang = new JTextField();
-        pnlContent.add(txtMaHang, "growx, h 35!");
+        cboMaHang=new JComboBox<>();
+        cboMaHang.setBackground(Color.WHITE);
+        pnlContent.add(cboMaHang, "growx, h 35!");
 
         pnlContent.add(new JLabel("Bảo hành (tháng): "));
-        txtBaoHanh = new JTextField();
+        txtBaoHanh = new JTextField("12");
         pnlContent.add(txtBaoHanh, "growx, h 35!");
 
         pnlContent.add(new JLabel("Mô tả sản phẩm: "), "aligny top");
@@ -68,8 +73,8 @@ public class ThemSanPhamDialog extends ThaoTacDialog {
             SanPham sp = new SanPham();
             sp.setMaSP(txtMaSP.getText().trim());
             sp.setTenSP(txtTenSP.getText().trim());
-            sp.setMaLoai(txtMaLoai.getText().trim());
-            sp.setMaHang(txtMaHang.getText().trim());
+            sp.setMaLoai(cboMaLoai.getSelectedItem().toString().split(" - ")[0].trim());
+            sp.setMaHang(cboMaHang.getSelectedItem().toString().split(" - ")[0].trim());
             sp.setMoTa(txtMoTa.getText().trim());
             sp.setThoiGianBaoHanh(Integer.parseInt(txtBaoHanh.getText().trim()));
             sp.setTrangThai(true);
@@ -77,8 +82,8 @@ public class ThemSanPhamDialog extends ThaoTacDialog {
             boolean ketQua = spBUS.add(sp);
             if (ketQua) {
                 this.isSuccess = true;
-                int confirm = JOptionPane.showConfirmDialog(this,"Thêm sản phẩm thành công\nBạn có muốn thiết lập Phiên Bản  ngay không?", "Thông báo",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-                this.dispose(); // Đóng form Thêm SP
+                int confirm = JOptionPane.showConfirmDialog(this,"Thêm sản phẩm thành công\nBạn có muốn thiết lập Phiên Bản ngay không?", "Thông báo",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+                this.dispose();   
                 if (confirm == JOptionPane.YES_OPTION) {
                     // Mở form Quản lý phiên bản
                     PhienBanSPDialog pbDlg = new PhienBanSPDialog(parentFrame, sp.getMaSP(), sp.getTenSP(), true);
@@ -96,5 +101,18 @@ public class ThemSanPhamDialog extends ThaoTacDialog {
 
     public boolean isSuccess() {
         return isSuccess;
+    }
+
+    private void loadDataComboBox() {
+
+        ArrayList<String> dsLoai = spBUS.getDanhSachLoai(); 
+        for (String chuoiLoai : dsLoai) {
+            cboMaLoai.addItem(chuoiLoai);
+        }
+
+        ArrayList<String> dsHang = spBUS.getDanhSachHang(); 
+        for (String chuoiHang : dsHang) {
+            cboMaHang.addItem(chuoiHang);
+        }
     }
 }
