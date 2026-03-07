@@ -19,7 +19,7 @@ public class ChiTietSPDialog extends JDialog {
         private boolean isEditMode;
 
         public ChiTietSPDialog(JFrame parent, String maPB, boolean isEditMode) {
-                super(parent, isEditMode ? "QUẢN LÝ CHI TIẾT - " + maPB : "DANH SÁCH CHI TIẾT - " + maPB, true);
+                super(parent, isEditMode ? "SỬA CHI TIẾT - " + maPB : "DANH SÁCH CHI TIẾT - " + maPB, true);
                 this.maPBHT = maPB;
                 this.isEditMode = isEditMode;
 
@@ -36,7 +36,7 @@ public class ChiTietSPDialog extends JDialog {
                 // --- HEADER ---
                 JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
                 pnlHeader.setBackground(Theme.PRIMARY_COLOR);
-                JLabel lblHeader = new JLabel(isEditMode ? "QUẢN LÝ CHI TIẾT - " + maPBHT : "DANH SÁCH CHI TIẾT - " + maPBHT);
+                JLabel lblHeader = new JLabel(isEditMode ? "SỬA CHI TIẾT - " + maPBHT : "DANH SÁCH CHI TIẾT - " + maPBHT);
                 lblHeader.setFont(new Font("Segoe UI", Font.BOLD, 16));
                 lblHeader.setForeground(Color.WHITE);
                 pnlHeader.add(lblHeader);
@@ -66,7 +66,6 @@ public class ChiTietSPDialog extends JDialog {
                         btnSua.setPreferredSize(new Dimension(80, 40));
                         pnlFooter.add(btnSua);
 
-                        // Chỉ truyền duy nhất nút Sửa vào hàm sự kiện
                         addEditEvents(btnSua); 
                 }
 
@@ -79,7 +78,6 @@ public class ChiTietSPDialog extends JDialog {
         }
 
         private void addEditEvents(JButton btnSua) {
-                // --- SỰ KIỆN NÚT SỬA ---
                 btnSua.addActionListener(e -> {
                         int row = tblCT.getSelectedRow();
                         if (row == -1) {
@@ -87,15 +85,11 @@ public class ChiTietSPDialog extends JDialog {
                                 return;
                         }
 
-                        // Lấy trạng thái hiện tại (Cột số 4)
                         String tinhTrang = tblCT.getValueAt(row, 4).toString();
-
-                        // 🛑 KIỂM TRA BẢO MẬT: CHẶN NẾU ĐÃ BÁN
                         if (tinhTrang.equalsIgnoreCase("Đã bán")) {
                             JOptionPane.showMessageDialog(this, 
                                 "Máy này đã xuất bán cho khách, KHÔNG ĐƯỢC PHÉP sửa thông tin!", 
-                                "Cảnh báo bảo mật", 
-                                JOptionPane.ERROR_MESSAGE);
+                                "Cảnh báo bảo mật", JOptionPane.ERROR_MESSAGE);
                             return; 
                         }
 
@@ -108,11 +102,9 @@ public class ChiTietSPDialog extends JDialog {
                         ct.setMaPhieuXuat(px != null ? px.toString() : null);
                         ct.setTinhTrang(tinhTrang);
 
-                        // Mở Dialog Sửa (InputChiTietDialog)
                         InputChiTietDialog inputDlg = new InputChiTietDialog((JFrame) SwingUtilities.getWindowAncestor(this), maPBHT, ct);
                         inputDlg.setVisible(true);
                         
-                        // Nếu lưu thành công thì tải lại bảng
                         if (inputDlg.isSuccess()) {
                                 loadData();
                         }

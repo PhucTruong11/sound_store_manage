@@ -77,7 +77,7 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
 
     @Override
     public int update(SanPham sp) {
-        String sql="UPDATE SanPham SET TenSP=?, MaLoai=?, MaHang=?, MoTa=?, ThoiGianBaoHanh=? ";
+        String sql="UPDATE SanPham SET TenSP=?, MaLoai=?, MaHang=?, MoTa=?, ThoiGianBaoHanh=? WHERE MaSP=?";
         try(Connection conn=DatabaseHelper.getConnection();
         PreparedStatement stmt=conn.prepareStatement(sql)){
             stmt.setString(1,sp.getTenSP());

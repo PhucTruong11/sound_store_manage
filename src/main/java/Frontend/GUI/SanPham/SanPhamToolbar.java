@@ -36,6 +36,9 @@ public class SanPhamToolbar extends JPanel {
         txtSearch.addKeyListener(new KeyAdapter() {
         @Override
         public void keyReleased(KeyEvent evt) {
+            if (parentPanel == null || parentPanel.getTable() == null || parentPanel.getTable().getTable() == null) {
+                    return;
+                }
             String keyword = txtSearch.getText().trim();
             JTable tbl = parentPanel.getTable().getTable();
             
@@ -139,7 +142,7 @@ public class SanPhamToolbar extends JPanel {
                 TableRowSorter<DefaultTableModel> sorter = (TableRowSorter<DefaultTableModel>) tbl.getRowSorter();
                 sorter.setRowFilter(null);
             }
-
+            parentPanel.getTable().resetFilters();
             parentPanel.loadData();
         });
     }
