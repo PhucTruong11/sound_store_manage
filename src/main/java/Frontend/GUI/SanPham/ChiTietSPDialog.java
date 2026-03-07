@@ -62,19 +62,12 @@ public class ChiTietSPDialog extends JDialog {
                 pnlFooter.setBackground(Color.WHITE);
 
                 if (isEditMode) {
-                        CustomButton btnThem = new CustomButton("Thêm", Theme.ACCENT_COLOR);
                         CustomButton btnSua = new CustomButton("Sửa", Theme.WARNING_COLOR);
-                        CustomButton btnXoa = new CustomButton("Xóa", Theme.DANGER_COLOR);
-
-                        btnThem.setPreferredSize(new Dimension(80, 40));
                         btnSua.setPreferredSize(new Dimension(80, 40));
-                        btnXoa.setPreferredSize(new Dimension(80, 40));
-
-                        pnlFooter.add(btnThem);
                         pnlFooter.add(btnSua);
-                        pnlFooter.add(btnXoa);
 
-                        addEditEvents(btnThem, btnSua, btnXoa);
+                        // Chỉ truyền duy nhất nút Sửa vào hàm sự kiện
+                        addEditEvents(btnSua); 
                 }
 
                 CustomButton btnDong = new CustomButton("Thoát", new Color(149, 165, 166));
@@ -85,19 +78,25 @@ public class ChiTietSPDialog extends JDialog {
                 add(pnlFooter, BorderLayout.SOUTH);
         }
 
-        private void addEditEvents(JButton btnThem, JButton btnSua, JButton btnXoa) {
-                btnThem.addActionListener(e -> {
-                        InputChiTietDialog inputDlg = new InputChiTietDialog((JFrame) SwingUtilities.getWindowAncestor(this), maPBHT, null);
-                        inputDlg.setVisible(true);
-                        if (inputDlg.isSuccess())
-                                loadData();
-                });
-
+        private void addEditEvents(JButton btnSua) {
+                // --- SỰ KIỆN NÚT SỬA ---
                 btnSua.addActionListener(e -> {
                         int row = tblCT.getSelectedRow();
                         if (row == -1) {
-                                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng IMEI để sửa", "Thông báo",JOptionPane.WARNING_MESSAGE);
+                                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng IMEI để sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
                                 return;
+                        }
+
+                        // Lấy trạng thái hiện tại (Cột số 4)
+                        String tinhTrang = tblCT.getValueAt(row, 4).toString();
+
+                        // 🛑 KIỂM TRA BẢO MẬT: CHẶN NẾU ĐÃ BÁN
+                        if (tinhTrang.equalsIgnoreCase("Đã bán")) {
+                            JOptionPane.showMessageDialog(this, 
+                                "Máy này đã xuất bán cho khách, KHÔNG ĐƯỢC PHÉP sửa thông tin!", 
+                                "Cảnh báo bảo mật", 
+                                JOptionPane.ERROR_MESSAGE);
+                            return; 
                         }
 
                         ChiTietSP ct = new ChiTietSP();
@@ -107,30 +106,15 @@ public class ChiTietSPDialog extends JDialog {
                         Object px = tblCT.getValueAt(row, 3);
                         ct.setMaPhieuNhap(pn != null ? pn.toString() : null);
                         ct.setMaPhieuXuat(px != null ? px.toString() : null);
-                        ct.setTinhTrang(tblCT.getValueAt(row, 4).toString());
-                        // Mở Dialog Sửa
+                        ct.setTinhTrang(tinhTrang);
+
+                        // Mở Dialog Sửa (InputChiTietDialog)
                         InputChiTietDialog inputDlg = new InputChiTietDialog((JFrame) SwingUtilities.getWindowAncestor(this), maPBHT, ct);
                         inputDlg.setVisible(true);
-                        if (inputDlg.isSuccess())
+                        
+                        // Nếu lưu thành công thì tải lại bảng
+                        if (inputDlg.isSuccess()) {
                                 loadData();
-                });
-
-                btnXoa.addActionListener(e -> {
-                        int row = tblCT.getSelectedRow();
-                        if (row == -1) {
-                                JOptionPane.showMessageDialog(this, "Vui lòng chọn IMEI để xóa!");
-                                return;
-                        }
-                        String maIMEI = tblCT.getValueAt(row, 0).toString();
-
-                        int op = JOptionPane.showConfirmDialog(this,"Bạn có chắc muốn xóa IMEI: " + maIMEI + "?","Xác nhận xóa", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                        if (op == JOptionPane.YES_OPTION) {
-                                if (ctBUS.delete(maIMEI)) {
-                                        //JOptionPane.showMessageDialog(this, "Xóa thành công!");
-                                        loadData();
-                                } else {
-                                        JOptionPane.showMessageDialog(this, "Xóa thất bại!");
-                                }
                         }
                 });
         }

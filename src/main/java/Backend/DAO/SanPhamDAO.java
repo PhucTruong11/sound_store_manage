@@ -77,15 +77,15 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
 
     @Override
     public int update(SanPham sp) {
-        String sql="UPDATE SanPham SET MaSP=?, TenSP=?, MaLoai=?, MaHang=?, MoTa=?, ThoiGianBaoHanh=? ";
+        String sql="UPDATE SanPham SET TenSP=?, MaLoai=?, MaHang=?, MoTa=?, ThoiGianBaoHanh=? ";
         try(Connection conn=DatabaseHelper.getConnection();
         PreparedStatement stmt=conn.prepareStatement(sql)){
-            stmt.setString(1,sp.getMaSP());
-            stmt.setString(2,sp.getTenSP());
-            stmt.setString(3,sp.getMaLoai());
-            stmt.setString(4,sp.getMaHang());
-            stmt.setString(5,sp.getMoTa());
-            stmt.setInt(6,sp.getThoiGianBaoHanh());
+            stmt.setString(1,sp.getTenSP());
+            stmt.setString(2,sp.getMaLoai());
+            stmt.setString(3,sp.getMaHang());
+            stmt.setString(4,sp.getMoTa());
+            stmt.setInt(5,sp.getThoiGianBaoHanh());
+            stmt.setString(6,sp.getMaSP());
 
             return stmt.executeUpdate();
         }catch(Exception e){
@@ -106,4 +106,72 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
         }
         return 0;
     }
+
+    // Lấy danh sách loại dưới dạng chuỗi "Mã - Tên"
+    public ArrayList<String> getDanhSachLoai() {
+        ArrayList<String> list = new ArrayList<>();
+        String sql = "SELECT MaLoai, TenLoai FROM LoaiSP "; 
+        
+        // Sử dụng try-with-resources đồng bộ với các hàm trên
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+             
+            while (rs.next()) {
+                String ma = rs.getString("MaLoai");
+                String ten = rs.getString("TenLoai");
+                list.add(ma + " - " + ten); 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Lấy danh sách hãng dưới dạng chuỗi "Mã - Tên"
+    public ArrayList<String> getDanhSachHang() {
+        ArrayList<String> list = new ArrayList<>();
+        String sql = "SELECT MaHang, TenHang FROM HangSX "; 
+        
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+             
+            while (rs.next()) {
+                String ma = rs.getString("MaHang");
+                String ten = rs.getString("TenHang");
+                list.add(ma + " - " + ten);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    // Hàm sinh mã tự động
+    public String getNextID() {
+        String sql = "SELECT MaSP FROM SanPham";
+        int maxId = 0;
+        
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String maSP = rs.getString("MaSP");
+                if (maSP != null) {
+                    try {
+                        int id = Integer.parseInt(maSP.replaceAll("[^0-9]", ""));
+                        if (id > maxId) {
+                            maxId = id;
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "SP" + String.format("%03d", maxId + 1);
+    }
+
 }

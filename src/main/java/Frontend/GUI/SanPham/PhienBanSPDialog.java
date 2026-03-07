@@ -5,6 +5,8 @@ import Backend.DTO.PhienBanSanPham;
 import Frontend.Compoent.CustomButton;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -17,13 +19,16 @@ public class PhienBanSPDialog extends JDialog {
         private PhienBanSanPhamBUS pbBUS = new PhienBanSanPhamBUS();
         private String maSPHT, tenSPHT;
         private boolean isEditMode;
+        private JLabel lblImage;
+        private ArrayList<PhienBanSanPham> listPhienBan; 
 
         public PhienBanSPDialog(JFrame parent, String maSP, String tenSP, boolean isEditMode) {
                 super(parent, isEditMode ? "Danh sách phiên bản - " + tenSP : "Danh sách phiên bản - " + tenSP, true);
                 this.maSPHT = maSP;
                 this.tenSPHT = tenSP;
                 this.isEditMode = isEditMode;
-                setSize(900, 500);
+                
+                setSize(1000, 550);
                 setLocationRelativeTo(null);
                 setLayout(new BorderLayout());
                 getContentPane().setBackground(Color.WHITE);
@@ -33,7 +38,6 @@ public class PhienBanSPDialog extends JDialog {
         }
 
         public void initComponents() {
-                // Header
                 JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 15));
                 pnlHeader.setBackground(Theme.PRIMARY_COLOR);
                 JLabel lblHeader = new JLabel(isEditMode ? "DANH SÁCH PHIÊN BẢN - " + tenSPHT.toUpperCase(): "DANH SÁCH PHIÊN BẢN - " + tenSPHT.toUpperCase());
@@ -41,6 +45,9 @@ public class PhienBanSPDialog extends JDialog {
                 lblHeader.setForeground(Color.WHITE);
                 pnlHeader.add(lblHeader);
                 add(pnlHeader, BorderLayout.NORTH);
+
+                JPanel pnlMain = new JPanel(new MigLayout("fill, insets 15", "[grow]15[280!]", "[grow]"));
+                pnlMain.setBackground(Color.WHITE);
 
                 String[] columns = { "Mã PB", "Màu Sắc", "Công Suất", "Pin", "Kết Nối", "Giá Nhập", "Giá Bán","Tồn Kho" };
                 model = new DefaultTableModel(columns, 0) {
@@ -54,12 +61,57 @@ public class PhienBanSPDialog extends JDialog {
 
                 JScrollPane scroll = new JScrollPane(tblPB);
                 scroll.getViewport().setBackground(Color.WHITE);
-                scroll.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-                add(scroll, BorderLayout.CENTER);
+                pnlMain.add(scroll, "grow");
 
-                // Footer
+                JPanel pnlPreview = new JPanel(new MigLayout("wrap 1, fill, insets 15", "[center]", "[center]"));
+                pnlPreview.setBackground(new Color(248, 249, 250));
+                pnlPreview.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+
+                lblImage = new JLabel("Chưa có hình ảnh", SwingConstants.CENTER);
+                lblImage.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+                pnlPreview.add(lblImage, "w 250!, h 250!");
+
+                pnlMain.add(pnlPreview, "growy"); 
+
+                add(pnlMain, BorderLayout.CENTER);
+
+                tblPB.getSelectionModel().addListSelectionListener(e -> {
+                    if (!e.getValueIsAdjusting()) {
+                        int row = tblPB.getSelectedRow();
+                        if (row != -1) {
+                            PhienBanSanPham pb = listPhienBan.get(row);
+                            if (pb.getHinhAnh() != null && !pb.getHinhAnh().isEmpty()) {
+                                loadProductImage(pb.getHinhAnh());
+                            } else {
+                                lblImage.setIcon(null);
+                                lblImage.setText("Không có ảnh");
+                            }
+                        }
+                    }
+                });
+
+                tblPB.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent e) {
+                        if (e.getClickCount() == 2) { 
+                            int row = tblPB.getSelectedRow();
+                            if (row != -1) {
+                                String maPB = tblPB.getValueAt(row, 0).toString();
+                                JFrame frameCha = (JFrame) SwingUtilities.getWindowAncestor(PhienBanSPDialog.this);
+                                ChiTietSPDialog dialog = new ChiTietSPDialog(frameCha, maPB, isEditMode);
+                                dialog.setVisible(true);
+                                
+                                if (isEditMode) {
+                                    loadData();
+                                }
+                            }
+                        }
+                    }
+                });
+
                 JPanel pnlFooter = new JPanel(new FlowLayout(FlowLayout.RIGHT));
                 pnlFooter.setBackground(Color.WHITE);
+                
                 if (isEditMode) {
                         CustomButton btnThem = new CustomButton("Thêm", Theme.ACCENT_COLOR);
                         CustomButton btnSua = new CustomButton("Sửa", Theme.WARNING_COLOR);
@@ -77,21 +129,6 @@ public class PhienBanSPDialog extends JDialog {
                         pnlFooter.add(btnQLCT);
 
                         addEditEvents(btnThem, btnSua, btnQLCT, btnXoa);
-                } else {
-                        CustomButton btnChiTiet = new CustomButton("Xem Chi Tiết", Theme.WARNING_COLOR);
-                        btnChiTiet.setPreferredSize(new Dimension(120, 40));
-                        pnlFooter.add(btnChiTiet);
-                        btnChiTiet.addActionListener(e -> {
-                                int selectedRow = tblPB.getSelectedRow();
-                                if (selectedRow == -1) {
-                                        JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 phiên bàn để xem chi tiết");
-                                        return;
-                                }
-                                String maPB = tblPB.getValueAt(selectedRow, 0).toString();
-                                JFrame frameCha = (JFrame) SwingUtilities.getWindowAncestor(this);
-                                ChiTietSPDialog dialog = new ChiTietSPDialog(frameCha, maPB, false);
-                                dialog.setVisible(true);
-                        });
                 }
 
                 CustomButton btnDong = new CustomButton("Thoát", new Color(149, 165, 166));
@@ -99,6 +136,24 @@ public class PhienBanSPDialog extends JDialog {
                 btnDong.addActionListener(e -> dispose());
                 pnlFooter.add(btnDong);
                 add(pnlFooter, BorderLayout.SOUTH);
+        }
+
+        private void loadProductImage(String imgName) {
+            try {
+                java.net.URL imgURL = getClass().getClassLoader().getResource("images/product/" + imgName);
+                if (imgURL != null) {
+                    ImageIcon icon = new ImageIcon(imgURL);
+                    Image scaled = icon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
+                    lblImage.setIcon(new ImageIcon(scaled));
+                    lblImage.setText(""); 
+                } else {
+                    lblImage.setIcon(null);
+                    lblImage.setText("Không tìm thấy ảnh");
+                }
+            } catch (Exception e) {
+                lblImage.setIcon(null);
+                lblImage.setText("Lỗi tải ảnh");
+            }
         }
 
         private void addEditEvents(JButton btnThem, JButton btnSua, JButton btnQLCT, JButton btnXoa) {
@@ -114,25 +169,9 @@ public class PhienBanSPDialog extends JDialog {
                                 JOptionPane.showMessageDialog(this, "Vui lòng chọn phiên bản để sửa!", "Thông báo",JOptionPane.WARNING_MESSAGE);
                                 return;
                         }
-                        PhienBanSanPham pb = new PhienBanSanPham();
-                        pb.setMaPhienBan(tblPB.getValueAt(row, 0).toString());
-                        pb.setMaSP(this.maSPHT);
-                        pb.setMauSac(tblPB.getValueAt(row, 1).toString());
-                        pb.setCongSuat(tblPB.getValueAt(row, 2).toString());
-                        pb.setPin(tblPB.getValueAt(row, 3).toString());
-                        pb.setKetNoi(tblPB.getValueAt(row, 4).toString());
-                        try {
-                                String giaNhapStr = tblPB.getValueAt(row, 5).toString().replaceAll("[^0-9]", "");
-                                String giaBanStr = tblPB.getValueAt(row, 6).toString().replaceAll("[^0-9]", "");
-                                String tonKhoStr = tblPB.getValueAt(row, 7).toString().replaceAll("[^0-9]", "");
-
-                                pb.setGiaNhap(Double.parseDouble(giaNhapStr));
-                                pb.setGiaBan(Double.parseDouble(giaBanStr));
-                                pb.setSoLuongTon(Integer.parseInt(tonKhoStr));
-                        } catch (Exception ex) {
-                                JOptionPane.showMessageDialog(this, "Lỗi chuyển đổi dữ liệu số!");
-                                return;
-                        }
+                        
+                        PhienBanSanPham pb = listPhienBan.get(row);
+                        
                         InputPhienBanDialog inputDlg = new InputPhienBanDialog((JFrame) SwingUtilities.getWindowAncestor(this), maSPHT, pb);
                         inputDlg.setVisible(true);
                         if (inputDlg.isSuccess()) {
@@ -163,7 +202,6 @@ public class PhienBanSPDialog extends JDialog {
 
                        if(op==JOptionPane.YES_OPTION){
                         if(pbBUS.delete(maPB)){
-                                //JOptionPane.showMessageDialog(this,"Xóa thành công");
                                 loadData();
                         }
                         else JOptionPane.showMessageDialog(this,"Xóa thất bại");
@@ -172,11 +210,11 @@ public class PhienBanSPDialog extends JDialog {
         }
 
         private void loadData() {
-                ArrayList<PhienBanSanPham> list = pbBUS.getByMaSP(maSPHT);
+                listPhienBan = pbBUS.getByMaSP(maSPHT); 
                 model.setRowCount(0);
                 DecimalFormat formatter = new DecimalFormat("###,###");
 
-                for (PhienBanSanPham pb : list) {
+                for (PhienBanSanPham pb : listPhienBan) {
                         model.addRow(new Object[] {
                                 pb.getMaPhienBan(),pb.getMauSac(),pb.getCongSuat(),pb.getPin(),pb.getKetNoi(),formatter.format(pb.getGiaNhap()),formatter.format(pb.getGiaBan()),pb.getSoLuongTon()
                         });
