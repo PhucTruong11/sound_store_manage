@@ -183,15 +183,11 @@ public class NhanVienTable extends JPanel {
         tbl.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (e.getClickCount() == 2) { // Kiểm tra double click
+                if (e.getClickCount() == 2) {
                     showDetail();
                 }
             }
         });
-
-        scrollPane = new JScrollPane(tbl);
-        scrollPane.setBorder(null);
-        add(scrollPane, "grow");
     }
 
     public void loadData() {
