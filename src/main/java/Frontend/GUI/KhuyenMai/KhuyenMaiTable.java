@@ -8,7 +8,7 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,40 +18,44 @@ public class KhuyenMaiTable extends JPanel {
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
     private KhuyenMaiBUS kmBUS;
-    private JComboBox<String> cboKM;
+    private JComboBox<String> cboStatus; // Đổi tên cho giống cboStatus bên Bảo hành
     private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
     private TableRowSorter<DefaultTableModel> sorter;
+    private String currentKeyword = "";
 
     public KhuyenMaiTable() {
         kmBUS = new KhuyenMaiBUS();
+        // Layout và màu nền WHITE giống hệt file BaoHanhTable bạn gửi
         setLayout(new MigLayout("wrap 1, fill, insets 10", "[grow]", "[]15[grow]"));
-        setBackground(Color.WHITE);
+        setBackground(Color.WHITE); 
         putClientProperty("FlatLaf.style", "arc: 20");
 
-        initFilterHeader();
+        initHeader(); // Đổi tên hàm cho khớp
         initTable();
         loadData();
     }
 
-    private void initFilterHeader() {
-        JPanel pnlHeader = new JPanel(new MigLayout("insets 10", "[]push[]"));
-        pnlHeader.setBackground(Color.WHITE);
+    private void initHeader() {
+        // Cấu trúc Header: insets 10, gapx 5 và không set Background (để lấy màu trắng của cha)
+        JPanel pnlHeader = new JPanel(new MigLayout("insets 10, gapx 5", "[]push[]"));
         pnlHeader.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
         
-        JLabel lblTitle = new JLabel("Chương trình khuyến mãi");
+        JLabel lblTitle = new JLabel("Khuyến mãi");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
-        cboKM = new JComboBox<>(new String[]{"Tất cả", "Đang hoạt động", "Ngừng hoạt động"});
-        cboKM.putClientProperty("FlatLaf.style", "arc: 10");
+        cboStatus = new JComboBox<>(new String[] {
+            "Tất cả trạng thái", "Đang hoạt động", "Ngừng hoạt động"
+        });
+        cboStatus.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+        
+        cboStatus.addActionListener(e -> applyFilters());
 
         pnlHeader.add(lblTitle);
-        pnlHeader.add(cboKM, "w 150!, h 30!");
-
+        pnlHeader.add(cboStatus, "w 200!, h 35!");
         add(pnlHeader, "growx");
     }
 
     private void initTable() {
-        // Đã xóa cột Điều kiện tối thiểu
         String[] header = {"STT", "Mã KM", "Tên chương trình", "% Giảm", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái"};
         tblModel = new DefaultTableModel(header, 0) {
             @Override
@@ -59,12 +63,20 @@ public class KhuyenMaiTable extends JPanel {
                 return false;
             }
         };
+
         tbl = new Table();
         tbl.setModel(tblModel);
+
         sorter = new TableRowSorter<>(tblModel);
         tbl.setRowSorter(sorter);
-        
+
+        // Căn giữa dữ liệu giống Bảo hành
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tbl.setDefaultRenderer(Object.class, centerRenderer);
+
         scrollPane = new JScrollPane(tbl);
+        scrollPane.setBorder(null); // Bỏ viền ScrollPane giống Bảo hành
         add(scrollPane, "grow");
     }
 
@@ -73,6 +85,7 @@ public class KhuyenMaiTable extends JPanel {
         displayData(kmBUS.getAllKhuyenMai());
     }
 
+    // Giữ tên displayData để KhuyenMaiToolbar gọi không bị lỗi symbol
     public void displayData(ArrayList<KhuyenMai> list) {
         tblModel.setRowCount(0);
         int stt = 1;
@@ -88,6 +101,32 @@ public class KhuyenMaiTable extends JPanel {
             };
             tblModel.addRow(row);
         }
+    }
+
+    // Cơ chế lọc applyFilters giống hệt Bảo hành
+    public void applyFilters() {
+        String status = cboStatus.getSelectedItem().toString().trim();
+        String keyword = currentKeyword.toLowerCase().trim();
+
+        sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
+            @Override
+            public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                // Cột 6 là Trạng thái
+                String trangThaiTable = entry.getStringValue(6);
+                String maKM = entry.getStringValue(1).toLowerCase();
+                String tenKM = entry.getStringValue(2).toLowerCase();
+
+                boolean matchSearch = keyword.isEmpty() || maKM.contains(keyword) || tenKM.contains(keyword);
+                boolean matchStatus = status.equals("Tất cả trạng thái") || trangThaiTable.equals(status);
+
+                return matchSearch && matchStatus;
+            }
+        });
+    }
+
+    public void loadDataBySearch(String query) {
+        this.currentKeyword = query.trim();
+        applyFilters();
     }
 
     public JTable getTbl() {

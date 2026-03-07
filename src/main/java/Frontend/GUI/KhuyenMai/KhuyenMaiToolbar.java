@@ -34,7 +34,9 @@ public class KhuyenMaiToolbar extends JPanel {
         txtSearch.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                table.displayData(kmBUS.search(txtSearch.getText()));
+                String query = txtSearch.getText();
+        // Gọi hàm này để vừa lọc theo từ khóa, vừa giữ bộ lọc ComboBox
+                table.loadDataBySearch(query);
             }
         });
 
