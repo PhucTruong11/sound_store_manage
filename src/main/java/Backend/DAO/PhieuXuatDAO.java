@@ -101,7 +101,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "PX000";
+        return "PX00";
     }
 
     public ArrayList<PhieuXuat> search(String keyword) {
@@ -138,7 +138,6 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             conn = DatabaseHelper.getConnection();
             conn.setAutoCommit(false);
 
-            // 1. Chèn phiếu xuất chính
             String sqlPX = "INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien, TrangThai) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement pstPX = conn.prepareStatement(sqlPX);
             pstPX.setString(1, px.getMaPhieuXuat());
@@ -150,13 +149,11 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             pstPX.setBoolean(7, true);
             pstPX.executeUpdate();
 
-            // 2. Chuẩn bị các câu lệnh Batch cho số lượng lớn
             String sqlCT = "INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES (?, ?, ?, ?)";
             String sqlSelectImei = "SELECT MaImei FROM ChiTietSP WHERE MaPhienBan = ? AND TinhTrang = 'Trong kho' LIMIT ?";
             String sqlUpdateImei = "UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = ? WHERE MaImei = ?";
             String sqlInsertBH = "INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc) VALUES (?, ?, ?, ?, ?)";
 
-            // CÂU LỆNH MỚI: Chèn nội dung bảo hành
             String sqlInsertCTBH = "INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES (?, ?, ?, ?)";
 
             PreparedStatement pstCT = conn.prepareStatement(sqlCT);
@@ -165,7 +162,6 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             PreparedStatement pstGetImei = conn.prepareStatement(sqlSelectImei);
             PreparedStatement pstInsCTBH = conn.prepareStatement(sqlInsertCTBH);
 
-            // Lấy số thứ tự bắt đầu cho BH và CTBH
             int currentNumBH = Integer.parseInt(generateMaBaoHanh().substring(2));
             int currentNumCTBH = Integer.parseInt(new ChiTietBaoHanhDAO().generateMaCTBH().substring(4));
 
@@ -176,7 +172,6 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
                 pstCT.setDouble(4, ct.getDonGia());
                 pstCT.addBatch();
 
-                // Lấy danh sách IMEI random có sẵn trong kho
                 pstGetImei.setString(1, ct.getMaPhienBan());
                 pstGetImei.setInt(2, ct.getSoLuong());
                 ResultSet rsImei = pstGetImei.executeQuery();
@@ -186,12 +181,10 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
                     countFound++;
                     String imeiReal = rsImei.getString("MaImei");
 
-                    // A. Cập nhật IMEI đã bán
                     pstUpImei.setString(1, px.getMaPhieuXuat());
                     pstUpImei.setString(2, imeiReal);
                     pstUpImei.addBatch();
 
-                    // B. Tạo phiếu Bảo hành mới gắn với IMEI này
                     String maBH = String.format("BH%02d", currentNumBH++);
                     pstInsBH.setString(1, maBH);
                     pstInsBH.setString(2, imeiReal);
@@ -204,10 +197,9 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
                     pstInsBH.setDate(5, new java.sql.Date(cal.getTimeInMillis()));
                     pstInsBH.addBatch();
 
-                    // C. QUAN TRỌNG NHẤT: Tự động tạo Chi tiết bảo hành cho MaBH vừa sinh ra
-                    String maCTBH = String.format("CTBH%02d", currentNumCTBH++);
+                    String maCTBH = "CT" + maBH;
                     pstInsCTBH.setString(1, maCTBH);
-                    pstInsCTBH.setString(2, maBH); // Khóa ngoại link tới BH vừa tạo
+                    pstInsCTBH.setString(2, maBH);
                     pstInsCTBH.setString(3, "Thiết bị mới xuất kho - Kích hoạt bảo hành điện tử");
                     pstInsCTBH.setString(4, "Hoàn thành");
                     pstInsCTBH.addBatch();
@@ -218,11 +210,10 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
                 }
             }
 
-            // Thực thi toàn bộ thay đổi trong 1 lượt để tối ưu hiệu năng
             pstCT.executeBatch();
             pstUpImei.executeBatch();
             pstInsBH.executeBatch();
-            pstInsCTBH.executeBatch(); // Thực thi chèn 100 chi tiết bảo hành
+            pstInsCTBH.executeBatch();
 
             conn.commit();
             return true;

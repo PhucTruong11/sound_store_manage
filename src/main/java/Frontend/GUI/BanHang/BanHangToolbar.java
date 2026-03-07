@@ -15,7 +15,6 @@ public class BanHangToolbar extends JPanel {
     private BanHangSidebar sidebar;
     private JComboBox<LoaiSP> cbFilter;
 
-
     public BanHangToolbar(ProductGrid productGrid, BanHangSidebar sidebar) {
         this.productGrid = productGrid;
         this.sidebar = sidebar;
