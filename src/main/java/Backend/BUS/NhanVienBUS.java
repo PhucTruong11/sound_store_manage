@@ -75,6 +75,3 @@ public class NhanVienBUS {
         return "OK";
     }
 }
-
-    
-
