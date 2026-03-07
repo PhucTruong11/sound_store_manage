@@ -107,7 +107,7 @@ public class KhuyenMaiToolbar extends JPanel {
         // --- Action Xuất Excel ---
         btnExcel.addActionListener(e -> {
             // Sẽ triển khai khi bạn có class ExcelUtil
-            JOptionPane.showMessageDialog(this, "Chức năng xuất Excel đang được xử lý!");
+            Frontend.Compoent.XuatExcel.xuat(table.getTbl());
         });
     }
 }
