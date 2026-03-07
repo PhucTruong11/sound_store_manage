@@ -413,25 +413,25 @@ INSERT INTO ChiTietQuyen (MaNhomQuyen, MaChucNang, HanhDong) VALUES
 ('NQ03', 'NHACUNGCAP', 'create');
 
 INSERT INTO ConNguoi (ID, HoTen, SDT, DiaChi) VALUES 
-('NV01', 'Trương Phúc', '0909123456', 'Đà Nẵng'),
-('NV02', 'Lê Văn Nam', '0909123457', 'Hà Nội'),
-('NV03', 'Nguyễn Văn Kho', '0909999888', 'Hải Phòng'),
-('KH01', 'Nguyễn Khách', '0912345678', 'TP.HCM'),
-('KH02', 'Trần VIP', '0987654321', 'Cần Thơ');
+('NV001', 'Trương Phúc', '0909123456', 'Đà Nẵng'),
+('NV002', 'Lê Văn Nam', '0909123457', 'Hà Nội'),
+('NV003', 'Nguyễn Văn Kho', '0909999888', 'Hải Phòng'),
+('KH001', 'Nguyễn Khách', '0912345678', 'TP.HCM'),
+('KH002', 'Trần VIP', '0987654321', 'Cần Thơ');
 
 INSERT INTO NhanVien (ID, ChucVu, Email, Luong) VALUES 
-('NV01', 'Quản lý', 'phuc@sw.com', 20000000),
-('NV02', 'Nhân viên bán hàng', 'nam@sw.com', 10000000),
-('NV03', 'Nhân viên kho', 'kho@sw.com', 12000000);
+('NV001', 'Quản lý', 'phuc@sw.com', 20000000),
+('NV002', 'Nhân viên bán hàng', 'nam@sw.com', 10000000),
+('NV003', 'Nhân viên kho', 'kho@sw.com', 12000000);
 
 INSERT INTO KhachHang (ID) VALUES 
-('KH01'),
-('KH02');
+('KH001'),
+('KH002');
 
 INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai) VALUES 
-('admin', '123456', 'NV01', 'NQ01', 1), 
-('nhanvien', '123456', 'NV02', 'NQ02', 1),
-('kho', '123456', 'NV03', 'NQ03', 1);
+('admin', '123456', 'NV001', 'NQ01', 1), 
+('nhanvien', '123456', 'NV002', 'NQ02', 1),
+('kho', '123456', 'NV003', 'NQ03', 1);
 -- --------------------------------------------------------
 
 INSERT INTO LoaiSP VALUES 
@@ -505,12 +505,20 @@ INSERT INTO PhienBanSP VALUES
 -- --------------------------------------------------------
 
 INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt) VALUES 
-('NCC01', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333089'),
-('NCC02', 'B&O', 'Q7, TP.HCM', '0961254087'),
-('NCC03', 'Bose', 'Hà Nội', '0991299099');
+('NCC001', 'Marshall VN Dist', 'Q1, TP.HCM', '0283333089'),
+('NCC002', 'B&O', 'Q7, TP.HCM', '0961254087'),
+('NCC003', 'Bose', 'Hà Nội', '0991299099');
 
 INSERT INTO PhieuNhap (MaPhieuNhap, MaNV, MaNCC) VALUES 
-('PN01', 'NV01', 'NCC01');
+('PN001', 'NV001', 'NCC001');
+
+INSERT INTO PhieuNhap (MaPhieuNhap, NgayNhap, MaNV, MaNCC, TongTien) VALUES 
+('PN002', '2026-01-10 08:00:00', 'NV001', 'NCC001', 150000000),
+('PN003', '2026-01-20 14:00:00', 'NV001', 'NCC003', 85000000),
+('PN004', '2026-02-05 10:30:00', 'NV001', 'NCC002', 120000000),
+('PN005', '2026-02-25 16:00:00', 'NV001', 'NCC001', 95000000),
+('PN006', '2026-03-02 09:00:00', 'NV001', 'NCC003', 210000000),
+('PN007', '2026-03-05 13:00:00', 'NV001', 'NCC001', 45000000);
 
 INSERT INTO ChiTietPhieuNhap (MaPhieuNhap, MaPhienBan, SoLuong, DonGia) VALUES 
 ('PN01', 'PB01', 1, 7000000);
@@ -529,26 +537,48 @@ INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES
 -- ------------------------------------------------------
 
 INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc, TrangThai) VALUES 
-('KM01', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31', 1), 
-('KM02', 'Siêu sale Black Friday', 5000000, 20, '2026-11-20', '2026-11-30', 1),
-('KM03', 'Hè rực rỡ', 0, 5, '2026-06-01', '2026-08-31', 1),
-('KM04', 'Chào năm mới 2027', 2000000, 15, '2026-12-25', '2027-01-05', 1),
-('KM05', 'Tri ân khách hàng VIP', 10000000, 25, '2026-01-01', '2026-12-31', 1),
-('KM06', 'Giảm giá cuối tháng', 1000000, 8, '2026-03-25', '2026-03-31', 1);
+('KM001', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31', 1), 
+('KM002', 'Siêu sale Black Friday', 5000000, 20, '2026-11-20', '2026-11-30', 1),
+('KM003', 'Hè rực rỡ', 0, 5, '2026-06-01', '2026-08-31', 1),
+('KM004', 'Chào năm mới 2027', 2000000, 15, '2026-12-25', '2027-01-05', 1),
+('KM005', 'Tri ân khách hàng VIP', 10000000, 25, '2026-01-01', '2026-12-31', 1),
+('KM006', 'Giảm giá cuối tháng', 1000000, 8, '2026-03-25', '2026-03-31', 1);
 
 INSERT INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, MaKM) VALUES 
-('PX01', 'NV01', 'KH01', 'KM01');
+('PX001', 'NV001', 'KH001', 'KM001');
+
+INSERT INTO PhieuXuat (MaPhieuXuat, NgayXuat, MaNV, MaKH, MaKM, TongTien) VALUES 
+('PX003', '2026-02-22 15:00:00', 'NV001', 'KH001', 'KM001', 19000000),
+('PX004', '2026-02-25 10:20:00', 'NV001', 'KH002', 'KM005', 25000000),
+('PX005', '2026-02-28 18:00:00', 'NV001', 'KH001', NULL, 11900000),
+('PX006', '2026-03-01 09:15:00', 'NV001', 'KH001', 'KM003', 8500000),
+('PX007', '2026-03-02 11:30:00', 'NV001', 'KH002', NULL, 12500000),
+('PX008', '2026-03-03 16:45:00', 'NV001', 'KH001', 'KM006', 7500000),
+('PX009', '2026-03-04 10:00:00', 'NV001', 'KH002', 'KM001', 9500000),
+('PX010', '2026-03-05 14:20:00', 'NV001', 'KH001', NULL, 21000000),
+('PX011', '2026-03-06 17:10:00', 'NV001', 'KH002', 'KM006', 15000000),
+('PX012', '2026-03-07 08:30:00', 'NV001', 'KH001', 'KM001', 28500000);
+
 
 INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES 
-('PX01', 'PB01', 1, 8550000);
+('PX001', 'PB001', 1, 8550000),
+('PX006', 'PB001', 1, 8500000), 
+('PX007', 'PB003', 1, 12500000),
+('PX008', 'PB009', 1, 7500000), 
+('PX009', 'PB002', 1, 9500000),
+('PX010', 'PB018', 2, 10500000), 
+('PX011', 'PB002', 2, 7500000),
+('PX012', 'PB001', 3, 9500000);
+
 
 UPDATE ChiTietSP 
 SET TinhTrang = 'Trong kho', MaPhieuXuat = NULL 
 WHERE MaImei IN ('111222333', '444555666', '777888999');
 
 UPDATE ChiTietSP 
-SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX01' 
+SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX001' 
 WHERE MaImei = '111222333';
+
 
 INSERT IGNORE INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, TongTien) VALUES 
 ('PX01', 'NV01', 'KH01', 8550000);
@@ -577,32 +607,32 @@ INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES
 -- ('CTBH07', 'BH07', 'Hỏng da đệm tai (Earpads)', 'Đang sửa chữa'),
 
 INSERT INTO NCC_SanPham VALUES 
-('NCC01', 'SP01'), 
-('NCC03', 'SP03'),
-('NCC01', 'SP04'), 
-('NCC01', 'SP05'), 
-('NCC02', 'SP06'), 
-('NCC02', 'SP07'), 
-('NCC03', 'SP08'), 
-('NCC03', 'SP09'), 
-('NCC03', 'SP10'),
-('NCC03', 'SP11'), 
-('NCC03', 'SP12'), 
-('NCC02', 'SP13'), 
-('NCC03', 'SP14'), 
-('NCC03', 'SP15'), 
-('NCC02', 'SP16'), 
-('NCC01', 'SP17'), 
-('NCC03', 'SP18'), 
-('NCC03', 'SP19'), 
-('NCC02', 'SP20'), 
-('NCC01', 'SP21'), 
-('NCC01', 'SP22'), 
-('NCC03', 'SP23'), 
-('NCC02', 'SP24'), 
-('NCC02', 'SP25'), 
-('NCC02', 'SP26'), 
-('NCC03', 'SP27');
+('NCC001', 'SP001'), 
+('NCC003', 'SP003'),
+('NCC001', 'SP004'), 
+('NCC001', 'SP005'), 
+('NCC002', 'SP006'), 
+('NCC002', 'SP007'), 
+('NCC003', 'SP008'), 
+('NCC003', 'SP009'), 
+('NCC003', 'SP010'),
+('NCC003', 'SP011'), 
+('NCC003', 'SP012'), 
+('NCC002', 'SP013'), 
+('NCC003', 'SP014'), 
+('NCC003', 'SP015'), 
+('NCC002', 'SP016'), 
+('NCC001', 'SP017'), 
+('NCC003', 'SP018'), 
+('NCC003', 'SP019'), 
+('NCC002', 'SP020'), 
+('NCC001', 'SP021'), 
+('NCC001', 'SP022'), 
+('NCC003', 'SP023'), 
+('NCC002', 'SP024'), 
+('NCC002', 'SP025'), 
+('NCC002', 'SP026'), 
+('NCC003', 'SP027');
 
 INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang)
 SELECT 

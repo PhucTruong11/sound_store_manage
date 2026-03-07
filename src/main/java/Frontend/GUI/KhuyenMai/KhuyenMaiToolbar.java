@@ -34,7 +34,9 @@ public class KhuyenMaiToolbar extends JPanel {
         txtSearch.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                table.displayData(kmBUS.search(txtSearch.getText()));
+                String query = txtSearch.getText();
+        // Gọi hàm này để vừa lọc theo từ khóa, vừa giữ bộ lọc ComboBox
+                table.loadDataBySearch(query);
             }
         });
 
@@ -107,7 +109,7 @@ public class KhuyenMaiToolbar extends JPanel {
         // --- Action Xuất Excel ---
         btnExcel.addActionListener(e -> {
             // Sẽ triển khai khi bạn có class ExcelUtil
-            JOptionPane.showMessageDialog(this, "Chức năng xuất Excel đang được xử lý!");
+            Frontend.Compoent.XuatExcel.xuat(table.getTbl());
         });
     }
 }

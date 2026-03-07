@@ -55,9 +55,7 @@ public class ThongKeDAO {
     }
 
     public void getTop5SanPham(DefaultCategoryDataset dataset, String type) {
-        dataset.clear(); // Xóa dữ liệu cũ trước khi nạp mới
-    
-        // Xác định điều kiện lọc thời gian
+        dataset.clear();
         String timeCondition = "";
         if (type.equals("Ngày")) timeCondition = "DATE(px.NgayXuat) = CURDATE()";
         else if (type.equals("Tháng")) timeCondition = "MONTH(px.NgayXuat) = MONTH(CURDATE()) AND YEAR(px.NgayXuat) = YEAR(CURDATE())";
@@ -75,15 +73,14 @@ public class ThongKeDAO {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                dataset.addValue(rs.getInt("TongSL"), "Đã bán", rs.getString("TenSP"));
+                dataset.addValue(rs.getInt("TongSL"), "Sản phẩm", rs.getString("TenSP"));
             }
         } catch (Exception e) { e.printStackTrace(); }
     }
 
     public void getTiTrongDoanhThuLoai(DefaultPieDataset dataset, String type) {
-        dataset.clear(); // Xóa dữ liệu cũ trước khi nạp mới
+        dataset.clear();
     
-        // Xác định điều kiện lọc thời gian
         String timeCondition = "";
         if (type.equals("Ngày")) timeCondition = "DATE(px.NgayXuat) = CURDATE()";
         else if (type.equals("Tháng")) timeCondition = "MONTH(px.NgayXuat) = MONTH(CURDATE()) AND YEAR(px.NgayXuat) = YEAR(CURDATE())";
@@ -103,6 +100,27 @@ public class ThongKeDAO {
             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 dataset.setValue(rs.getString("TenLoai"), rs.getDouble("DoanhThu"));
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public void getXuHuongTrongThang(DefaultCategoryDataset dataset) {
+        dataset.clear();
+        // Lấy dữ liệu 15 ngày gần nhất
+        String sql = "SELECT DATE_FORMAT(NgayXuat, '%d/%m') as Ngay, " +
+                    "COUNT(DISTINCT MaKH) as SLKhach, " +
+                    "COUNT(MaPhieuXuat) as SLDonHang " +
+                    "FROM PhieuXuat " +
+                    "WHERE NgayXuat >= DATE_SUB(CURDATE(), INTERVAL 15 DAY) AND TrangThai = TRUE " +
+                    "GROUP BY Ngay ORDER BY NgayXuat ASC";
+
+        try (Connection conn = Backend.DatabaseHelper.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                String ngay = rs.getString("Ngay");
+                dataset.addValue(rs.getInt("SLKhach"), "Khách hàng", ngay);
+                dataset.addValue(rs.getInt("SLDonHang"), "Đơn hàng", ngay);
             }
         } catch (Exception e) { e.printStackTrace(); }
     }

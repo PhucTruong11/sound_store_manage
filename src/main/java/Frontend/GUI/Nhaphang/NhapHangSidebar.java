@@ -228,4 +228,14 @@ public class NhapHangSidebar extends JPanel {
         lblTenSP.setText(ten);
         lblTonKho.setText("Tồn kho hiện tại: " + ton);
     }
+
+    public String getSelectedMaNCC() {
+        if (cbxNhaCungCap != null && cbxNhaCungCap.getSelectedItem() !=null) {
+            NhaCungCap selected = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
+            if (!selected.getMaNCC().equals("All")) {
+                return selected.getMaNCC();
+            }
+        }
+        return "NCC001";
+    }
 }
