@@ -33,7 +33,6 @@ public class MainFrame extends JFrame {
         // 1. Xử lý hình ảnh
         JLabel lblImage = new JLabel();
         try {
-            // Lưu ý: Đảm bảo file ảnh tồn tại trong src/main/resources/images/
             ImageIcon icon = new ImageIcon(getClass().getResource("/images/isometric-logistics-delivery-composition-with-images-shelves-parcel-boxes-human-characters-workers-vector-illustration.png"));
             Image scaled = icon.getImage().getScaledInstance(600, -1, Image.SCALE_SMOOTH);
             lblImage.setIcon(new ImageIcon(scaled));
