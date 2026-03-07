@@ -390,7 +390,6 @@ SELECT 'NQ01', MaChucNang, act
 FROM ChucNang
 CROSS JOIN (SELECT 'read' AS act UNION SELECT 'create' UNION SELECT 'update' UNION SELECT 'delete') AS actions;
 
-
 INSERT INTO ChiTietQuyen (MaNhomQuyen, MaChucNang, HanhDong) VALUES 
 ('NQ02', 'BANHANG', 'read'), 
 ('NQ02', 'BANHANG', 'create'), 
@@ -568,20 +567,16 @@ INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc, TinhTra
 ('BH02', '444555666', 'PX01', '2026-01-10', '2027-01-10', 'Đã trả máy'),
 ('BH03', '777888999', 'PX01', '2026-02-05', '2027-02-05', 'Đang sửa chữa'), 
 ('BH04', '123123123', 'PX02', '2026-02-22', '2027-02-22', 'Hoàn thành'),
-('BH05', '456456456', 'PX02', '2026-02-24', '2027-02-24', 'Đang sửa chữa'), 
-('BH06', '333111001', 'PX02', '2026-02-25', '2027-02-25', 'Đang sửa chữa');
-
+('BH05', '456456456', 'PX02', '2026-02-24', '2027-02-24', 'Đang sửa chữa');
 
 INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang) VALUES 
 ('CTBH01', 'BH01', 'Loa bị rè bass', 'Đang sửa chữa'),
 ('CTBH02', 'BH02', 'Lỗi kết nối Bluetooth chập chờn', 'Đã trả máy'),
-('CTBH03', 'BH02', 'Vệ sinh chân sạc miễn phí', 'Đã trả máy'),
-('CTBH04', 'BH03', 'Hỏng pin - Sạc không vào điện', 'Đang sửa chữa'),
-('CTBH05', 'BH04', 'Khách báo chống ồn ANC hoạt động chập chờn', 'Đang sửa chữa'),
-('CTBH06', 'BH04', 'Cập nhật lại Firmware phiên bản mới nhất', 'Hoàn thành'),
-('CTBH07', 'BH05', 'Hỏng da đệm tai (Earpads)', 'Đang sửa chữa'),
-('CTBH08', 'BH06', 'Loa không lên nguồn', 'Đang sửa chữa'),
-('CTBH09', 'BH06', 'Kiểm tra pin và mạch sạc', 'Đang sửa chữa');
+('CTBH03', 'BH03', 'Vệ sinh chân sạc miễn phí', 'Đã trả máy'),
+('CTBH04', 'BH04', 'Hỏng pin - Sạc không vào điện', 'Đang sửa chữa'),
+('CTBH05', 'BH05', 'Khách báo chống ồn ANC hoạt động chập chờn', 'Đang sửa chữa');
+-- ('CTBH06', 'BH06', 'Cập nhật lại Firmware phiên bản mới nhất', 'Hoàn thành'),
+-- ('CTBH07', 'BH07', 'Hỏng da đệm tai (Earpads)', 'Đang sửa chữa'),
 
 INSERT INTO NCC_SanPham VALUES 
 ('NCC01', 'SP01'), 
@@ -611,3 +606,11 @@ INSERT INTO NCC_SanPham VALUES
 ('NCC02', 'SP26'), 
 ('NCC03', 'SP27');
 
+INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang)
+SELECT 
+    CONCAT('CT', MaBH), 
+    MaBH, 
+    'Kích hoạt bảo hành điện tử cho thiết bị mới', 
+    'Hoàn thành' 
+FROM BaoHanh AS b 
+WHERE MaBH NOT IN (SELECT MaBH FROM ChiTietBaoHanh);

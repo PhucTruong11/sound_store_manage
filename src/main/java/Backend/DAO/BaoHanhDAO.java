@@ -33,7 +33,8 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
         String sql = "SELECT bh.*, " +
                 "(SELECT TinhTrang FROM ChiTietBaoHanh WHERE MaBH = bh.MaBH ORDER BY MaCTBH DESC LIMIT 1) AS TinhTrang "
                 +
-                "FROM BaoHanh bh ORDER BY bh.NgayBatDau DESC";
+                "FROM BaoHanh bh " +
+                "ORDER BY CAST(SUBSTRING(bh.MaBH, 3) AS UNSIGNED) ASC";
 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
@@ -118,7 +119,7 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
                 "LEFT JOIN ChiTietSP ctsp ON bh.MaImei = ctsp.MaImei " +
                 "LEFT JOIN PhienBanSP pb ON ctsp.MaPhienBan = pb.MaPhienBan " +
                 "LEFT JOIN SanPham sp ON pb.MaSP = sp.MaSP " +
-                "ORDER BY bh.NgayBatDau DESC";
+                "ORDER BY CAST(SUBSTRING(bh.MaBH, 3) AS UNSIGNED) ASC";
 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
@@ -129,18 +130,11 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
                 bh.setMaBH(rs.getString("MaBH"));
                 bh.setMaImei(rs.getString("MaImei"));
                 bh.setMaPhieuXuat(rs.getString("MaPhieuXuat"));
-
-                Date bd = rs.getDate("NgayBatDau");
-                if (bd != null)
-                    bh.setNgayBatDau(bd.toLocalDate());
-
-                Date kt = rs.getDate("NgayKetThuc");
-                if (kt != null)
-                    bh.setNgayKetThuc(kt.toLocalDate());
-
+                bh.setNgayBatDau(rs.getDate("NgayBatDau").toLocalDate());
+                bh.setNgayKetThuc(rs.getDate("NgayKetThuc").toLocalDate());
                 bh.setTenSP(rs.getString("TenSP"));
-                bh.setTinhTrang(rs.getString("TinhTrang"));
-
+                String tt = rs.getString("TinhTrang");
+                bh.setTinhTrang(tt != null ? tt : "Đang sửa chữa");
                 list.add(bh);
             }
         } catch (Exception e) {
@@ -165,18 +159,18 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
     }
 
     public String generateMaBH() {
-    String sql = "SELECT MaBH FROM BaoHanh ORDER BY CAST(SUBSTRING(MaBH, 3) AS UNSIGNED) DESC LIMIT 1";
-    try (Connection conn = DatabaseHelper.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql);
-         ResultSet rs = stmt.executeQuery()) {
-        if (rs.next()) {
-            String lastMa = rs.getString("MaBH");
-            int num = Integer.parseInt(lastMa.substring(2)); 
-            return String.format("BH%02d", num + 1);
+        String sql = "SELECT MaBH FROM BaoHanh ORDER BY CAST(SUBSTRING(MaBH, 3) AS UNSIGNED) DESC LIMIT 1";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery()) {
+            if (rs.next()) {
+                String lastMa = rs.getString("MaBH");
+                int num = Integer.parseInt(lastMa.substring(2));
+                return String.format("BH%02d", num + 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    } catch (Exception e) {
-        e.printStackTrace();
+        return "BH01";
     }
-    return "BH01"; 
-}
 }

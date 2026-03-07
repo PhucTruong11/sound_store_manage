@@ -42,7 +42,7 @@ public class BaoHanhTable extends JPanel {
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
         cboStatus = new JComboBox<>(new String[] {
-                "Tất cả trạng thái", "Đang sửa chữa", "Đã trả máy"
+                "Tất cả trạng thái", "Đang sửa chữa", "Hoàn thành", "Đã trả máy"
         });
         cboStatus.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
@@ -87,22 +87,22 @@ public class BaoHanhTable extends JPanel {
     }
 
     public void applyFilters() {
-        String status = cboStatus.getSelectedItem().toString();
-        String keyword = currentKeyword.toLowerCase();
+        String status = cboStatus.getSelectedItem().toString().trim();
+        String keyword = currentKeyword.toLowerCase().trim();
 
         sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
             @Override
             public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
+                Object value6 = entry.getValue(6);
+                String trangThaiThucTe = (value6 != null) ? value6.toString().trim() : "";
+
                 String maBH = entry.getStringValue(1).toLowerCase();
                 String imei = entry.getStringValue(2).toLowerCase();
-                String trangThai = entry.getStringValue(6);
 
-                boolean matchSearch = keyword.isEmpty()
-                        || maBH.contains(keyword)
-                        || imei.contains(keyword);
+                boolean matchSearch = keyword.isEmpty() || maBH.contains(keyword) || imei.contains(keyword);
 
                 boolean matchStatus = status.equals("Tất cả trạng thái")
-                        || trangThai.equalsIgnoreCase(status);
+                        || trangThaiThucTe.equals(status);
 
                 return matchSearch && matchStatus;
             }

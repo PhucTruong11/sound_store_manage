@@ -55,4 +55,8 @@ public class PhieuXuatBUS {
         }
         return result;
     }
+
+    public double getPhanTramGiamCuaPhieu(String maPX) {
+        return pxDAO.getDiscountPercentage(maPX);
+    }
 }
