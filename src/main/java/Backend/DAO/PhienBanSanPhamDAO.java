@@ -26,6 +26,7 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
                         pbsp.setGiaBan(rs.getDouble("GiaBan"));
                         pbsp.setSoLuongTon(rs.getInt("SoLuongTon"));
                         pbsp.setTrangThai(rs.getBoolean("TrangThai"));
+                        pbsp.setHinhAnh(rs.getString("HinhAnh"));
 
                 pbsp.setTenSP(rs.getString("TenSP"));
                 list.add(pbsp);
@@ -54,7 +55,8 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
                         rs.getDouble("GiaNhap"),
                         rs.getDouble("GiaBan"),
                         rs.getInt("SoLuongTon"),
-                        rs.getBoolean("TrangThai"));
+                        rs.getBoolean("TrangThai"),
+                        rs.getString("HinhAnh"));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,7 +187,8 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
                         rs.getDouble("GiaNhap"),
                         rs.getDouble("GiaBan"),
                         rs.getInt("SoLuongTon"),
-                        rs.getBoolean("TrangThai"));
+                        rs.getBoolean("TrangThai"),
+                        rs.getString("HinhAnh"));
                 list.add(pb);
             }
         } catch (Exception e) {
@@ -193,6 +196,34 @@ public class PhienBanSanPhamDAO implements DAOInterface<PhienBanSanPham> {
         }
         return list;
     }
+
+    public String getNextID() {
+        String sql = "SELECT MaPhienBan FROM PhienBanSP";
+        int maxId = 0;
+        
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String maPB = rs.getString("MaPhienBan");
+                if (maPB != null) {
+                    try {
+                        int id = Integer.parseInt(maPB.replaceAll("[^0-9]", ""));
+                        if (id > maxId) {
+                            maxId = id;
+                        }
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "PB" + String.format("%03d", maxId + 1);
+    }
+    
+    
 
    
 }

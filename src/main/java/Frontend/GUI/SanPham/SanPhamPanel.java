@@ -10,13 +10,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import net.miginfocom.swing.MigLayout;
 
-public class QuanlyamthanhPanel extends JPanel {
+public class SanPhamPanel extends JPanel {
     
     private SanPhamBUS spBUS = new SanPhamBUS();
     private SanPhamToolbar toolbar; 
     private SanPhamTable table;
 
-    public QuanlyamthanhPanel() {
+    public SanPhamPanel() {
         setLayout(new MigLayout("fill, insets 10, gap 10", "[grow]", "[]10[grow]"));
         setBackground(new Color(237, 241, 245));
         initComponents();
@@ -41,7 +41,7 @@ public class QuanlyamthanhPanel extends JPanel {
                     if(selectedRow!=-1){
                         String maSP=tbl.getValueAt(selectedRow,1).toString();
                         String tenSP=tbl.getValueAt(selectedRow,2).toString();
-                        JFrame frameCha=(JFrame) SwingUtilities.getWindowAncestor(QuanlyamthanhPanel.this);
+                        JFrame frameCha=(JFrame) SwingUtilities.getWindowAncestor(SanPhamPanel.this);
                         PhienBanSPDialog dialog = new PhienBanSPDialog(frameCha, maSP, tenSP,false);
                         dialog.setVisible(true);
                     }
@@ -51,12 +51,7 @@ public class QuanlyamthanhPanel extends JPanel {
     }
     // Load dữ liệu 
     public void loadData() {
-        // String tuKhoa = toolbar.getKeyword();
-        // String phanLoai = table.getComboBox().getSelectedItem().toString();
-
         ArrayList<SanPham> list = spBUS.getAll();
-
-       // ArrayList<Amthanh> list = amthanhBUS.timKiemSanPham(tuKhoa, phanLoai);
 
         table.showData(list);
     }

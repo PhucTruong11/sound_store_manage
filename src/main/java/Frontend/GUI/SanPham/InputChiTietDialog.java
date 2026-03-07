@@ -12,38 +12,31 @@ public class InputChiTietDialog extends ThaoTacDialog  {
     private JTextField txtIMEI, txtMaPB, txtMaPN, txtMaPX;
     private JComboBox<String> cboTinhTrang;
     private ChiTietSPBUS ctBUS = new ChiTietSPBUS();
-    private boolean isUpdate = false;
     private boolean isSuccess = false;
     private String maPB;
 
     public InputChiTietDialog(JFrame parent, String maPB, ChiTietSP ct) {
-        super(parent, ct == null ? "THÊM IMEI MỚI" : "CẬP NHẬT THÔNG TIN", 450,500 );
+        super(parent, "CẬP NHẬT THÔNG TIN", 450, 500);
         this.maPB = maPB;
-        this.isUpdate = (ct != null);
         
-        // Điền dữ liệu nếu là form sửa
-        if (isUpdate) {
+        if (ct != null) {
             fillData(ct);
-            txtMaPB.setEditable(false);
-            txtMaPB.setFocusable(false);
-            txtMaPN.setEditable(false);
-            txtMaPN.setFocusable(false);
-            txtMaPX.setEditable(false);
-            txtMaPX.setFocusable(false);
-        } else {
-            txtMaPB.setText(maPB);
-            txtMaPN.setText("N/A"); 
-            txtMaPX.setText("N/A"); 
-            cboTinhTrang.setSelectedItem("Tồn kho");
         }
+
+        txtMaPB.setEditable(false);
+        txtMaPB.setFocusable(false);
+        txtMaPN.setEditable(false);
+        txtMaPN.setFocusable(false);
+        txtMaPX.setEditable(false);
+        txtMaPX.setFocusable(false);
+        txtIMEI.setEditable(false);
+        txtIMEI.setFocusable(false);
     }
 
     @Override
-    protected void initForm(){
-    
+    protected void initForm() {
         pnlContent.add(new JLabel("Mã IMEI:")); 
         txtIMEI = new JTextField();
-        txtIMEI.setEditable(!isUpdate);
         pnlContent.add(txtIMEI, "growx,h 35!");
         
         pnlContent.add(new JLabel("Mã Phiên Bản:"));
@@ -59,8 +52,7 @@ public class InputChiTietDialog extends ThaoTacDialog  {
         pnlContent.add(txtMaPX, "growx,h 35!");
 
         pnlContent.add(new JLabel("Tình Trạng:"));
-        String[] tinhTrang = {"Tồn kho", "Đã bán", "Lỗi"};
-        cboTinhTrang = new JComboBox<>(tinhTrang);
+        cboTinhTrang = new JComboBox<>(new String[]{"Trong kho", "Lỗi"});
         cboTinhTrang.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         cboTinhTrang.setBackground(Color.WHITE);
         pnlContent.add(cboTinhTrang, "growx, h 35!");
@@ -76,39 +68,21 @@ public class InputChiTietDialog extends ThaoTacDialog  {
 
     @Override
     protected void logicXacNhan() {
-        if (txtIMEI.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã IMEI!");
-            return;
-        }
         ChiTietSP ct = new ChiTietSP();
         ct.setMaImei(txtIMEI.getText().trim());
         ct.setMaPhienBan(maPB);
         ct.setTinhTrang(cboTinhTrang.getSelectedItem().toString());
-        ct.setMaPhieuNhap(null); 
-        ct.setMaPhieuXuat(null);
-        boolean ketQua;
+        String pn = txtMaPN.getText().trim();
+        ct.setMaPhieuNhap(pn.equals("N/A") ? null : pn); 
+        String px = txtMaPX.getText().trim();
+        ct.setMaPhieuXuat(px.equals("N/A") ? null : px);
 
-        if (isUpdate) {
-            if (ctBUS.update(ct)) {
-                JOptionPane.showMessageDialog(this, "Cập nhật trạng thái thành công!");
-                ketQua = true;
-            } else {
-                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
-                ketQua = false;
-            }
-        } else {
-            if (ctBUS.add(ct)) {
-                JOptionPane.showMessageDialog(this, "Thêm IMEI thành công!");
-                ketQua = true;
-            } else {
-                JOptionPane.showMessageDialog(this, "Thêm thất bại (IMEI đã tồn tại)!");
-                ketQua = false;
-            }
-        }
-
-        if (ketQua) {
+        if (ctBUS.update(ct)) {
             isSuccess = true;
             dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            isSuccess = false;
         }
     }
     

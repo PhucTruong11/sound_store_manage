@@ -21,15 +21,12 @@ public class InputPhienBanDialog extends ThaoTacDialog {
 
         if (isUpdate) {
             fillData(pb);
-            txtMaPB.setEditable(false);
-            txtMaPB.setFocusable(false);
         } else {
             txtSoLuong.setText("0");
             txtMaPB.setText(pbBUS.getNextID());
-            txtMaPB.setEditable(false);
-            txtMaPB.setFocusable(false);
         }
-
+        txtMaPB.setEditable(false);
+        txtMaPB.setFocusable(false);
         txtSoLuong.setEditable(false);
         txtSoLuong.setFocusable(false);
     }

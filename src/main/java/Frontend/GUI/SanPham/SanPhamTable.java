@@ -5,6 +5,7 @@ import Frontend.Compoent.Theme;
 import Backend.DTO.SanPham;
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.table.TableRowSorter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -30,15 +31,38 @@ public class SanPhamTable extends JPanel {
         JPanel pnlHeader = new JPanel(new MigLayout("insets 10", "[]push[]"));
         pnlHeader.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
-        // Tiêu đề
         JLabel lblTitle = new JLabel("Sản Phẩm");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
-        // Phân loại
         cboPhanLoai = new JComboBox<>(new String[] { "Tất cả", "Loa", "Tai nghe", "Phụ kiện" });
         cboPhanLoai.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         cboPhanLoai.setBackground(Color.WHITE);
         cboPhanLoai.setFocusable(false);
         cboPhanLoai.setPreferredSize(new Dimension(130, 30));
+        cboPhanLoai.addActionListener(e -> {
+            String selected = cboPhanLoai.getSelectedItem().toString();
+            TableRowSorter<DefaultTableModel> sorter = (TableRowSorter<DefaultTableModel>) tbl.getRowSorter();
+            
+            if (sorter != null) {
+                if (selected.equals("Tất cả")) {
+                    sorter.setRowFilter(null);
+                } else {
+                    String maLoaiCanTim = "";
+                    switch (selected) {
+                        case "Loa": 
+                            maLoaiCanTim = "L01"; 
+                            break;
+                        case "Tai nghe": 
+                            maLoaiCanTim = "L02"; 
+                            break;
+                        case "Phụ kiện": 
+                            maLoaiCanTim = "L03"; 
+                            break;
+                    }
+                    
+                    sorter.setRowFilter(RowFilter.regexFilter("^" + maLoaiCanTim + "$", 4));
+                }
+            }
+        });
 
         pnlHeader.add(lblTitle);
         pnlHeader.add(cboPhanLoai, "w 150!,h 35!");
@@ -58,6 +82,9 @@ public class SanPhamTable extends JPanel {
         tbl = new Table();
         tbl.setModel(tblModel);
 
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tblModel);
+        tbl.setRowSorter(sorter);
+
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tbl.setDefaultRenderer(Object.class, centerRenderer);
@@ -70,10 +97,8 @@ public class SanPhamTable extends JPanel {
     // Hiển thị dữ liệu
     public void showData(ArrayList<SanPham> list) {
         tblModel.setRowCount(0);
-
         int stt = 1;
         //DecimalFormat formatter = new DecimalFormat("###,###");
-
         for (SanPham sp : list) {
             tblModel.addRow(new Object[] {
                     stt++, sp.getMaSP(), sp.getTenSP(),sp.getSoLuong(),sp.getMaLoai(),sp.getMaHang(),sp.getMoTa(),sp.getThoiGianBaoHanh()
@@ -82,6 +107,5 @@ public class SanPhamTable extends JPanel {
     }
 
     public JTable getTable() {return tbl;}
-
     public JComboBox<String> getComboBox() {return cboPhanLoai;}
 }

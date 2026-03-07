@@ -45,8 +45,7 @@ public abstract class ThaoTacDialog extends JDialog {
         // Gọi initForm để lớp con vẽ giao diện
         initForm();
     }
-
-    // Hàm để các lớp con (Thêm/Sửa) tự vẽ giao diện riêng của chúng
+    
     protected abstract void initForm();
     protected abstract void logicXacNhan();
 }
