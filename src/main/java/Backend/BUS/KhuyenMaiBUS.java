@@ -47,9 +47,10 @@ public class KhuyenMaiBUS {
         if (km.getNgayBD() == null || km.getNgayKT() == null) return "Vui lòng chọn đầy đủ ngày!";
         if (km.getNgayKT().before(km.getNgayBD())) return "Ngày kết thúc phải sau ngày bắt đầu!";
         
-        if (isNew) {
-            for (KhuyenMai existing : dsKM) {
-                if (existing.getMaKM().equalsIgnoreCase(km.getMaKM())) return "Mã KM đã tồn tại!";
+        // Kiểm tra mã: khi thêm mới, mã không được trùng; khi sửa, mã không được trùng với record khác
+        for (KhuyenMai existing : dsKM) {
+            if (existing.getMaKM().equalsIgnoreCase(km.getMaKM()) && !existing.getMaKM().equals(km.getMaKM())) {
+                return "Mã KM đã tồn tại!";
             }
         }
         return "OK";
