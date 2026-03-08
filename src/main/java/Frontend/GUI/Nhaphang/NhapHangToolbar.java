@@ -3,6 +3,7 @@ package Frontend.GUI.Nhaphang;
 import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.ButtonNhapExcel;
 import Frontend.Compoent.ButtonXuatExcel;
+import Frontend.Compoent.DocExcel;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 
@@ -16,9 +17,11 @@ import java.util.ArrayList;
 public class NhapHangToolbar extends JPanel{
     private NhapHangTable table;
     private JComboBox<LoaiSP> cbFilter;
+    private NhapHangSidebar sidebar;
 
-    public NhapHangToolbar(NhapHangTable table) {
+    public NhapHangToolbar(NhapHangTable table, NhapHangSidebar sidebar) {
         this.table = table;
+        this.sidebar = sidebar;
         setLayout(new MigLayout("insets 10", "[grow]10[]10[]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: 20");
@@ -56,5 +59,16 @@ public class NhapHangToolbar extends JPanel{
         cbFilter.setPreferredSize(new Dimension(200, 35));
         cbFilter.putClientProperty("FlatLaf.style", "arc: 10");
         add(cbFilter, "w 200!");
+
+        ButtonXuatExcel btnNhapExcel = new ButtonXuatExcel("Nhập Excel");
+        btnNhapExcel.addActionListener(e -> {
+            ArrayList<Object[]> dataList = DocExcel.docDuLieuNhapHang();
+            
+            if (!dataList.isEmpty()) {
+                this.sidebar.nhapTuExcel(dataList);
+            }
+        });
+
+        add(btnNhapExcel, "h 35!, w 105!");
     }
 }

@@ -232,4 +232,43 @@ public class NhapHangSidebar extends JPanel {
         }
         return "NCC001";
     }
+
+    public void nhapTuExcel(ArrayList<Object[]> dataExcel) {
+        if (dataExcel == null || dataExcel.isEmpty()) return;
+
+        int soDongThemThanhCong = 0;
+
+        for (Object[] rowData : dataExcel) {
+            String maExcel = rowData[0].toString();
+            String tenExcel = rowData[1].toString();
+            int slExcel = (int) rowData[2];
+            double giaExcel = (double) rowData[3];
+
+            boolean daCoTrongBang = false;
+
+            for (int i = 0; i < modelNhap.getRowCount(); i++) {
+                String maTrongBang = modelNhap.getValueAt(i, 0).toString();
+
+                if (maTrongBang.equals(maExcel)) {
+                    int slCu = (int) modelNhap.getValueAt(i, 2);
+                    modelNhap.setValueAt(slCu + slExcel, i, 2);
+                    
+                    modelNhap.setValueAt(String.format("%,.0f", giaExcel), i, 3);
+                    daCoTrongBang = true;
+                    soDongThemThanhCong++;
+                    break;
+                }
+            }
+
+            if (!daCoTrongBang) {
+                String giaFormatted = String.format("%,.0f", giaExcel);
+                modelNhap.addRow(new Object[]{maExcel, tenExcel, slExcel, giaFormatted});
+                soDongThemThanhCong++;
+            }
+        }
+        
+        if (soDongThemThanhCong > 0) {
+            JOptionPane.showMessageDialog(this, "Đã tải thành công " + soDongThemThanhCong + " sản phẩm từ Excel vào danh sách chờ!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 }
