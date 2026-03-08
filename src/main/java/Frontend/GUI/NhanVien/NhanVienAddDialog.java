@@ -4,6 +4,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import java.awt.Frame;
 
 import Backend.BUS.NhanVienBUS;
 import Backend.DTO.NhanVien;
@@ -13,7 +14,7 @@ public class NhanVienAddDialog extends BaseThaoTacDialog {
     private JTextField txtMa, txtTen, txtSDT, txtDiaChi, txtChucVu, txtEmail, txtLuong;
     private NhanVienBUS nvBUS = new NhanVienBUS();
 
-    public NhanVienAddDialog() {
+    public NhanVienAddDialog(Frame parent) {
         super("THÊM NHÂN VIÊN", 500, 450);
 
         // Tự động lấy và điền mã mới

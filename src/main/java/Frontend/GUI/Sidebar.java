@@ -33,7 +33,7 @@ public class Sidebar extends JPanel {
         this.parent = parent;
         this.maNQ = maNQ;
         setBackground(Theme.SECONDARY_COLOR);
-        setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", "[]20[]"));
+        setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", ""));
 
         String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Phiếu nhập", "Phiếu xuất", "Khuyến mãi",
                 "Bảo hành", "Nhà cung cấp", "Nhân viên", "Khách hàng", "Thống kê", "Phân quyền" };
@@ -41,7 +41,7 @@ public class Sidebar extends JPanel {
             String code = getChucNangCode(item);
 
             if(qBUS.checkQuyen(maNQ, code, "read")) {
-                 add(createMenubtn(item));
+                 add(createMenubtn(item), "h 35:40:45");
             }
         }
            
@@ -62,7 +62,7 @@ public class Sidebar extends JPanel {
                 new Frontend.GUI.LogIn.LoginFrame().setVisible(true);
             }
         });
-        add(btnLogout, "pushy, aligny bottom, h 40!");
+        add(btnLogout, "pushy, aligny bottom, h 40!, gaptop 20");
     }
 
     private JButton createMenubtn(String text) {
