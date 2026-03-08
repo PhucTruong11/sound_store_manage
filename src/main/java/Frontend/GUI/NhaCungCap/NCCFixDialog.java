@@ -43,9 +43,18 @@ public class NCCFixDialog extends BaseThaoTacDialog{
     @Override
     protected void logicXacNhan() {
         NhaCungCap ncc = new NhaCungCap(txtMa.getText(), txtTen.getText(), txtDiaChi.getText(), txtSDT.getText());
+        String validationMsg = nccBUS.validate(ncc, false);
+
+        if (!validationMsg.equals("OK")) {
+            JOptionPane.showMessageDialog(this, validationMsg, "Lỗi dữ liệu", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         if(nccBUS.update(ncc)) {
             JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
             dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
         }
     }
 }

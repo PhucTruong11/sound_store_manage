@@ -45,11 +45,12 @@ public class NhaCungCapBUS {
             return "Địa chỉ nhà cung cấp không được để trống!";
         }
 
-        if (ncc.getSdt().matches("^\\d{9}$")) {
-            return "SĐT phải có 10 chữ số và bắt đầu bằng số 0!";
-        }
-        if (ncc.getSdt() == null) {
+        if (ncc.getSdt() == null || ncc.getSdt().trim().isEmpty()) {
             return "SĐT không được để trống!";
+        }
+        
+        if (!ncc.getSdt().matches("^0\\d{9}$")) {
+            return "SĐT phải có 10 chữ số và bắt đầu bằng số 0!";
         }
         ArrayList<NhaCungCap> list = getAllNhaCungCap();
         for (NhaCungCap oldNCC : list) {
