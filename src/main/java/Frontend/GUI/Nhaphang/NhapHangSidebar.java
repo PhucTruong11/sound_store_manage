@@ -9,7 +9,7 @@ import Backend.BUS.NhaCungCapBUS;
 import Backend.BUS.TaiKhoanBUS;
 import Backend.DTO.TaiKhoan;
 import Backend.DTO.NhaCungCap;
-import Backend.DTO.Session; // Import Session để lấy thông tin đăng nhập
+import Backend.DTO.Session;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -21,7 +21,7 @@ public class NhapHangSidebar extends JPanel {
     private JSpinner spnSoLuongNhap;
     private JTable tblNhap;
     private DefaultTableModel modelNhap;
-    private JTextField txtNhanVien; // Thay JComboBox bằng JTextField vì chỉ hiển thị 1 người
+    private JTextField txtNhanVien;
     private JComboBox<NhaCungCap> cbxNhaCungCap;
 
     private String currenMa = "";
@@ -29,7 +29,6 @@ public class NhapHangSidebar extends JPanel {
     private String currenGia = "";
 
     private NhapHangTable table;
-    // private TaiKhoanBUS tkBUS;
 
     public NhapHangSidebar(NhapHangTable table) {
         this.table = table;
@@ -47,16 +46,15 @@ public class NhapHangSidebar extends JPanel {
     private void initHeader() {
         add(new JLabel("Nhân viên nhập:"), "gaptop 5");
         
-        // Lấy họ tên từ Session
         String hoTenNV = "Chưa xác định";
         if (Session.currentNhanVien != null) {
             hoTenNV = Session.currentNhanVien.getHoTen();
         } else if (Session.currentAccount != null) {
-            hoTenNV = Session.currentAccount.getUsername(); // Backup nếu chưa load được đối tượng NV
+            hoTenNV = Session.currentAccount.getUsername();
         }
 
         txtNhanVien = new JTextField(hoTenNV);
-        txtNhanVien.setEditable(false); // Không cho phép sửa
+        txtNhanVien.setEditable(false);
         txtNhanVien.setFocusable(false);
         txtNhanVien.setBackground(new Color(245, 245, 245));
         add(txtNhanVien, "h 30!");
@@ -64,7 +62,6 @@ public class NhapHangSidebar extends JPanel {
         add(new JLabel("Nhà cung cấp:"), "gaptop 10");
         cbxNhaCungCap = new JComboBox<>();
 
-        // Renderer để hiển thị "Tên - Mã" giúp phân biệt nhà cung cấp trùng tên
         cbxNhaCungCap.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -74,7 +71,6 @@ public class NhapHangSidebar extends JPanel {
                     if (ncc.getMaNCC().equals("All")) {
                         setText(ncc.getTenNCC());
                     } else {
-                        // Hiển thị thêm Mã để phân biệt các ông trùng tên
                         setText(ncc.getTenNCC() + " (" + ncc.getMaNCC() + ")");
                     }
                 }
@@ -103,7 +99,6 @@ public class NhapHangSidebar extends JPanel {
         add(new JSeparator(), "gaptop 10, gapbottom 5");
     }
 
-    // ... (Các hàm initProductSelection, initMiniTable giữ nguyên như cũ) ...
 
     private void initProductSelection() {
         lblTenSP = new JLabel("Chọn sản phẩm");
@@ -149,7 +144,6 @@ public class NhapHangSidebar extends JPanel {
             }
         });
 
-        // Ẩn các cột không cần thiết trong bảng phụ để giao diện gọn hơn
         tblNhap.getColumnModel().getColumn(1).setMinWidth(0);
         tblNhap.getColumnModel().getColumn(1).setMaxWidth(0);
         tblNhap.getColumnModel().getColumn(3).setMinWidth(0);
