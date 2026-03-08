@@ -69,20 +69,6 @@ public class PhieuNhapTable extends JScrollPane {
         }
     }
 
-    // public void loadDataBySearch(String query) {
-    //     tblModel.setRowCount(0);
-    //     ArrayList<PhieuNhap> list = phieuNhapBUS.getAllPhieuNhap();
-    //     DecimalFormat df = new DecimalFormat("#,###");
-    //     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    //     int stt = 1;
-    //     for (PhieuNhap pn : list) {
-    //         if (pn.getmaPhieuNhap().toLowerCase().contains(query.toLowerCase())) {
-    //             tblModel.addRow(new Object[]{stt++, pn.getmaPhieuNhap(), sdf.format(pn.getngayNhap()), 
-    //                                         pn.getmaNV(), df.format(pn.getTongTien())});
-    //         }
-    //     }
-    // }
-
     public void loadDataBySearch(String query) {
         tblModel.setRowCount(0);
         ArrayList<PhieuNhap> list = phieuNhapBUS.getAllPhieuNhap();
@@ -128,51 +114,8 @@ public class PhieuNhapTable extends JScrollPane {
     }
 
     public void loadData() {
-        // tblModel.setRowCount(0);
-        // ArrayList<PhieuNhap> listPN = phieuNhapBUS.getAllPhieuNhap();
-
-        // DecimalFormat df = new DecimalFormat("#, ###");
-        // SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-
-        // int stt = 1;
-        // for(PhieuNhap pn :listPN) {
-        //     Object[] row = {
-        //         stt++,
-        //         pn.getmaPhieuNhap(),
-        //         sdf.format(pn.getngayNhap()),
-        //         pn.getmaNV(),
-        //         df.format(pn.getTongTien())
-        //     };
-        //     tblModel.addRow(row);
-        // }
         filter(/*"All",*/ null, null, "", "");
     }
-
-    // public void loadDataByNCC(String maPN) {
-    //     tblModel.setRowCount(0);
-    //     ArrayList<PhieuNhap> list;
-
-    //     if(maPN.equals("All")) {
-    //         list = phieuNhapBUS.getAllPhieuNhap();
-    //     } else {
-    //         list = phieuNhapBUS.getByNCC(maPN);
-    //     }
-
-    //     DecimalFormat df = new DecimalFormat("#, ###");
-    //     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-
-    //     int stt = 1;
-    //     for(PhieuNhap pn : list) {
-    //         Object[] row = {
-    //              stt++,
-    //             pn.getmaPhieuNhap(),
-    //             sdf.format(pn.getngayNhap()),
-    //             pn.getmaNV(),
-    //             df.format(pn.getTongTien())
-    //         };
-    //         tblModel.addRow(row);
-    //     }
-    // }
 
     private void addTableEvents() {
         tbl.addMouseListener(new MouseAdapter() {

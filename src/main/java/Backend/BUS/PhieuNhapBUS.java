@@ -42,16 +42,6 @@ public class PhieuNhapBUS {
         return imei;
     }
 
-    // public boolean thanhToan(PhieuNhap pn, ArrayList<ChiTietPhieuNhap> dsCT) {
-    //     // Insert phiếu nhập
-    //     if(pnDAO.insert(pn) > 0) {
-    //         // Insert danh sách chi tiết
-    //         // Các Trigger trg_UpdateStock, trg_CalcThanhTien, trg_UpdateTongTien sẽ chạy
-    //         return ctDAO.insert(dsCT) > 0;
-    //     }
-    //     return false;
-    // }
-
     public boolean thanhToan(PhieuNhap pn, ArrayList<ChiTietPhieuNhap> dsCT) {
         // Insert phiếu nhập
         if(pnDAO.insert(pn) > 0) {

@@ -10,7 +10,6 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhap> {
 
     @Override
     public int insert(PhieuNhap pn) {
-        // Luôn mặc định TrangThai = TRUE khi thêm mới
         String sql = "INSERT INTO PhieuNhap (MaPhieuNhap, MaNV, MaNCC, TongTien, TrangThai) VALUES (?, ?, ?, ?, TRUE)";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {

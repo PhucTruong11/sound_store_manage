@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
     @Override
     public int insert(NhaCungCap ncc) {
-        // Luôn mặc định TrangThai = TRUE khi thêm mới
         String sql = "INSERT INTO NhaCungCap (MaNCC, TenNCC, DiaChi, Sdt, TrangThai) VALUES (?, ?, ?, ?, TRUE)";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -62,7 +61,6 @@ public class NhaCungCapDAO implements DAOInterface<NhaCungCap> {
 
     @Override
     public int delete(String id) {
-        // SET TrangThai về FALSE để ẩn trong GUI
         String sql = "UPDATE NhaCungCap SET TrangThai = FAlSE WHERE MaNCC = ?";
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {

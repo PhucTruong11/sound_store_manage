@@ -12,7 +12,6 @@ public class KhuyenMaiBUS {
         refreshData();
     }
 
-    // Trong KhuyenMaiBUS.java
     public void refreshData() {
         kmDAO.autoUpdateExpiredStatus();
         dsKM = kmDAO.getAll();
@@ -22,10 +21,44 @@ public class KhuyenMaiBUS {
         return dsKM;
     }
 
-    // ĐÂY LÀ HÀM ĐANG THIẾU DẪN ĐẾN LỖI BUILD
+    /**
+     * TẠO MÃ MỚI TỰ ĐỘNG (Fix lỗi compilation: cannot find symbol getNewMaKM)
+     */
+    public String getNewMaKM() {
+        int max = 0;
+        for (KhuyenMai km : dsKM) {
+            // Tách phần số từ mã "KMxxx"
+            try {
+                int num = Integer.parseInt(km.getMaKM().replace("KM", ""));
+                if (num > max) max = num;
+            } catch (Exception e) {
+                // Bỏ qua nếu mã không đúng định dạng KMxxx
+            }
+        }
+        return String.format("KM%03d", max + 1);
+    }
+
+    /**
+     * KIỂM TRA DỮ LIỆU (Fix lỗi compilation: cannot find symbol validate)
+     */
+    public String validate(KhuyenMai km, boolean isNew) {
+        if (km.getTenKM().isEmpty()) return "Tên chương trình không được để trống!";
+        if (km.getPhanTramGiam() <= 0 || km.getPhanTramGiam() > 100) return "% Giảm phải từ 1 đến 100!";
+        if (km.getNgayBD() == null || km.getNgayKT() == null) return "Vui lòng chọn đầy đủ ngày!";
+        if (km.getNgayKT().before(km.getNgayBD())) return "Ngày kết thúc phải sau ngày bắt đầu!";
+        
+        // Kiểm tra mã: khi thêm mới, mã không được trùng; khi sửa, mã không được trùng với record khác
+        for (KhuyenMai existing : dsKM) {
+            if (existing.getMaKM().equalsIgnoreCase(km.getMaKM()) && !existing.getMaKM().equals(km.getMaKM())) {
+                return "Mã KM đã tồn tại!";
+            }
+        }
+        return "OK";
+    }
+
     public boolean delete(String maKM) {
-        if (kmDAO.updateStatus(maKM, 0)) { // Gọi xuống DAO để đổi trạng thái thành 0
-            refreshData(); // Cập nhật lại danh sách trên RAM sau khi DB thay đổi
+        if (kmDAO.updateStatus(maKM, 0)) {
+            refreshData();
             return true;
         }
         return false;
@@ -52,7 +85,7 @@ public class KhuyenMaiBUS {
         ArrayList<KhuyenMai> result = new ArrayList<>();
         for (KhuyenMai km : dsKM) {
             if (km.getMaKM().toLowerCase().contains(text) ||
-                    km.getTenKM().toLowerCase().contains(text)) {
+                km.getTenKM().toLowerCase().contains(text)) {
                 result.add(km);
             }
         }
@@ -77,5 +110,4 @@ public class KhuyenMaiBUS {
         }
         return result;
     }
-
 }

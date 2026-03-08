@@ -140,9 +140,9 @@ public class NCCTable extends JPanel {
     public void loadComboBox() {
         if (cboNCC == null) return;
 
-        Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại để sau khi nạp lại không nhảy
+        Object selected = cboNCC.getSelectedItem(); // Lưu lại item đang được chọn hiện tại
         cboNCC.removeAllItems(); // Xóa sạch dữ liệu cũ
-        cboNCC.addItem(new NhaCungCap("All", "Tất cả", "", "")); // Thêm lại item mặc định
+        cboNCC.addItem(new NhaCungCap("All", "Tất cả", "", ""));
         ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
         ArrayList<String> addNames = new ArrayList<>();
         for (NhaCungCap ncc : list) {
@@ -154,32 +154,8 @@ public class NCCTable extends JPanel {
         }
 
         if (selected != null)
-            cboNCC.setSelectedItem(selected); // Khôi phục lại lựa chọn trước đó nếu nó vẫn còn tồn tại
+            cboNCC.setSelectedItem(selected);
     }
-
-    // public void loadDataBySearch(String query) {
-    //     tblModel.setRowCount(0);
-    //     ArrayList<NhaCungCap> list = nccBUS.getAllNhaCungCap();
-
-    //     int stt = 1;
-    //     for (NhaCungCap ncc : list) {
-    //         boolean matchMa = ncc.getMaNCC().toLowerCase().contains(query);
-    //         boolean matchTen = ncc.getTenNCC().toLowerCase().contains(query);
-    //         if (matchMa || matchTen) {
-    //             Object[] row = {
-    //                     stt++,
-    //                     ncc.getMaNCC(),
-    //                     ncc.getTenNCC(),
-    //                     ncc.getDiaChi(),
-    //                     ncc.getSdt(),
-    //             };
-    //             tblModel.addRow(row);
-    //         }
-    //     }
-    //     if (query.isEmpty()) {
-    //         cboNCC.setSelectedIndex(0);
-    //     }
-    // }
 
     public void loadDataBySearch(String query) {
         tblModel.setRowCount(0);
