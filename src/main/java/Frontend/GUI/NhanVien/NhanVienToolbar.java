@@ -57,20 +57,20 @@ public class NhanVienToolbar extends JPanel {
         // @Override
         // public void keyReleased(java.awt.event.KeyEvent e) {
         // String query = txtSearch.getText().toLowerCase().trim();
-        // // table.loadDataBySearch(query);
+        // table.loadDataBySearch(query);
         // }
         // });
 
-        // btnAdd.addActionListener(e -> {
-        // // Lấy JFrame chứa cái Toolbar này
-        // JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+        btnAdd.addActionListener(e -> {
+        // Lấy JFrame chứa cái Toolbar này
+        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        // // Truyền parent vào Dialog
-        // NhanVienAddDialog dialog = new NhanVienAddDialog(parent);
+        // Truyền parent vào Dialog
+        NhanVienAddDialog dialog = new NhanVienAddDialog(parent);
 
-        // dialog.setVisible(true);
-        // table.loadData();
-        // });
+        dialog.setVisible(true);
+        table.loadData();
+        });
 
         btnFix.addActionListener(e -> {
             int selectedRow = table.getTbl().getSelectedRow();
