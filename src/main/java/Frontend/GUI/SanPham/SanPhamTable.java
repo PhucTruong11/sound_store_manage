@@ -30,7 +30,9 @@ public class SanPhamTable extends JPanel {
 
     private void initHeader() {
         JPanel pnlHeader = new JPanel(new MigLayout("insets 10", "[]push[]"));
-        pnlHeader.setOpaque(false);
+        pnlHeader.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
+
+        // pnlHeader.setOpaque(false);
 
         JLabel lblTitle = new JLabel("Sản Phẩm");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
