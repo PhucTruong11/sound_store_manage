@@ -101,7 +101,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "PX00";
+        return "PX000";
     }
 
     public ArrayList<PhieuXuat> search(String keyword) {
@@ -240,7 +240,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "BH01";
+        return "BH000";
     }
 
     public ArrayList<PhieuXuat> filterSQL(Timestamp from, Timestamp to, Double min, Double max) {
