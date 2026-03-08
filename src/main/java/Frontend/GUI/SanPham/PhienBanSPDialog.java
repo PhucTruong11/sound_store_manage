@@ -115,20 +115,20 @@ public class PhienBanSPDialog extends JDialog {
                 if (isEditMode) {
                         CustomButton btnThem = new CustomButton("Thêm", Theme.ACCENT_COLOR);
                         CustomButton btnSua = new CustomButton("Sửa", Theme.WARNING_COLOR);
-                        CustomButton btnQLCT = new CustomButton("Quản Lý Chi Tiết", Theme.WARNING_COLOR);
+                        CustomButton btnSCT = new CustomButton("Sửa Chi Tiết", Theme.WARNING_COLOR);
                         CustomButton btnXoa = new CustomButton("Xóa", Theme.DANGER_COLOR);
 
                         btnThem.setPreferredSize(new Dimension(80, 40));
                         btnSua.setPreferredSize(new Dimension(80, 40));
-                        btnQLCT.setPreferredSize(new Dimension(150, 40));
+                        btnSCT.setPreferredSize(new Dimension(130, 40));
                         btnXoa.setPreferredSize(new Dimension(80, 40));
 
                         pnlFooter.add(btnThem);
                         pnlFooter.add(btnSua);
                         pnlFooter.add(btnXoa);
-                        pnlFooter.add(btnQLCT);
+                        pnlFooter.add(btnSCT);
 
-                        addEditEvents(btnThem, btnSua, btnQLCT, btnXoa);
+                        addEditEvents(btnThem, btnSua, btnSCT, btnXoa);
                 }
 
                 CustomButton btnDong = new CustomButton("Thoát", new Color(149, 165, 166));
@@ -156,7 +156,7 @@ public class PhienBanSPDialog extends JDialog {
             }
         }
 
-        private void addEditEvents(JButton btnThem, JButton btnSua, JButton btnQLCT, JButton btnXoa) {
+        private void addEditEvents(JButton btnThem, JButton btnSua, JButton btnSCT, JButton btnXoa) {
                 btnThem.addActionListener(e -> {
                         InputPhienBanDialog inputDlg = new InputPhienBanDialog((JFrame) SwingUtilities.getWindowAncestor(this), maSPHT, null);
                         inputDlg.setVisible(true);
@@ -179,7 +179,7 @@ public class PhienBanSPDialog extends JDialog {
                         }
                 });
 
-                btnQLCT.addActionListener(e -> {
+                btnSCT.addActionListener(e -> {
                         int row = tblPB.getSelectedRow();
                         if (row == -1) {
                                 JOptionPane.showMessageDialog(this, "Vui lòng chọn phiên bản để quản lý");
