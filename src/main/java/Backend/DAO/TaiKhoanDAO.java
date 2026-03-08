@@ -10,17 +10,15 @@ import java.sql.ResultSet;
 public class TaiKhoanDAO {
 
     public TaiKhoan login(String username, String password) {
-        // ... (Giữ nguyên code login cũ của bạn) ...
         TaiKhoan tk = null;
         String sql = """
-            SELECT TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai
-            FROM TaiKhoan
-            WHERE TenDangNhap = ? AND MatKhau = ? AND TrangThai = 1
-        """;
+                    SELECT TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai
+                    FROM TaiKhoan
+                    WHERE TenDangNhap = ? AND MatKhau = ? AND TrangThai = 1
+                """;
         try (
-            Connection con = DatabaseHelper.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+                Connection con = DatabaseHelper.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
@@ -38,15 +36,13 @@ public class TaiKhoanDAO {
         return tk;
     }
 
-    // THÊM PHƯƠNG THỨC NÀY VÀO ĐÂY
     public TaiKhoan getTaiKhoanByMaNV(String maNV) {
         TaiKhoan tk = null;
         String sql = "SELECT TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai FROM TaiKhoan WHERE MaNV = ?";
 
         try (
-            Connection con = DatabaseHelper.getConnection();
-            PreparedStatement ps = con.prepareStatement(sql)
-        ) {
+                Connection con = DatabaseHelper.getConnection();
+                PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setString(1, maNV);
             ResultSet rs = ps.executeQuery();
 

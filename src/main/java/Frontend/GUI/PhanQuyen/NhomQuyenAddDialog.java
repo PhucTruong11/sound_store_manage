@@ -23,7 +23,7 @@ public class NhomQuyenAddDialog extends JDialog {
       private ArrayList<ChucNang> dsChucNang;
 
       public NhomQuyenAddDialog() {
-            setTitle("Thêm nhóm quyền mới");
+            setTitle("Thêm nhóm quyền: NHÂN VIÊN BÁN HÀNG");
             setModal(true);
             setSize(900, 700);
             setLocationRelativeTo(null);
@@ -32,7 +32,9 @@ public class NhomQuyenAddDialog extends JDialog {
             getContentPane().setBackground(Color.WHITE);
 
             add(new JLabel("Tên nhóm quyền"), "split 2, w 120!");
-            txtTen = new JTextField();
+            txtTen = new JTextField("Nhân viên bán hàng");
+            txtTen.setEditable(false);
+            txtTen.setBackground(new Color(240, 240, 240));
             txtTen.putClientProperty("FlatLaf.style", "arc: 10");
             add(txtTen, "growx, h 35!, wrap");
 
@@ -49,7 +51,7 @@ public class NhomQuyenAddDialog extends JDialog {
 
                   @Override
                   public boolean isCellEditable(int row, int col) {
-                        return col != 0; 
+                        return col != 0;
                   }
             };
 
@@ -75,8 +77,22 @@ public class NhomQuyenAddDialog extends JDialog {
       private void loadChucNang() {
             dsChucNang = cnBUS.getAll();
             for (ChucNang cn : dsChucNang) {
-                  model.addRow(new Object[] { "Quản lý " + cn.getTenChucNang().toLowerCase(), false, false, false,
-                              false });
+                  boolean read = false, create = false, update = false, delete = false;
+                  String maCN = cn.getMaChucNang();
+
+                  if (maCN.equals("BANHANG") || maCN.equals("PHIEUXUAT") || maCN.equals("KHACHHANG")) {
+                        read = true;
+                        create = true;
+                        update = true;
+                  } else if (maCN.equals("SANPHAM") || maCN.equals("BAOHANH")) {
+                        read = true;
+                  } else if (maCN.equals("BAOHANH")) {
+                  }
+
+                  model.addRow(new Object[] {
+                              "Quản lý " + cn.getTenChucNang().toLowerCase(),
+                              read, create, update, delete
+                  });
             }
       }
 
@@ -87,7 +103,7 @@ public class NhomQuyenAddDialog extends JDialog {
                   return;
             }
 
-            String maNQ = nqBUS.getNextMa(); 
+            String maNQ = nqBUS.getNextMa();
             NhomQuyen nq = new NhomQuyen(maNQ, tenNQ, "");
 
             ArrayList<ChiTietQuyen> dsQuyen = new ArrayList<>();

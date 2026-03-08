@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
+import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonFix;
 import Frontend.Compoent.SearchTextField;
 import Frontend.Compoent.Theme;
@@ -20,9 +21,12 @@ public class PhanQuyenToolBar extends JPanel {
             setBackground(Color.WHITE);
             putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
-            SearchTextField txtSearch = new SearchTextField("Tìm kiếm nhóm quyền (Mã hoặc tên)...");            ButtonFix btnFix = new ButtonFix("Sửa");
+            SearchTextField txtSearch = new SearchTextField("Tìm kiếm nhóm quyền (Mã hoặc tên)...");
+            ButtonFix btnFix = new ButtonFix("Sửa");
+            // ButtonAdd btnAdd = new ButtonAdd("Thêm");
 
             add(txtSearch, "growx, h 35!");
+            // add(btnAdd, "w 95!, h 35!");
             add(btnFix, "w 95!, h 35!");
 
             txtSearch.addKeyListener(new KeyAdapter() {
@@ -32,6 +36,13 @@ public class PhanQuyenToolBar extends JPanel {
                         table.loadDataBySearch(query);
                   }
             });
+
+            // btnAdd.addActionListener(e -> {
+            //       NhomQuyenAddDialog dialog = new NhomQuyenAddDialog();
+            //       dialog.setVisible(true);
+
+            //       table.loadData();
+            // });
 
             btnFix.addActionListener(e -> {
                   int selectedRow = table.getTbl().getSelectedRow();

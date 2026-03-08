@@ -11,7 +11,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.awt.*;
-import Backend.DTO.Session; // Đảm bảo đã import Session
+import Backend.DTO.Session; 
 
 public class BanHangSidebar extends JPanel {
 
@@ -19,7 +19,7 @@ public class BanHangSidebar extends JPanel {
     private JSpinner spnSoLuongBan;
     private JTable tblBan;
     private DefaultTableModel modelBan;
-    private JTextField txtNhanVien; // Đổi từ JComboBox sang JTextField
+    private JTextField txtNhanVien; 
     private PhieuXuatTable phieuXuatTable;
     private BaoHanhTable baoHanhTable;
 
@@ -95,7 +95,6 @@ public class BanHangSidebar extends JPanel {
 
         add(new JLabel("Số lượng bán:"), "gaptop 5");
 
-        // Dùng model không giới hạn max, việc kiểm tra tồn kho sẽ làm thủ công
         spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
 
         add(spnSoLuongBan, "split 2, w 100!, h 35!");
@@ -151,7 +150,6 @@ public class BanHangSidebar extends JPanel {
             }
         });
 
-        // Ẩn mã SP và đơn giá trong bảng phụ
         tblBan.getColumnModel().getColumn(1).setMinWidth(0);
         tblBan.getColumnModel().getColumn(1).setMaxWidth(0);
         tblBan.getColumnModel().getColumn(3).setMinWidth(0);

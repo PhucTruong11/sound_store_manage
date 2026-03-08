@@ -58,7 +58,8 @@ public class PhanQuyenTable extends JPanel {
                               String ten = tbl.getValueAt(row, 2).toString();
 
                               JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(PhanQuyenTable.this);
-                              new PhanQuyenGanQuyenDialog(parent, ma, ten).setVisible(true);
+                              XemTaiKhoanNhomQuyenDialog dialog = new XemTaiKhoanNhomQuyenDialog(parent, ma, ten);
+                              dialog.setVisible(true);
                         }
                   }
             });

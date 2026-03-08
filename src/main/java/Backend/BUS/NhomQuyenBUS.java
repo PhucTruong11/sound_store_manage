@@ -39,6 +39,9 @@ public class NhomQuyenBUS {
       }
 
       public boolean checkQuyen(String maNQ, String maCN, String hanhDong) {
+            if (maNQ.equalsIgnoreCase("NQ01")) {
+                  return true;
+            }
             ArrayList<ChiTietQuyen> list = ctqDAO.selectByMaNQ(maNQ);
             for (ChiTietQuyen q : list) {
                   if (q.getMaChucNang().equalsIgnoreCase(maCN) &&

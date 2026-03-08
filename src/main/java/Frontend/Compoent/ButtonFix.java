@@ -1,12 +1,10 @@
 package Frontend.Compoent;
 
 import javax.swing.*;
-
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-
 import java.awt.*;
 
-public class ButtonFix extends JButton{
+public class ButtonFix extends JButton {
     public ButtonFix(String text) {
         super(text);
         setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -14,7 +12,6 @@ public class ButtonFix extends JButton{
         setBackground(Theme.WARNING_COLOR);
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setFocusPainted(false);
-        setBorderPainted(false);
 
         try {
             FlatSVGIcon PdfIcon = new FlatSVGIcon("images/icon/circle-dot.svg", 16, 16);

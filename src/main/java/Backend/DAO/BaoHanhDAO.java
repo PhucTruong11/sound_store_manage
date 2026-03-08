@@ -174,11 +174,11 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
             if (rs.next()) {
                 String lastMa = rs.getString("MaBH");
                 int num = Integer.parseInt(lastMa.substring(2));
-                return String.format("BH%02d", num + 1);
+                return String.format("BH%03d", num + 1);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "BH00";
+        return "BH000";
     }
 }

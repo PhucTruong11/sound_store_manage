@@ -87,9 +87,15 @@ public class ChonKhuyenMaiDialog extends JDialog {
             modelKM.setRowCount(0);
             try {
                   ArrayList<KhuyenMai> list = kmBUS.getAllKhuyenMai();
+                  java.util.Date today = new java.util.Date();
+
                   if (list != null) {
                         for (KhuyenMai km : list) {
-                              if (km.getTrangThai() == 1) {
+                              boolean isActive = km.getTrangThai() == 1;
+                              boolean chuaHetHan = km.getNgayKT() == null || !km.getNgayKT().before(today);
+                              boolean daBatDau = km.getNgayBD() == null || !km.getNgayBD().after(today);
+
+                              if (isActive && chuaHetHan && daBatDau) {
                                     modelKM.addRow(new Object[] {
                                                 km.getMaKM(),
                                                 km.getTenKM(),

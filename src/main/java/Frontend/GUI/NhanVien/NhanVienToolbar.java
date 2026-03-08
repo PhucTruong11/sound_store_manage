@@ -2,9 +2,12 @@ package Frontend.GUI.NhanVien;
 
 import java.awt.Color;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+import javax.swing.SwingUtilities;
+import Backend.BUS.NhomQuyenBUS;
+import Backend.DTO.Session;
 import Backend.BUS.NhanVienBUS;
 import Frontend.Compoent.ButtonAdd;
 import Frontend.Compoent.ButtonDele;
@@ -17,6 +20,7 @@ import net.miginfocom.swing.MigLayout;
 public class NhanVienToolbar extends JPanel {
     private NhanVienTable table;
     private NhanVienBUS nvBUS = new NhanVienBUS();
+    private NhomQuyenBUS nqBUS = new NhomQuyenBUS();
 
     public NhanVienToolbar(NhanVienTable table) {
         this.table = table;
@@ -30,6 +34,15 @@ public class NhanVienToolbar extends JPanel {
         ButtonDele btnDele = new ButtonDele("Xóa");
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
 
+        String maNQ = "NQ03"; 
+        if (Session.currentAccount != null) {
+            maNQ = Session.currentAccount.getMaNhomQuyen();
+        }
+
+        btnAdd.setEnabled(nqBUS.checkQuyen(maNQ, "NHANVIEN", "create"));
+        btnFix.setEnabled(nqBUS.checkQuyen(maNQ, "NHANVIEN", "update"));
+        btnDele.setEnabled(nqBUS.checkQuyen(maNQ, "NHANVIEN", "delete"));
+
         add(txtSearch, "growx, h 35!");
         add(btnAdd, "w 95!, h 35!");
         add(btnFix, "w 95!, h 35!");
@@ -41,24 +54,29 @@ public class NhanVienToolbar extends JPanel {
         });
 
         // txtSearch.addKeyListener(new java.awt.event.KeyAdapter() {
-        //     @Override
-        //     public void keyReleased(java.awt.event.KeyEvent e) {
-        //         String query = txtSearch.getText().toLowerCase().trim();
-        //         // table.loadDataBySearch(query);
-        //     }
+        // @Override
+        // public void keyReleased(java.awt.event.KeyEvent e) {
+        // String query = txtSearch.getText().toLowerCase().trim();
+        // // table.loadDataBySearch(query);
+        // }
         // });
 
-        btnAdd.addActionListener(e -> {
-            NhanVienAddDialog dialog = new NhanVienAddDialog();
-            dialog.setVisible(true);
-            table.loadData();
-            // table.loadComboBox();
-        });
+        // btnAdd.addActionListener(e -> {
+        // // Lấy JFrame chứa cái Toolbar này
+        // JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+
+        // // Truyền parent vào Dialog
+        // NhanVienAddDialog dialog = new NhanVienAddDialog(parent);
+
+        // dialog.setVisible(true);
+        // table.loadData();
+        // });
 
         btnFix.addActionListener(e -> {
             int selectedRow = table.getTbl().getSelectedRow();
             if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 hàng để sửa!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 hàng để sửa!", "Thông báo",
+                        JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -71,8 +89,7 @@ public class NhanVienToolbar extends JPanel {
             String chucVu = table.getTbl().getValueAt(modelRow, 5).toString();
             String email = table.getTbl().getValueAt(modelRow, 6).toString();
             double luong = Double.parseDouble(
-                    table.getTbl().getValueAt(modelRow, 7).toString().replace(",", "")
-            );
+                    table.getTbl().getValueAt(modelRow, 7).toString().replace(",", ""));
 
             NhanVienFixDialog dialog = new NhanVienFixDialog(ma, ten, sdt, diaChi, chucVu, email, luong);
             dialog.setVisible(true);

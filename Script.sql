@@ -538,11 +538,13 @@ INSERT INTO ChiTietSP (MaImei, MaPhienBan, MaPhieuNhap, TinhTrang) VALUES
 
 INSERT INTO KhuyenMai (MaKM, TenKM, DieuKienGiam, PhanTramGiam, NgayBatDau, NgayKetThuc, TrangThai) VALUES 
 ('KM001', 'Khai trương', 0, 10, '2025-01-01', '2030-12-31', 1), 
-('KM002', 'Siêu sale Black Friday', 5000000, 20, '2026-11-20', '2026-11-30', 1),
-('KM003', 'Hè rực rỡ', 0, 5, '2026-06-01', '2026-08-31', 1),
-('KM004', 'Chào năm mới 2027', 2000000, 15, '2026-12-25', '2027-01-05', 1),
+('KM002', 'Siêu sale Black Friday', 5000000, 20, '2026-11-20', '2026-11-30', 0),
+('KM003', 'Hè rực rỡ', 0, 5, '2026-06-01', '2026-08-31', 0),
+('KM004', 'Chào năm mới 2027', 2000000, 15, '2026-12-25', '2027-01-05', 0),
 ('KM005', 'Tri ân khách hàng VIP', 10000000, 25, '2026-01-01', '2026-12-31', 1),
-('KM006', 'Giảm giá cuối tháng', 1000000, 8, '2026-03-25', '2026-03-31', 1);
+('KM006', 'Giảm giá cuối tháng', 1000000, 8, '2026-03-25', '2026-03-31', 0),
+('KM007', 'Ngày Quốc tế Phụ nữ 8/3', 0, 8, '2026-03-05', '2026-03-10', 1),
+('KM008', 'Mua loa tặng phụ kiện', 3000000, 12, '2026-03-01', '2026-03-31', 1);
 
 INSERT INTO PhieuXuat (MaPhieuXuat, MaNV, MaKH, MaKM) VALUES 
 ('PX001', 'NV001', 'KH001', 'KM001');

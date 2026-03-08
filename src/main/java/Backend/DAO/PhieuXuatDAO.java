@@ -96,7 +96,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             if (rs.next()) {
                 String lastMa = rs.getString("MaPhieuXuat");
                 int num = Integer.parseInt(lastMa.substring(2));
-                return String.format("PX%02d", num + 1);
+                return String.format("PX%03d", num + 1);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,7 +235,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
             if (rs.next()) {
                 String lastMa = rs.getString("MaBH");
                 int num = Integer.parseInt(lastMa.substring(2));
-                return String.format("BH%02d", num + 1);
+                return String.format("BH%03d", num + 1);
             }
         } catch (Exception e) {
             e.printStackTrace();

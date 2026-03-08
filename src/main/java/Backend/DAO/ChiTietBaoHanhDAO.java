@@ -89,12 +89,12 @@ public class ChiTietBaoHanhDAO implements ChiTietInterface<ChiTietBaoHanh> {
                 ResultSet rs = stmt.executeQuery()) {
             if (rs.next()) {
                 String lastMa = rs.getString("MaCTBH");
-                int num = Integer.parseInt(lastMa.substring(4)); // Cắt bỏ 'CTBH'
-                return String.format("CTBH%02d", num + 1); // Trả về CTBH01, CTBH02...
+                int num = Integer.parseInt(lastMa.substring(4));
+                return String.format("CTBH%03d", num + 1); 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "CTBH01"; 
+        return "CTBH000"; 
     }
 }

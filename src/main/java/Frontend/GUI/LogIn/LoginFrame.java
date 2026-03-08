@@ -5,6 +5,7 @@ import Frontend.Compoent.CustomButton;
 import Backend.BUS.TaiKhoanBUS;
 import Backend.DTO.TaiKhoan;
 import net.miginfocom.swing.MigLayout;
+import Backend.DTO.Session;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,10 +41,10 @@ public class LoginFrame extends JFrame {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
+
                 // Hiệu ứng Gradient mượt mà
-                GradientPaint gp = new GradientPaint(0, 0, Theme.PRIMARY_COLOR, 
-                                                   getWidth(), getHeight(), Theme.PRIMARY_COLOR.darker());
+                GradientPaint gp = new GradientPaint(0, 0, Theme.PRIMARY_COLOR,
+                        getWidth(), getHeight(), Theme.PRIMARY_COLOR.darker());
                 g2d.setPaint(gp);
                 g2d.fillRect(0, 0, getWidth(), getHeight());
 
@@ -59,7 +60,7 @@ public class LoginFrame extends JFrame {
         if (imgUrl != null) {
             ImageIcon icon = new ImageIcon(imgUrl);
             // Căn chỉnh kích thước ảnh để vừa với panel bên trái (giữ tỷ lệ)
-            Image scaledImage = icon.getImage().getScaledInstance(350, -1, Image.SCALE_SMOOTH); 
+            Image scaledImage = icon.getImage().getScaledInstance(350, -1, Image.SCALE_SMOOTH);
             JLabel lblIllustration = new JLabel(new ImageIcon(scaledImage));
             pnlImage.add(lblIllustration, "wrap, gapbottom 10");
         } else {
@@ -77,7 +78,8 @@ public class LoginFrame extends JFrame {
         lblLogo.setFont(new Font("Segoe UI", Font.BOLD, 42));
         lblLogo.setForeground(Color.WHITE);
 
-        JLabel lblDescription = new JLabel("<html><center>Giải pháp quản lý kho hàng và doanh thu<br>dành riêng cho thiết bị âm thanh cao cấp</center></html>");
+        JLabel lblDescription = new JLabel(
+                "<html><center>Giải pháp quản lý kho hàng và doanh thu<br>dành riêng cho thiết bị âm thanh cao cấp</center></html>");
         lblDescription.setFont(new Font("Segoe UI", Font.PLAIN, 17));
         lblDescription.setForeground(new Color(240, 240, 240));
 
@@ -99,29 +101,30 @@ public class LoginFrame extends JFrame {
         JLabel lblWelcome = new JLabel("XIN CHÀO!");
         lblWelcome.setFont(new Font("Segoe UI Semibold", Font.PLAIN, 14));
         lblWelcome.setForeground(Theme.PRIMARY_COLOR);
-        
+
         JLabel lblLoginTitle = new JLabel("Đăng nhập để bắt đầu");
         lblLoginTitle.setFont(new Font("Segoe UI", Font.BOLD, 28));
         lblLoginTitle.setForeground(new Color(50, 50, 50));
 
         txtUsername = new JTextField();
         txtUsername.putClientProperty("FlatLaf.style", "margin: 8,12,8,12; arc: 15; placeholderText: 'Tên đăng nhập'");
-        
+
         txtPassword = new JPasswordField();
-        txtPassword.putClientProperty("FlatLaf.style", "margin: 8,12,8,12; arc: 15; showRevealButton: true; placeholderText: 'Mật khẩu'");
+        txtPassword.putClientProperty("FlatLaf.style",
+                "margin: 8,12,8,12; arc: 15; showRevealButton: true; placeholderText: 'Mật khẩu'");
 
         btnLogin = new CustomButton("ĐĂNG NHẬP NGAY", Theme.PRIMARY_COLOR);
         btnLogin.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
         formPanel.add(lblWelcome, "center");
         formPanel.add(lblLoginTitle, "gapbottom 40, center");
-        
+
         formPanel.add(new JLabel("Tên đăng nhập"), "gapbottom 5");
         formPanel.add(txtUsername, "growx, h 50!, gapbottom 20");
-        
+
         formPanel.add(new JLabel("Mật khẩu"), "gapbottom 5");
         formPanel.add(txtPassword, "growx, h 50!, gapbottom 40");
-        
+
         formPanel.add(btnLogin, "growx, h 55!");
 
         pnlFormContainer.add(formPanel, "w 380!");
@@ -134,12 +137,13 @@ public class LoginFrame extends JFrame {
         KeyAdapter enterSubmit = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) doLogin();
+                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                    doLogin();
             }
         };
         txtUsername.addKeyListener(enterSubmit);
         txtPassword.addKeyListener(enterSubmit);
-        
+
         // Sự kiện nút bấm
         btnLogin.addActionListener(e -> doLogin());
     }
@@ -147,9 +151,11 @@ public class LoginFrame extends JFrame {
     private void doLogin() {
         String username = txtUsername.getText().trim();
         String password = new String(txtPassword.getPassword());
+        Session.loadQuyen();
 
         if (username.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin!", "Thông báo",
+                    JOptionPane.WARNING_MESSAGE);
             return;
         }
 
@@ -163,14 +169,15 @@ public class LoginFrame extends JFrame {
                 if (tk != null) {
                     Backend.DTO.Session.currentAccount = tk;
                     Backend.BUS.NhanVienBUS nvBUS = new Backend.BUS.NhanVienBUS();
-                    Backend.DTO.NhanVien nv = nvBUS.getById(tk.getMaNV()); 
+                    Backend.DTO.NhanVien nv = nvBUS.getById(tk.getMaNV());
                     Backend.DTO.Session.currentNhanVien = nv;
 
                     String displayName = (nv != null) ? nv.getHoTen() : tk.getUsername();
                     new Frontend.GUI.MainFrame(displayName, tk.getMaNhomQuyen()).setVisible(true);
                     this.dispose();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Sai tài khoản hoặc mật khẩu!", "Lỗi đăng nhập",
+                            JOptionPane.ERROR_MESSAGE);
                     btnLogin.setEnabled(true);
                     setCursor(Cursor.getDefaultCursor());
                     txtPassword.setText("");
