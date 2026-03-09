@@ -1,5 +1,6 @@
 package Frontend.GUI.PhieuNhap;
 
+import Frontend.Compoent.CustomButton;
 import Frontend.Compoent.Theme;
 import Frontend.GUI.Nhaphang.NhapHangTable;
 
@@ -33,6 +34,7 @@ public class PhieuNhapSidebar extends JPanel{
         // initNhaCungCap();
         initDate();
         initPrice();
+        initResetButton();
     }
 
     // private void initNhanVienNhap() {
@@ -111,5 +113,31 @@ public class PhieuNhapSidebar extends JPanel{
 
         txtMinPrice.getDocument().addDocumentListener(priceListener);
         txtMaxPrice.getDocument().addDocumentListener(priceListener);
+    }
+
+    private void initResetButton() {
+        // add(new JLabel(""), "gaptop 20, push"); // khoảng trống để đẩy nút xuống dưới
+        // JButton btnXacNhan = new JButton("Đặt lại mặc định");
+        // btnXacNhan.setBackground(new Color(230, 126, 34));
+        // btnXacNhan.setForeground(Color.WHITE);
+        // btnXacNhan.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        // btnXacNhan.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        CustomButton btnXacNhan = new CustomButton("MẶC ĐỊNH", Theme.ACCENT_COLOR);
+        
+        btnXacNhan.addActionListener(e -> resetFilters());
+        
+        add(btnXacNhan, "gaptop 5, growx, h 40!, pushy, aligny bottom");
+    }
+
+    private void resetFilters() {
+        dateFrom.setDate(new Date(100, 0, 1));
+        
+        dateTo.setDate(new Date());
+        
+        txtMinPrice.setText("");
+        txtMaxPrice.setText("");
+        
+        onFilterChange();
     }
 }

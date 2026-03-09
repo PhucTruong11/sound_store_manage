@@ -185,7 +185,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
                     pstUpImei.setString(2, imeiReal);
                     pstUpImei.addBatch();
 
-                    String maBH = String.format("BH%02d", currentNumBH++);
+                    String maBH = String.format("BH%03d", currentNumBH++);
                     pstInsBH.setString(1, maBH);
                     pstInsBH.setString(2, imeiReal);
                     pstInsBH.setString(3, px.getMaPhieuXuat());
