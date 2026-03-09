@@ -60,4 +60,34 @@ public class TaiKhoanDAO {
         }
         return tk;
     }
+
+    public int insert(TaiKhoan tk) {
+        String sql = "INSERT INTO TaiKhoan (TenDangNhap, MatKhau, MaNV, MaNhomQuyen, TrangThai) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, tk.getUsername());
+            ps.setString(2, tk.getPassword());
+            ps.setString(3, tk.getMaNV());
+            ps.setString(4, tk.getMaNhomQuyen());
+            ps.setInt(5, tk.getStatus());
+            return ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public boolean existsByUsername(String username) {
+        String sql = "SELECT COUNT(*) FROM TaiKhoan WHERE TenDangNhap = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next())
+                return rs.getInt(1) > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

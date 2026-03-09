@@ -236,7 +236,7 @@ CREATE TABLE BaoHanh (
     MaPhieuXuat VARCHAR(20), 
     NgayBatDau DATE DEFAULT (CURRENT_DATE),
     NgayKetThuc DATE,
-    TinhTrang VARCHAR(50) DEFAULT 'Đang sửa chữa', 
+    TinhTrang VARCHAR(50) DEFAULT 'Còn bảo hành',
     TrangThai BOOLEAN DEFAULT TRUE, 
     FOREIGN KEY (MaImei) REFERENCES ChiTietSP(MaImei),
     FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat)
@@ -352,6 +352,7 @@ ALTER TABLE ChiTietPhieuXuat
 ADD CONSTRAINT chk_soluong_xuat CHECK (SoLuong > 0);
 
 ALTER TABLE KhuyenMai MODIFY COLUMN TrangThai INT DEFAULT 1;
+
 
 
 -- INDEX ĐỂ TỐI ƯU HÓA 
@@ -598,12 +599,17 @@ INSERT INTO NCC_SanPham VALUES
 ('NCC002', 'SP026'), 
 ('NCC003', 'SP027');
 
+UPDATE ChiTietBaoHanh 
+SET TinhTrang = 'Còn bảo hành' 
+WHERE TinhTrang = 'Hoàn thành' 
+AND NoiDung = 'Kích hoạt bảo hành điện tử';
+
 INSERT INTO ChiTietBaoHanh (MaCTBH, MaBH, NoiDung, TinhTrang)
 SELECT 
     CONCAT('CT', b.MaBH),
     b.MaBH,               
     'Kích hoạt bảo hành điện tử', 
-    'Hoàn thành' 
+    'Còn bảo hành'
 FROM BaoHanh AS b 
 WHERE b.MaBH NOT IN (SELECT MaBH FROM ChiTietBaoHanh);
 

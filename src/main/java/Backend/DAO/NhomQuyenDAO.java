@@ -1,6 +1,7 @@
 package Backend.DAO;
 
 import Backend.DatabaseHelper;
+import Backend.DTO.ChiTietQuyen;
 import Backend.DTO.NhomQuyen;
 import java.sql.*;
 import java.util.ArrayList;
@@ -99,5 +100,24 @@ public class NhomQuyenDAO implements DAOInterface<NhomQuyen> {
                   e.printStackTrace();
             }
             return "NQ01";
+      }
+
+      public ArrayList<ChiTietQuyen> selectQuyenByNhom(String maNQ) {
+            ArrayList<ChiTietQuyen> list = new ArrayList<>();
+            String sql = "SELECT * FROM ChiTietQuyen WHERE MaNhomQuyen = ?";
+            try (Connection conn = DatabaseHelper.getConnection();
+                        PreparedStatement stmt = conn.prepareStatement(sql)) {
+                  stmt.setString(1, maNQ);
+                  ResultSet rs = stmt.executeQuery();
+                  while (rs.next()) {
+                        list.add(new ChiTietQuyen(
+                                    rs.getString("MaNhomQuyen"),
+                                    rs.getString("MaChucNang"),
+                                    rs.getString("HanhDong")));
+                  }
+            } catch (Exception e) {
+                  e.printStackTrace();
+            }
+            return list;
       }
 }

@@ -12,7 +12,6 @@ public class BaoHanhBUS {
     }
 
     public boolean add(BaoHanh bh) {
-        // Kiểm tra Imei phải tồn tại trong bảng ChiTietSP mới cho thêm
         if (!bhDAO.checkImeiExists(bh.getMaImei())) {
             System.err.println("Mã Imei không tồn tại: " + bh.getMaImei());
             return false;
@@ -27,14 +26,16 @@ public class BaoHanhBUS {
     public boolean delete(String id) {
         ChiTietBaoHanhBUS ctbhBUS = new ChiTietBaoHanhBUS();
 
-        // Bước 1: Dọn dẹp bảng con trước để gỡ bỏ ràng buộc khóa ngoại
         ctbhBUS.delete(id);
 
-        // Bước 2: Xóa bảng cha (BaoHanh)
         return bhDAO.delete(id) > 0;
     }
 
     public String getNewMaBH() {
         return bhDAO.generateMaBH();
+    }
+
+    public String getMaBHByImei(String maImei) {
+        return bhDAO.getMaBHByImei(maImei);
     }
 }

@@ -77,4 +77,8 @@ public class NhomQuyenBUS {
             }
             return false;
       }
+
+      public ArrayList<ChiTietQuyen> getQuyenByNhom(String maNQ) {
+            return nqDAO.selectQuyenByNhom(maNQ);
+      }
 }
