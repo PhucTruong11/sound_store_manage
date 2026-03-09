@@ -12,10 +12,12 @@ import java.time.LocalDate;
 public class BaoHanhAddDialog extends BaseThaoTacDialog {
     private JTextField txtMaBH, txtImei, txtMaPX;
     private JSpinner spnNgayBD, spnNgayKT;
+    private JTextField txtNoiDung;
+    private JComboBox<String> cboTinhTrang;
     private BaoHanhBUS bhBUS = new BaoHanhBUS();
 
     public BaoHanhAddDialog() {
-        super("THÊM PHIẾU BẢO HÀNH", 450, 450);
+        super("THÊM PHIẾU BẢO HÀNH", 450, 650);
         String newMa = bhBUS.getNewMaBH();
         txtMaBH.setText(newMa);
 
@@ -29,7 +31,9 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
 
     @Override
     protected void initForm() {
-        pnlContent.setLayout(new MigLayout("wrap 2, fillx, insets 30", "[100!]20[grow]", "[]20[]20[]20[]20[]"));
+        // pnlContent.setLayout(new MigLayout("wrap 2, fillx, insets 30",
+        // "[100!]20[grow]", "[]20[]20[]20[]20[]"));
+        pnlContent.setLayout(new MigLayout("wrap 2, fillx, insets 30", "[100!]20[grow]", "[]20[]20[]20[]20[]20[]20[]"));
 
         pnlContent.add(new JLabel("Mã bảo hành:"));
         txtMaBH = new JTextField();
@@ -52,6 +56,16 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
         spnNgayKT = new JSpinner(new SpinnerDateModel());
         spnNgayKT.setEditor(new JSpinner.DateEditor(spnNgayKT, "dd/MM/yyyy"));
         pnlContent.add(spnNgayKT, "growx, h 35!");
+
+        pnlContent.add(new JLabel("Nội dung lỗi:"));
+        txtNoiDung = new JTextField("Tiếp nhận thiết bị");
+        pnlContent.add(txtNoiDung, "growx, h 35!");
+
+        pnlContent.add(new JLabel("Tình trạng:"));
+        cboTinhTrang = new JComboBox<>(new String[] {
+                "Đang sửa chữa", "Hoàn thành", "Đã trả máy"
+        });
+        pnlContent.add(cboTinhTrang, "growx, h 35!");
     }
 
     @Override
@@ -65,10 +79,43 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
             return;
         }
 
+        if (imei.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Mã IMEI!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
+            txtImei.requestFocus();
+            return;
+        }
+
+        if (maPX.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Mã phiếu xuất!", "Lỗi nhập liệu",
+                    JOptionPane.WARNING_MESSAGE);
+            txtMaPX.requestFocus();
+            return;
+        }
+
+        if (!imei.matches("^[a-zA-Z0-9]+$")) {
+            JOptionPane.showMessageDialog(this, "Mã IMEI không hợp lệ! Chỉ được chứa chữ cái và số.", "Lỗi định dạng",
+                    JOptionPane.ERROR_MESSAGE);
+            txtImei.requestFocus();
+            return;
+        }
+
+        if (!maPX.matches("^[a-zA-Z0-9]+$")) {
+            JOptionPane.showMessageDialog(this, "Mã Phiếu xuất không hợp lệ! Chỉ được chứa chữ cái và số.",
+                    "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
+            txtMaPX.requestFocus();
+            return;
+        }
+
         java.util.Date dStart = (java.util.Date) spnNgayBD.getValue();
         java.util.Date dEnd = (java.util.Date) spnNgayKT.getValue();
         LocalDate ngayBD = new java.sql.Date(dStart.getTime()).toLocalDate();
         LocalDate ngayKT = new java.sql.Date(dEnd.getTime()).toLocalDate();
+
+        if (ngayKT.isBefore(ngayBD)) {
+            JOptionPane.showMessageDialog(this, "Lỗi: Ngày kết thúc bảo hành không được nhỏ hơn ngày bắt đầu!",
+                    "Lỗi logic", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         BaoHanh bh = new BaoHanh(maBH, imei, maPX, ngayBD, ngayKT);
 
@@ -77,12 +124,25 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
 
             String maCTMoi = ctbhBUS.getNewMaCTBH();
 
+            // ChiTietBaoHanh ctbhMacDinh = new ChiTietBaoHanh(
+            // maCTMoi,
+            // bh.getMaBH(),
+            // null,
+            // "Tiếp nhận thiết bị",
+            // "Đang sửa chữa");
+
+            String noiDungLoi = txtNoiDung.getText().trim();
+            if (noiDungLoi.isEmpty())
+                noiDungLoi = "Tiếp nhận thiết bị";
+
+            String tinhTrangChon = cboTinhTrang.getSelectedItem().toString();
+
             ChiTietBaoHanh ctbhMacDinh = new ChiTietBaoHanh(
                     maCTMoi,
                     bh.getMaBH(),
                     null,
-                    "Tiếp nhận thiết bị",
-                    "Đang sửa chữa");
+                    noiDungLoi,
+                    tinhTrangChon);
 
             if (ctbhBUS.add(ctbhMacDinh)) {
                 JOptionPane.showMessageDialog(this, "Thêm thành công!");
