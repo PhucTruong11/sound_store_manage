@@ -70,6 +70,12 @@ public class KhuyenMaiTable extends JPanel {
         sorter = new TableRowSorter<>(tblModel);
         tbl.setRowSorter(sorter);
 
+        sorter.setComparator(3, (String s1, String s2) -> {
+        // Loại bỏ ký tự '%' và chuyển về kiểu Double để so sánh số học
+        Double d1 = Double.parseDouble(s1.replace("%", "").trim());
+        Double d2 = Double.parseDouble(s2.replace("%", "").trim());
+        return d1.compareTo(d2);
+        });
         // Căn giữa dữ liệu giống Bảo hành
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
