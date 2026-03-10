@@ -33,6 +33,7 @@ public class NhanVienTable extends JPanel {
     private JComboBox<String> cboChucVu;
     private TableRowSorter<DefaultTableModel> sorter;
     private String currentKeyword = "";
+    private boolean isAdjusting = false;
 
     // private JComboBox<NhanVien> cboNV;
 
@@ -53,24 +54,6 @@ public class NhanVienTable extends JPanel {
         JLabel lblTitle = new JLabel("Nhân viên");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
-        // cboNV = new JComboBox<>();
-        // loadComboBox();
-
-        // cboNV.addActionListener(e -> {
-        //     NhanVien selected = (NhanVien) cboNV.getSelectedItem();
-        //     if (selected != null) {
-        //         if (selected.getId().equals("All")) {
-        //             loadData();
-        //         } else {
-        //             loadDataByFilter(selected.getId());
-        //         }
-        //     }
-        // });
-
-        // cboNV.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
-        // pnlHeader.add(lblTitle);
-        // pnlHeader.add(cboNV, "w 150!, h 35!");
-        // add(pnlHeader, "growx");
         cboSort = new JComboBox<>(new String[]{
                 "Tên mặc định",
                 "Tên A - Z",
@@ -88,6 +71,13 @@ public class NhanVienTable extends JPanel {
 
 
         cboSort.addActionListener(e -> {
+        if (isAdjusting) return;
+
+        isAdjusting = true;
+
+        if (cboSortLuong.getSelectedIndex() != 0) {
+            cboSortLuong.setSelectedIndex(0);
+        }
         int colTen = 2; // cột "Tên NV"
 
         switch (cboSort.getSelectedIndex()) {
@@ -111,8 +101,16 @@ public class NhanVienTable extends JPanel {
                 );
                 break;
         }
+        isAdjusting = false;
     });
-            cboSortLuong.addActionListener(e -> {
+        cboSortLuong.addActionListener(e -> {
+            if (isAdjusting) return;
+
+            isAdjusting = true;
+
+            if (cboSort.getSelectedIndex() != 0) {
+                cboSort.setSelectedIndex(0);
+            }
             int colLuong = 7; // cột Lương
 
             switch (cboSortLuong.getSelectedIndex()) {
@@ -136,6 +134,7 @@ public class NhanVienTable extends JPanel {
                     );
                     break;
             }
+            isAdjusting = false;
         });
 
         cboChucVu.addActionListener(e -> applyFilters());
@@ -169,6 +168,17 @@ public class NhanVienTable extends JPanel {
             } catch (Exception e) {
                 return 0;
             }
+        });
+        sorter.setComparator(2, (String s1, String s2) -> {
+
+            String ten1 = s1.substring(s1.lastIndexOf(" ") + 1);
+            String ten2 = s2.substring(s2.lastIndexOf(" ") + 1);
+
+            int compareTen = ten1.compareToIgnoreCase(ten2);
+
+            if (compareTen != 0) return compareTen;
+
+            return s1.compareToIgnoreCase(s2);
         });
         tbl.setRowSorter(sorter);
 
@@ -277,43 +287,6 @@ public class NhanVienTable extends JPanel {
     });
 }
 
-
-    // public void loadComboBox() {
-    //     if (cboNV == null) return;
-    //     Object selected = cboNV.getSelectedItem();
-    //     cboNV.removeAllItems();
-    //     cboNV.addItem(new NhanVien("All", "Tất cả", "", "", "", "", 0, true));
-    //     ArrayList<NhanVien> list = nvBUS.getAllNhanVien();
-    //     for (NhanVien nv : list) {
-    //         cboNV.addItem(nv);
-    //     }
-    //     if (selected != null) cboNV.setSelectedItem(selected);
-    // }
-
-    // public void loadDataBySearch(String query) {
-    //     tblModel.setRowCount(0);
-    //     ArrayList<NhanVien> list = nvBUS.getAllNhanVien();
-
-    //     int stt = 1;
-    //     for (NhanVien nv : list) {
-    //         boolean matchMa = nv.getId().toLowerCase().contains(query.toLowerCase());
-    //         boolean matchTen = nv.getHoTen().toLowerCase().contains(query.toLowerCase());
-    //         if (matchMa || matchTen) {
-    //             Object[] row = {
-    //                     stt++,
-    //                     nv.getId(),
-    //                     nv.getHoTen(),
-    //                     nv.getSdt(),
-    //                     nv.getDiaChi(),
-    //                     nv.getChucVu(),
-    //                     nv.getEmail(),
-    //                     nv.getLuong()
-    //             };
-    //             tblModel.addRow(row);
-    //         }
-    //     }
-    //     if (query.isEmpty()) cboNV.setSelectedIndex(0);
-    // }
     private void loadComboBoxChucVu() {
             cboChucVu.removeAllItems();
             cboChucVu.addItem("Tất cả chức vụ");
@@ -329,17 +302,12 @@ public class NhanVienTable extends JPanel {
                 cboChucVu.addItem(cv);
             }
         }
-// Thêm hàm này vào cuối file NhanVienTable.java
     private void showDetail() {
         int selectedRow = tbl.getSelectedRow();
         if (selectedRow != -1) {
-            // Chuyển đổi index từ View sang Model (quan trọng khi Table đang được Sort/Filter)
             int modelRow = tbl.convertRowIndexToModel(selectedRow);
-            
-            // Lấy mã NV từ cột số 1
             String maNV = tblModel.getValueAt(modelRow, 1).toString();
             
-            // Tìm đối tượng NhanVien đầy đủ từ BUS
             NhanVien selectedNV = null;
             for (NhanVien nv : nvBUS.getAllNhanVien()) {
                 if (nv.getId().equals(maNV)) {
@@ -349,7 +317,6 @@ public class NhanVienTable extends JPanel {
             }
 
             if (selectedNV != null) {
-                // Hiển thị Dialog chi tiết
                 NhanVienDetailDialog dialog = new NhanVienDetailDialog(selectedNV);
                 dialog.setVisible(true);
             }
