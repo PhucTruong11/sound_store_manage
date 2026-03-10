@@ -29,7 +29,7 @@ public class KpiCardsPanel extends JPanel {
         lblValVon = new JLabel("0");
         lblValLoiNhuan = new JLabel("0");
 
-        add(createKpiCard("Doanh Thu Ngày", "+Today", lblValDoanhThu, "landmark.svg", new Color(46, 204, 113)));
+        add(createKpiCard("Doanh Thu Ngày", "+Hôm nay", lblValDoanhThu, "landmark.svg", new Color(46, 204, 113)));
         add(createKpiCard("Đơn Hàng Ngày", "Mới", lblValDonHang, "handbag.svg", new Color(52, 152, 219)));
         add(createKpiCard("Vốn Nhập Tháng", "Chi", lblValVon, "banknote-arrow-up.svg", new Color(231, 76, 60)));
         add(createKpiCard("Lợi Nhuận Tháng", "Thuần", lblValLoiNhuan, "banknote-arrow-down.svg", new Color(155, 89, 182)));

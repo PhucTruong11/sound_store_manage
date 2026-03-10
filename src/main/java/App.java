@@ -4,9 +4,8 @@ import Frontend.Compoent.Theme;
 
 public class App {
     public static void main(String[] args) {
-        Theme.setup(false); // Thiết lập FlatLaf/Theme
+        Theme.setup(false);
         java.awt.EventQueue.invokeLater(() -> {
-            // Hiển thị màn hình đăng nhập trướcgit 
             new LoginFrame().setVisible(true);
         });
     }

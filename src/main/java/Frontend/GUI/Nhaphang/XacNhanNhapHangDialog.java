@@ -91,7 +91,6 @@ public class XacNhanNhapHangDialog extends JDialog {
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblReview.setDefaultRenderer(Object.class, centerRenderer);
 
-        // Copy dữ liệu từ Sidebar sang
         for (int i = 0; i < sourceModel.getRowCount(); i++) {
             // Cột 0: Mã, Cột 1: Tên, Cột 2: SL, Cột 3: Giá
             String ma = sourceModel.getValueAt(i, 0).toString();
@@ -150,7 +149,7 @@ public class XacNhanNhapHangDialog extends JDialog {
                     maNVThucTe = Backend.DTO.Session.currentAccount.getMaNV();
                 }
 
-                String maNCCThucTe = "NCC001"; // Mặc định
+                String maNCCThucTe = "NCC001";
                 if (this.sidebar != null) {
                     maNCCThucTe = this.sidebar.getSelectedMaNCC(); 
                 }
@@ -181,7 +180,6 @@ public class XacNhanNhapHangDialog extends JDialog {
                     if(table != null) {
                         table.loadData();
                     }
-
 
                     if(this.sidebar != null) {
                         this.sidebar.clearCart();

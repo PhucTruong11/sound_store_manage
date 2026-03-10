@@ -38,6 +38,17 @@ public class NhapHangToolbar extends JPanel{
             }
         });
 
+        ButtonXuatExcel btnNhapExcel = new ButtonXuatExcel("Nhập Excel");
+        btnNhapExcel.addActionListener(e -> {
+            ArrayList<Object[]> dataList = DocExcel.docDuLieuNhapHang();
+            
+            if (!dataList.isEmpty()) {
+                this.sidebar.nhapTuExcel(dataList);
+            }
+        });
+
+        add(btnNhapExcel, "h 35!, w 105!");
+
         cbFilter = new JComboBox<>();
         DefaultComboBoxModel<LoaiSP> model = new DefaultComboBoxModel<>();
         model.addElement(new LoaiSP("All", "Tất cả sản phẩm"));
@@ -58,17 +69,6 @@ public class NhapHangToolbar extends JPanel{
 
         cbFilter.setPreferredSize(new Dimension(200, 35));
         cbFilter.putClientProperty("FlatLaf.style", "arc: 10");
-        add(cbFilter, "w 200!");
-
-        ButtonXuatExcel btnNhapExcel = new ButtonXuatExcel("Nhập Excel");
-        btnNhapExcel.addActionListener(e -> {
-            ArrayList<Object[]> dataList = DocExcel.docDuLieuNhapHang();
-            
-            if (!dataList.isEmpty()) {
-                this.sidebar.nhapTuExcel(dataList);
-            }
-        });
-
-        add(btnNhapExcel, "h 35!, w 105!");
+        add(cbFilter, "h 35!,w 130!");
     }
 }

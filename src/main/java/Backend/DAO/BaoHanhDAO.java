@@ -38,7 +38,7 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
                 "    WHERE MaBH = bh.MaBH " +
                 "    ORDER BY MaCTBH DESC LIMIT 1" +
                 ") " +
-                "ORDER BY CAST(SUBSTRING(bh.MaBH, 3) AS UNSIGNED) ASC";
+                "ORDER BY CAST(SUBSTRING(bh.MaBH, 3) AS UNSIGNED) DESC";
 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
