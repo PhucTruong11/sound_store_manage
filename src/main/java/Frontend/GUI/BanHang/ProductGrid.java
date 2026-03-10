@@ -22,6 +22,8 @@ public class ProductGrid extends JPanel {
     private String currentMaLoai = "";
     private PhienBanSanPhamBUS phienbansanphamBUS;
 
+    private int currentColumns = -1;
+
     public ProductGrid(BanHangSidebar sidebar, PaginationPanel pagination) {
         phienbansanphamBUS = new PhienBanSanPhamBUS();
         this.sidebar = sidebar;
@@ -106,7 +108,9 @@ public class ProductGrid extends JPanel {
 
     public void applyFiltersBanHang() {
         this.fullList = phienbansanphamBUS.getFilteredListBanHang(currentMaLoai, currentSearchQuery);
+        this.currentColumns = -1;
         displayAll();
+        updateGridFlow();
     }
 
     public void displayAll() {
@@ -125,9 +129,6 @@ public class ProductGrid extends JPanel {
                 mainPanel.add(card);
             }
         }
-
-        mainPanel.revalidate();
-        mainPanel.repaint();
     }
 
     public void loadDataSearch(String query) {
@@ -142,21 +143,25 @@ public class ProductGrid extends JPanel {
 
     private void updateGridFlow() {
         int width = getWidth();
-        if (width <= 0)
-            return;
+        if (width <= 0) return;
 
-        int columns = Math.max(1, width / 280);
+        int columns = Math.max(1, width / 240);
 
-        StringBuilder colConstraints = new StringBuilder();
-        for (int i = 0; i < columns; i++) {
-            colConstraints.append("[grow, fill]");
+        if (columns != currentColumns) {
+            currentColumns = columns;
+
+            StringBuilder colConstraints = new StringBuilder();
+            for (int i = 0; i < columns; i++) {
+                colConstraints.append("[grow, fill]");
+            }
+
+            mainPanel.setLayout(new MigLayout(
+                    "ins 15, wrap " + columns + ", fillx, gap 15",
+                    colConstraints.toString(),
+                    ""));
+
+            mainPanel.revalidate();
+            mainPanel.repaint();
         }
-
-        mainPanel.setLayout(new MigLayout(
-                "ins 15, wrap " + columns + ", fillx, gap 15",
-                colConstraints.toString(),
-                ""));
-
-        displayAll();
     }
 }
