@@ -31,7 +31,7 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
     public ArrayList<BaoHanh> selectAll() {
         ArrayList<BaoHanh> list = new ArrayList<>();
         String sql = "SELECT bh.MaBH, bh.MaImei, bh.MaPhieuXuat, bh.NgayBatDau, bh.NgayKetThuc, " +
-                "COALESCE(ct.TinhTrang, bh.TinhTrang, 'Hoàn thành') AS TinhTrangCuoi " +
+                "COALESCE(ct.TinhTrang, bh.TinhTrang, 'Còn bảo hành') AS TinhTrangCuoi " +
                 "FROM BaoHanh bh " +
                 "LEFT JOIN ChiTietBaoHanh ct ON ct.MaCTBH = (" +
                 "    SELECT MaCTBH FROM ChiTietBaoHanh " +
@@ -117,7 +117,7 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
     public ArrayList<BaoHanh> selectAllWithDetails() {
         ArrayList<BaoHanh> list = new ArrayList<>();
         String sql = "SELECT bh.MaBH, bh.MaImei, bh.MaPhieuXuat, bh.NgayBatDau, bh.NgayKetThuc, sp.TenSP, " +
-                "COALESCE(ct.TinhTrang, bh.TinhTrang, 'Hoàn thành') AS TinhTrang " +
+                "COALESCE(ct.TinhTrang, bh.TinhTrang, 'Còn bảo hành') AS TinhTrang " +
                 "FROM BaoHanh bh " +
                 "LEFT JOIN ChiTietBaoHanh ct ON ct.MaCTBH = (" +
                 "    SELECT MaCTBH FROM ChiTietBaoHanh " +
@@ -142,7 +142,7 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
                 bh.setNgayKetThuc(rs.getDate("NgayKetThuc").toLocalDate());
                 bh.setTenSP(rs.getString("TenSP"));
                 String tt = rs.getString("TinhTrang");
-                bh.setTinhTrang(tt != null ? tt : "Hoàn thành");
+                bh.setTinhTrang(tt != null ? tt : "Còn bảo hành");
                 list.add(bh);
             }
         } catch (Exception e) {
@@ -180,5 +180,19 @@ public class BaoHanhDAO implements DAOInterface<BaoHanh> {
             e.printStackTrace();
         }
         return "BH000";
+    }
+
+    public String getMaBHByImei(String maImei) {
+        String sql = "SELECT MaBH FROM BaoHanh WHERE MaImei = ? AND TrangThai = TRUE ORDER BY MaBH DESC LIMIT 1";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, maImei);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next())
+                return rs.getString("MaBH");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

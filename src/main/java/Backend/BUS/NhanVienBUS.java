@@ -3,7 +3,9 @@ package Backend.BUS;
 import java.util.ArrayList;
 
 import Backend.DAO.NhanVienDAO;
+import Backend.DTO.ConNguoi;
 import Backend.DTO.NhanVien;
+import Backend.DTO.TaiKhoan;
 
 public class NhanVienBUS {
     private final NhanVienDAO nhanVienDAO = new NhanVienDAO();
@@ -29,7 +31,8 @@ public class NhanVienBUS {
     }
 
     public NhanVien getById(String id) {
-        if (id == null) return null;
+        if (id == null)
+            return null;
         ArrayList<NhanVien> list = getAllNhanVien();
         for (NhanVien nv : list) {
             if (nv.getId().equalsIgnoreCase(id)) {
@@ -38,7 +41,8 @@ public class NhanVienBUS {
         }
         return null;
     }
-        //Ràng buộc
+
+    // Ràng buộc
     public String validate(NhanVien nv, boolean isNew) {
         if (nv.getHoTen() == null || nv.getHoTen().trim().isEmpty()) {
             return "Tên nhân viên không được để trống!";
@@ -73,5 +77,13 @@ public class NhanVienBUS {
             }
         }
         return "OK";
+    }
+
+    public boolean addNhanVienWithAccount(NhanVien nv, TaiKhoan tk) {
+        return nhanVienDAO.insertWithAccount(nv, tk);
+    }
+
+    public String getNextMa() {
+        return nhanVienDAO.generateMaNV();
     }
 }

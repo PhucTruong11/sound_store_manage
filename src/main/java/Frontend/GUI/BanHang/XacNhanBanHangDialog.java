@@ -15,7 +15,7 @@ import Backend.BUS.PhieuXuatBUS;
 import Backend.DTO.PhieuXuat;
 import Backend.DTO.ChiTietPhieuXuat;
 import Backend.DTO.KhuyenMai;
-import Backend.DTO.Session; // Đảm bảo đã import Session
+import Backend.DTO.Session; 
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.util.ArrayList;

@@ -23,10 +23,10 @@ public class PhanQuyenToolBar extends JPanel {
 
             SearchTextField txtSearch = new SearchTextField("Tìm kiếm nhóm quyền (Mã hoặc tên)...");
             ButtonFix btnFix = new ButtonFix("Sửa");
-            // ButtonAdd btnAdd = new ButtonAdd("Thêm");
+            ButtonAdd btnAdd = new ButtonAdd("Thêm");
 
             add(txtSearch, "growx, h 35!");
-            // add(btnAdd, "w 95!, h 35!");
+            add(btnAdd, "w 95!, h 35!");
             add(btnFix, "w 95!, h 35!");
 
             txtSearch.addKeyListener(new KeyAdapter() {
@@ -37,12 +37,12 @@ public class PhanQuyenToolBar extends JPanel {
                   }
             });
 
-            // btnAdd.addActionListener(e -> {
-            //       NhomQuyenAddDialog dialog = new NhomQuyenAddDialog();
-            //       dialog.setVisible(true);
+            btnAdd.addActionListener(e -> {
+                  NhomQuyenAddDialog dialog = new NhomQuyenAddDialog(table);
+                  dialog.setVisible(true);
 
-            //       table.loadData();
-            // });
+                  table.loadData();
+            });
 
             btnFix.addActionListener(e -> {
                   int selectedRow = table.getTbl().getSelectedRow();

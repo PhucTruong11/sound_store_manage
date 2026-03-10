@@ -23,8 +23,8 @@ public class BaoHanhTable extends JPanel {
     private TableRowSorter<DefaultTableModel> sorter;
     private String currentKeyword = "";
 
-    // Danh sách trạng thái khớp chính xác với giá trị lưu trong DB
     private static final String STATUS_ALL = "Tất cả trạng thái";
+    private static final String STATUS_WARRANTY = "Còn bảo hành";
     private static final String STATUS_FIXING = "Đang sửa chữa";
     private static final String STATUS_DONE = "Hoàn thành";
     private static final String STATUS_RETURNED = "Đã trả máy";
@@ -47,7 +47,7 @@ public class BaoHanhTable extends JPanel {
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
         cboStatus = new JComboBox<>(new String[] {
-                STATUS_ALL, STATUS_FIXING, STATUS_DONE, STATUS_RETURNED
+                STATUS_ALL, STATUS_WARRANTY, STATUS_FIXING, STATUS_DONE, STATUS_RETURNED
         });
         cboStatus.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
         cboStatus.addActionListener(e -> applyFilters());
@@ -73,7 +73,6 @@ public class BaoHanhTable extends JPanel {
         sorter = new TableRowSorter<>(tblModel);
         tbl.setRowSorter(sorter);
 
-        // Ẩn cột "Tình trạng" (dùng để filter, không hiển thị)
         tbl.getColumnModel().getColumn(6).setMinWidth(0);
         tbl.getColumnModel().getColumn(6).setMaxWidth(0);
         tbl.getColumnModel().getColumn(6).setPreferredWidth(0);
@@ -98,7 +97,6 @@ public class BaoHanhTable extends JPanel {
         sorter.setRowFilter(new RowFilter<DefaultTableModel, Integer>() {
             @Override
             public boolean include(Entry<? extends DefaultTableModel, ? extends Integer> entry) {
-                // Cột 6 là tình trạng thực tế lấy từ ChiTietBaoHanh (ẩn khỏi màn hình)
                 String trangThai = entry.getStringValue(6).trim();
 
                 String maBH = entry.getStringValue(1).toLowerCase();
@@ -108,7 +106,6 @@ public class BaoHanhTable extends JPanel {
                         || maBH.contains(keyword)
                         || imei.contains(keyword);
 
-                // So sánh không phân biệt hoa/thường để tránh mismatch encoding
                 boolean matchStatus = selected.equals(STATUS_ALL)
                         || trangThai.equalsIgnoreCase(selected);
 
@@ -121,11 +118,9 @@ public class BaoHanhTable extends JPanel {
         tblModel.setRowCount(0);
         int stt = 1;
         for (BaoHanh bh : list) {
-            // Nếu tình trạng null/rỗng thì mặc định "Hoàn thành"
-            // (khớp với trạng thái ChiTietBaoHanh khi vừa bán hàng xong)
             String trangThaiThuc = bh.getTinhTrang();
             if (trangThaiThuc == null || trangThaiThuc.trim().isEmpty()) {
-                trangThaiThuc = STATUS_DONE;
+                trangThaiThuc = STATUS_WARRANTY; 
             }
 
             tblModel.addRow(new Object[] {
@@ -135,7 +130,7 @@ public class BaoHanhTable extends JPanel {
                     bh.getMaPhieuXuat(),
                     bh.getNgayBatDau(),
                     bh.getNgayKetThuc(),
-                    trangThaiThuc // lưu vào cột ẩn để filter
+                    trangThaiThuc
             });
         }
     }
@@ -166,4 +161,3 @@ public class BaoHanhTable extends JPanel {
         });
     }
 }
-

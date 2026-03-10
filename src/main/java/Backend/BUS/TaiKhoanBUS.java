@@ -22,4 +22,8 @@ public class TaiKhoanBUS {
         }
         return taiKhoanDAO.getTaiKhoanByMaNV(maNV);
     }
+
+    public boolean isTenDangNhapTonTai(String tenDN) {
+        return taiKhoanDAO.existsByUsername(tenDN);
+    }
 }

@@ -201,7 +201,7 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
                     pstInsCTBH.setString(1, maCTBH);
                     pstInsCTBH.setString(2, maBH);
                     pstInsCTBH.setString(3, "Thiết bị mới xuất kho - Kích hoạt bảo hành điện tử");
-                    pstInsCTBH.setString(4, "Hoàn thành");
+                    pstInsCTBH.setString(4, "Còn bảo hành");
                     pstInsCTBH.addBatch();
                 }
 

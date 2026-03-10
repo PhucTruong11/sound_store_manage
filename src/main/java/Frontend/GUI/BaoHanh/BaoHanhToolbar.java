@@ -24,13 +24,13 @@ public class BaoHanhToolbar extends JPanel {
 
         SearchTextField txtSearch = new SearchTextField("Tìm kiếm thiết bị bảo hành (IMEI, Mã BH)...");
         ButtonAdd btnAdd = new ButtonAdd("Thêm");
-        ButtonFix btnFix = new ButtonFix("Sửa");
+        // ButtonFix btnFix = new ButtonFix("Sửa");
         ButtonDele btnDele = new ButtonDele("Xóa");
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
 
         add(txtSearch, "growx, h 35!");
         add(btnAdd, "w 95!, h 35!");
-        add(btnFix, "w 95!, h 35!");
+        // add(btnFix, "w 95!, h 35!");
         add(btnDele, "w 95!, h 35!");
         add(btnXuatExcel, "w 105!, h 35!");
 
@@ -52,22 +52,22 @@ public class BaoHanhToolbar extends JPanel {
             table.loadData();
         });
 
-        btnFix.addActionListener(e -> {
-            int selectedRow = table.getTbl().getSelectedRow();
-            if (selectedRow == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 phiếu bảo hành để sửa!", "Thông báo",
-                        JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+        // btnFix.addActionListener(e -> {
+        //     int selectedRow = table.getTbl().getSelectedRow();
+        //     if (selectedRow == -1) {
+        //         JOptionPane.showMessageDialog(this, "Vui lòng chọn 1 phiếu bảo hành để sửa!", "Thông báo",
+        //                 JOptionPane.WARNING_MESSAGE);
+        //         return;
+        //     }
 
-            String maBH = table.getTbl().getValueAt(selectedRow, 1).toString();
-            String maImei = table.getTbl().getValueAt(selectedRow, 2).toString();
-            String maPX = table.getTbl().getValueAt(selectedRow, 3).toString();
+        //     String maBH = table.getTbl().getValueAt(selectedRow, 1).toString();
+        //     String maImei = table.getTbl().getValueAt(selectedRow, 2).toString();
+        //     String maPX = table.getTbl().getValueAt(selectedRow, 3).toString();
 
-            BaoHanhFixDialog dialog = new BaoHanhFixDialog(maBH, maImei, maPX);
-            dialog.setVisible(true);
-            table.loadData();
-        });
+        //     BaoHanhFixDialog dialog = new BaoHanhFixDialog(maBH, maImei, maPX);
+        //     dialog.setVisible(true);
+        //     table.loadData();
+        // });
 
         btnDele.addActionListener(e -> {
             int selectedRow = table.getTbl().getSelectedRow();

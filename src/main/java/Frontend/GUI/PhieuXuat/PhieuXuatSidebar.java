@@ -3,15 +3,18 @@ package Frontend.GUI.PhieuXuat;
 import javax.swing.*;
 import com.toedter.calendar.JDateChooser;
 import java.awt.*;
+import java.util.Date;
+
+import Frontend.Compoent.CustomButton;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
-import java.util.Date;
 
 public class PhieuXuatSidebar extends JPanel {
     private JDateChooser dateFrom;
     private JDateChooser dateTo;
     private JTextField txtMinPrice, txtMaxPrice;
-    private JComboBox<String> cbxNhanVien, cbNhaCungCap;
+    private JComboBox<String> cbxNhanVien;
+
     private PhieuXuatTable tblPhieuXuat;
 
     public PhieuXuatSidebar(PhieuXuatTable tblPhieuXuat) {
@@ -21,18 +24,49 @@ public class PhieuXuatSidebar extends JPanel {
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
-        // initNhanVienNhap();
+        // initNhanVienXuat();
         initDate();
         initPrice();
-        addEventListeners();
+        initResetButton();
     }
 
-    // private void initNhanVienNhap() {
-    //     add(new JLabel("Nhân viên xuất"), "gaptop 10");
-    //     cbxNhanVien = new JComboBox<>(new String[] { "Phúc Trương" });
-    //     cbxNhanVien.setEnabled(false);
-    //     add(cbxNhanVien, "h 35!");
+    // private void initNhanVienXuat() {
+    // add(new JLabel("Nhân viên xuất"), "gaptop 10");
+    // cbxNhanVien = new JComboBox<>(new String[] { "Tất cả", "Phúc Trương", "Văn
+    // Nam" });
+    // cbxNhanVien.addActionListener(e -> { onFilterChange(); });
+    // add(cbxNhanVien, "h 35!");
     // }
+
+    private void onFilterChange() {
+        String minPriceClean = txtMinPrice.getText().replaceAll("[^0-9]", "");
+        String maxPriceClean = txtMaxPrice.getText().replaceAll("[^0-9]", "");
+
+        double min = 0;
+        try {
+            if (!minPriceClean.isEmpty())
+                min = Double.parseDouble(minPriceClean);
+        } catch (Exception e) {
+            min = 0;
+        }
+
+        double max = Double.MAX_VALUE;
+        try {
+            if (!maxPriceClean.isEmpty())
+                max = Double.parseDouble(maxPriceClean);
+        } catch (Exception e) {
+            max = Double.MAX_VALUE;
+        }
+
+        Date start = dateFrom.getDate();
+        Date end = dateTo.getDate();
+
+        String nv = "Tất cả";
+
+        if (tblPhieuXuat != null) {
+            tblPhieuXuat.filterData(start, end, nv, min, max);
+        }
+    }
 
     private void initDate() {
         add(new JLabel("Từ ngày:"), "gaptop 10");
@@ -40,7 +74,7 @@ public class PhieuXuatSidebar extends JPanel {
         dateFrom.setBorder(null);
         dateFrom.setBackground(Color.WHITE);
         dateFrom.setDateFormatString("dd/MM/yyyy");
-        dateFrom.setDate(new Date(125, 0, 1));
+        dateFrom.setDate(new Date(100, 0, 1)); 
         add(dateFrom, "h 35!");
 
         add(new JLabel("Đến ngày:"), "gaptop 10");
@@ -48,55 +82,65 @@ public class PhieuXuatSidebar extends JPanel {
         dateTo.setBorder(null);
         dateTo.setBackground(Color.WHITE);
         dateTo.setDateFormatString("dd/MM/yyyy");
-        dateTo.setDate(new Date());
+        dateTo.setDate(new Date()); 
         add(dateTo, "h 35!");
+
+        dateFrom.addPropertyChangeListener(e -> {
+            if ("date".equals(e.getPropertyName()))
+                onFilterChange();
+        });
+
+        dateTo.addPropertyChangeListener(e -> {
+            if ("date".equals(e.getPropertyName()))
+                onFilterChange();
+        });
     }
 
     private void initPrice() {
         add(new JLabel("Số tiền từ (VNĐ):"), "gaptop 10");
         txtMinPrice = new JTextField();
         add(txtMinPrice, "h 35!");
+
         add(new JLabel("Đến số tiền (VNĐ):"), "gaptop 10");
         txtMaxPrice = new JTextField();
         add(txtMaxPrice, "h 35!");
-    }
 
-    public void addEventListeners() {
-        dateFrom.addPropertyChangeListener(evt -> triggerFilter());
-        dateTo.addPropertyChangeListener(evt -> triggerFilter());
-
-        java.awt.event.KeyAdapter keyAdapter = new java.awt.event.KeyAdapter() {
+        javax.swing.event.DocumentListener priceListener = new javax.swing.event.DocumentListener() {
             @Override
-            public void keyReleased(java.awt.event.KeyEvent e) {
-                triggerFilter();
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                onFilterChange();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                onFilterChange();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                onFilterChange();
             }
         };
-        txtMinPrice.addKeyListener(keyAdapter);
-        txtMaxPrice.addKeyListener(keyAdapter);
+
+        txtMinPrice.getDocument().addDocumentListener(priceListener);
+        txtMaxPrice.getDocument().addDocumentListener(priceListener);
     }
 
-    private void triggerFilter() {
-        Date start = dateFrom.getDate();
-        Date end = dateTo.getDate();
+    private void initResetButton() {
+        CustomButton btnXacNhan = new CustomButton("MẶC ĐỊNH", Theme.ACCENT_COLOR);
 
-        String nv = "Tất cả";
+        btnXacNhan.addActionListener(e -> resetFilters());
 
-        double min = 0;
-        try {
-            min = txtMinPrice.getText().isEmpty() ? 0 : Double.parseDouble(txtMinPrice.getText());
-        } catch (Exception e) {
-            min = 0;
-        }
+        add(btnXacNhan, "gaptop 5, growx, h 40!, pushy, aligny bottom");
+    }
 
-        double max = Double.MAX_VALUE;
-        try {
-            if (!txtMaxPrice.getText().isEmpty()) {
-                max = Double.parseDouble(txtMaxPrice.getText());
-            }
-        } catch (Exception e) {
-            max = Double.MAX_VALUE;
-        }
+    private void resetFilters() {
+        dateFrom.setDate(new Date(100, 0, 1)); 
+        dateTo.setDate(new Date()); 
 
-        tblPhieuXuat.filterData(start, end, nv, min, max);
+        txtMinPrice.setText("");
+        txtMaxPrice.setText("");
+
+        onFilterChange();
     }
 }

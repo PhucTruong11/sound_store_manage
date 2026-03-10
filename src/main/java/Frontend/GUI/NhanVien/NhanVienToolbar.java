@@ -34,7 +34,7 @@ public class NhanVienToolbar extends JPanel {
         ButtonDele btnDele = new ButtonDele("Xóa");
         ButtonXuatExcel btnXuatExcel = new ButtonXuatExcel("Xuất Excel");
 
-        String maNQ = "NQ03"; 
+        String maNQ = "NQ03";
         if (Session.currentAccount != null) {
             maNQ = Session.currentAccount.getMaNhomQuyen();
         }
@@ -62,14 +62,14 @@ public class NhanVienToolbar extends JPanel {
         // });
 
         btnAdd.addActionListener(e -> {
-        // Lấy JFrame chứa cái Toolbar này
-        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+            // Lấy JFrame chứa cái Toolbar này
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
 
-        // Truyền parent vào Dialog
-        NhanVienAddDialog dialog = new NhanVienAddDialog(parent);
+            // Truyền parent vào Dialog
+            NhanVienAddDialog dialog = new NhanVienAddDialog(parent);
 
-        dialog.setVisible(true);
-        table.loadData();
+            dialog.setVisible(true);
+            table.loadData();
         });
 
         btnFix.addActionListener(e -> {
@@ -80,16 +80,14 @@ public class NhanVienToolbar extends JPanel {
                 return;
             }
 
-            int modelRow = table.getTbl().convertRowIndexToModel(selectedRow);
+            String ma = table.getTbl().getValueAt(selectedRow, 1).toString();
+            String ten = table.getTbl().getValueAt(selectedRow, 2).toString();
+            String sdt = table.getTbl().getValueAt(selectedRow, 3).toString();
+            String diaChi = table.getTbl().getValueAt(selectedRow, 4).toString();
+            String chucVu = table.getTbl().getValueAt(selectedRow, 5).toString();
+            String email = table.getTbl().getValueAt(selectedRow, 6).toString();
 
-            String ma = table.getTbl().getValueAt(modelRow, 1).toString();
-            String ten = table.getTbl().getValueAt(modelRow, 2).toString();
-            String sdt = table.getTbl().getValueAt(modelRow, 3).toString();
-            String diaChi = table.getTbl().getValueAt(modelRow, 4).toString();
-            String chucVu = table.getTbl().getValueAt(modelRow, 5).toString();
-            String email = table.getTbl().getValueAt(modelRow, 6).toString();
-            double luong = Double.parseDouble(
-                    table.getTbl().getValueAt(modelRow, 7).toString().replace(",", ""));
+            double luong = Double.parseDouble(table.getTbl().getValueAt(selectedRow, 7).toString().replace(",", ""));
 
             NhanVienFixDialog dialog = new NhanVienFixDialog(ma, ten, sdt, diaChi, chucVu, email, luong);
             dialog.setVisible(true);

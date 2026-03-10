@@ -31,8 +31,6 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
 
     @Override
     protected void initForm() {
-        // pnlContent.setLayout(new MigLayout("wrap 2, fillx, insets 30",
-        // "[100!]20[grow]", "[]20[]20[]20[]20[]"));
         pnlContent.setLayout(new MigLayout("wrap 2, fillx, insets 30", "[100!]20[grow]", "[]20[]20[]20[]20[]20[]20[]"));
 
         pnlContent.add(new JLabel("Mã bảo hành:"));
@@ -63,7 +61,7 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
 
         pnlContent.add(new JLabel("Tình trạng:"));
         cboTinhTrang = new JComboBox<>(new String[] {
-                "Đang sửa chữa", "Hoàn thành", "Đã trả máy"
+                "Còn bảo hành", "Đang sửa chữa", "Hoàn thành", "Đã trả máy"
         });
         pnlContent.add(cboTinhTrang, "growx, h 35!");
     }
@@ -79,22 +77,9 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
             return;
         }
 
-        if (imei.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập Mã IMEI!", "Lỗi nhập liệu", JOptionPane.WARNING_MESSAGE);
-            txtImei.requestFocus();
-            return;
-        }
-
-        if (maPX.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập Mã phiếu xuất!", "Lỗi nhập liệu",
-                    JOptionPane.WARNING_MESSAGE);
-            txtMaPX.requestFocus();
-            return;
-        }
-
         if (!imei.matches("^[a-zA-Z0-9]+$")) {
-            JOptionPane.showMessageDialog(this, "Mã IMEI không hợp lệ! Chỉ được chứa chữ cái và số.", "Lỗi định dạng",
-                    JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Mã IMEI không hợp lệ! Chỉ được chứa chữ cái và số.",
+                    "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
             txtImei.requestFocus();
             return;
         }
@@ -112,41 +97,48 @@ public class BaoHanhAddDialog extends BaseThaoTacDialog {
         LocalDate ngayKT = new java.sql.Date(dEnd.getTime()).toLocalDate();
 
         if (ngayKT.isBefore(ngayBD)) {
-            JOptionPane.showMessageDialog(this, "Lỗi: Ngày kết thúc bảo hành không được nhỏ hơn ngày bắt đầu!",
+            JOptionPane.showMessageDialog(this, "Lỗi: Ngày kết thúc không được nhỏ hơn ngày bắt đầu!",
                     "Lỗi logic", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        BaoHanh bh = new BaoHanh(maBH, imei, maPX, ngayBD, ngayKT);
+        String noiDungLoi = txtNoiDung.getText().trim();
+        if (noiDungLoi.isEmpty())
+            noiDungLoi = "Tiếp nhận thiết bị";
+        String tinhTrangChon = cboTinhTrang.getSelectedItem().toString();
 
-        if (bhBUS.add(bh)) {
-            ChiTietBaoHanhBUS ctbhBUS = new ChiTietBaoHanhBUS();
+        ChiTietBaoHanhBUS ctbhBUS = new ChiTietBaoHanhBUS();
+        String maBHHienCo = bhBUS.getMaBHByImei(imei);
+
+        if (maBHHienCo != null) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "IMEI này đã có phiếu bảo hành: " + maBHHienCo
+                            + "\nBạn có muốn thêm lần sửa chữa mới vào phiếu này không?",
+                    "Xác nhận", JOptionPane.YES_NO_OPTION);
+            if (confirm != JOptionPane.YES_OPTION)
+                return;
 
             String maCTMoi = ctbhBUS.getNewMaCTBH();
-
-            // ChiTietBaoHanh ctbhMacDinh = new ChiTietBaoHanh(
-            // maCTMoi,
-            // bh.getMaBH(),
-            // null,
-            // "Tiếp nhận thiết bị",
-            // "Đang sửa chữa");
-
-            String noiDungLoi = txtNoiDung.getText().trim();
-            if (noiDungLoi.isEmpty())
-                noiDungLoi = "Tiếp nhận thiết bị";
-
-            String tinhTrangChon = cboTinhTrang.getSelectedItem().toString();
-
-            ChiTietBaoHanh ctbhMacDinh = new ChiTietBaoHanh(
-                    maCTMoi,
-                    bh.getMaBH(),
-                    null,
-                    noiDungLoi,
-                    tinhTrangChon);
-
-            if (ctbhBUS.add(ctbhMacDinh)) {
-                JOptionPane.showMessageDialog(this, "Thêm thành công!");
+            ChiTietBaoHanh ctbh = new ChiTietBaoHanh(maCTMoi, maBHHienCo, null, noiDungLoi, tinhTrangChon);
+            if (ctbhBUS.add(ctbh)) {
+                JOptionPane.showMessageDialog(this, "Đã thêm lần sửa chữa mới vào phiếu: " + maBHHienCo);
                 dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } else {
+            BaoHanh bh = new BaoHanh(maBH, imei, maPX, ngayBD, ngayKT);
+            if (bhBUS.add(bh)) {
+                String maCTMoi = ctbhBUS.getNewMaCTBH();
+                ChiTietBaoHanh ctbh = new ChiTietBaoHanh(maCTMoi, bh.getMaBH(), null, noiDungLoi, tinhTrangChon);
+                if (ctbhBUS.add(ctbh)) {
+                    JOptionPane.showMessageDialog(this, "Thêm thành công!");
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this, "Thêm chi tiết thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Thêm phiếu bảo hành thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

@@ -76,7 +76,8 @@ public class ChiTietBaoHanhDialog extends JDialog {
 
                     String tinhTrangHienTai = model.getValueAt(row, 5).toString();
 
-                    if (!tinhTrangHienTai.equalsIgnoreCase("Đang sửa chữa")) {
+                    if (!tinhTrangHienTai.equalsIgnoreCase("Đang sửa chữa")
+                            && !tinhTrangHienTai.equalsIgnoreCase("Còn bảo hành")) {
                         JOptionPane.showMessageDialog(ChiTietBaoHanhDialog.this,
                                 "Chỉ có thể hoàn thành khi tình trạng là 'Đang sửa chữa'!",
                                 "Thông báo", JOptionPane.INFORMATION_MESSAGE);
