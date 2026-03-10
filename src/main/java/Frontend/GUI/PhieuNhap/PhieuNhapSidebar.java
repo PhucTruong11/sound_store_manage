@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Calendar;
 
 public class PhieuNhapSidebar extends JPanel{
     private JDateChooser dateFrom;
@@ -64,9 +65,33 @@ public class PhieuNhapSidebar extends JPanel{
     // }
 
     private void onFilterChange() {
+        Date start = getStartOfDay(dateFrom.getDate());
+        Date end = getEndOfDay(dateTo.getDate());
         // NhaCungCap ncc = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
         // String maNCC = (ncc != null) ? ncc.getMaNCC() : "All";
-        table.filter(/*maNCC,*/ dateFrom.getDate(), dateTo.getDate(), txtMinPrice.getText(), txtMaxPrice.getText());
+        table.filter(/*maNCC,*/ start, end, txtMinPrice.getText(), txtMaxPrice.getText());
+    }
+
+    private Date getStartOfDay(Date date) {
+        if (date == null) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
+    }
+
+    private Date getEndOfDay(Date date) {
+        if (date == null) return null;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 59);
+        cal.set(Calendar.SECOND, 59);
+        cal.set(Calendar.MILLISECOND, 999);
+        return cal.getTime();
     }
 
     private void initDate() {

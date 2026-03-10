@@ -56,7 +56,7 @@ public class NhaCungCapBUS {
         for (NhaCungCap oldNCC : list) {
             if (oldNCC.getSdt().equals(ncc.getSdt())) {
                 if (isNew || !oldNCC.getMaNCC().equals(ncc.getMaNCC())) {
-                    return "Số điện thoại này đã được sử dụng bởi nhân viên khac!";
+                    return "Số điện thoại này đã được sử dụng bởi nhà cung cấp khác!";
                 }
             }
         }
