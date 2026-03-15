@@ -26,6 +26,7 @@ public class SanPhamPanel extends JPanel {
     private void initComponents() {
         table = new SanPhamTable();
         toolbar = new SanPhamToolbar(this);
+        
         table.putClientProperty("FlatLaf.style", "arc: 15"); 
         add(toolbar, "growx, wrap");
 
@@ -49,10 +50,9 @@ public class SanPhamPanel extends JPanel {
             }
         });
     }
-    // Load dữ liệu 
+ 
     public void loadData() {
         ArrayList<SanPham> list = spBUS.getAll();
-
         table.showData(list);
     }
     public SanPhamTable getTable(){
