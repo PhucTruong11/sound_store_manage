@@ -3,7 +3,6 @@ package Frontend.GUI.SanPham;
 import Backend.BUS.ChiTietSPBUS;
 import Backend.DTO.ChiTietSP;
 import Frontend.Compoent.ThaoTacDialog;
-//import Frontend.Compoent.Theme;
 import javax.swing.*;
 import java.awt.*;
 

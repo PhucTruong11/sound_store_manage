@@ -64,12 +64,11 @@ public class ThemSanPhamDialog extends ThaoTacDialog {
 
     @Override
     protected void logicXacNhan() {
-        if (txtMaSP.getText().trim().isEmpty() || txtTenSP.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập Mã và Tên sản phẩm!");
+        if (txtTenSP.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập Tên sản phẩm!");
             return;
         }
         try{
-            // Tạo đối tượng SanPham
             SanPham sp = new SanPham();
             sp.setMaSP(txtMaSP.getText().trim());
             sp.setTenSP(txtTenSP.getText().trim());
@@ -79,13 +78,11 @@ public class ThemSanPhamDialog extends ThaoTacDialog {
             sp.setThoiGianBaoHanh(Integer.parseInt(txtBaoHanh.getText().trim()));
             sp.setTrangThai(true);
 
-            boolean ketQua = spBUS.add(sp);
-            if (ketQua) {
+            if (spBUS.add(sp)) {
                 this.isSuccess = true;
                 int confirm = JOptionPane.showConfirmDialog(this,"Thêm sản phẩm thành công\nBạn có muốn thiết lập Phiên Bản ngay không?", "Thông báo",JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
                 this.dispose();   
                 if (confirm == JOptionPane.YES_OPTION) {
-                    // Mở form Quản lý phiên bản
                     PhienBanSPDialog pbDlg = new PhienBanSPDialog(parentFrame, sp.getMaSP(), sp.getTenSP(), true);
                     pbDlg.setVisible(true);
                 }
@@ -94,7 +91,7 @@ public class ThemSanPhamDialog extends ThaoTacDialog {
                 JOptionPane.showMessageDialog(this, "Thêm thất bại");
             }
         }catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(this, "Thời gian bảo hành phải là số nguyên!");
+            JOptionPane.showMessageDialog(this, "Thời gian bảo hành phải là số nguyên");
         } 
 
     }

@@ -89,46 +89,46 @@ public class NhanVienTable extends JPanel {
 
 
         cboSort.addActionListener(e -> {
-        if (isAdjusting) return;
+            if (isAdjusting) return;
 
-        isAdjusting = true;
+            isAdjusting = true;
 
-        if (cboSortLuong.getSelectedIndex() != 0) {
-            cboSortLuong.setSelectedIndex(0);
-        }
-        int colTen = 2; // cột "Tên NV"
+            if (cboSortLuong.getSelectedIndex() != 0) {
+                cboSortLuong.setSelectedIndex(0);
+            }
+            int colTen = 2; // cột "Tên NV"
 
-        switch (cboSort.getSelectedIndex()) {
-            case 0: // Mặc định
-                sorter.setSortKeys(null);
-                break;
+            switch (cboSort.getSelectedIndex()) {
+                case 0: // Mặc định
+                    sorter.setSortKeys(null);
+                    break;
 
-            case 1: // A - Z
-                sorter.setSortKeys(
-                    java.util.List.of(
-                        new RowSorter.SortKey(colTen, SortOrder.ASCENDING)
-                    )
-                );
-                break;
+                case 1: // A - Z
+                    sorter.setSortKeys(
+                        java.util.List.of(
+                            new RowSorter.SortKey(colTen, SortOrder.ASCENDING)
+                        )
+                    );
+                    break;
 
-            case 2: // Z - A
-                sorter.setSortKeys(
-                    java.util.List.of(
-                        new RowSorter.SortKey(colTen, SortOrder.DESCENDING)
-                    )
-                );
-                break;
-        }
-        isAdjusting = false;
-    });
-            cboSortLuong.addActionListener(e -> {
+                case 2: // Z - A
+                    sorter.setSortKeys(
+                        java.util.List.of(
+                            new RowSorter.SortKey(colTen, SortOrder.DESCENDING)
+                        )
+                    );
+                    break;
+            }
+            isAdjusting = false;
+        });
 
+        cboSortLuong.addActionListener(e -> {
             if (isAdjusting) return;
 
             isAdjusting = true;
 
             if (cboSort.getSelectedIndex() != 0) {
-                cboSort.setSelectedIndex(0);
+                cboSort.setSelectedIndex(0);                
             }
             int colLuong = 7; // cột Lương
 
@@ -183,7 +183,7 @@ public class NhanVienTable extends JPanel {
             String ten2 = s2.substring(s2.lastIndexOf(" ") + 1);
             return ten1.compareToIgnoreCase(ten2);
         });
-
+        
         sorter.setComparator(7, (String s1, String s2) -> {
             try {
                 // Loại bỏ dấu phẩy trước khi so sánh số

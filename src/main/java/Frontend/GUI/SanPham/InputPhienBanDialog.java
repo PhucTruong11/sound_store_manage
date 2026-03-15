@@ -15,7 +15,7 @@ public class InputPhienBanDialog extends ThaoTacDialog {
 
     public InputPhienBanDialog(Window parent, String maSP, PhienBanSanPham pb) {
         super(parent, pb == null ? "THÊM PHIÊN BẢN MỚI" : "CẬP NHẬT PHIÊN BẢN", 450, 500);
-        
+
         this.maSP = maSP;
         this.isUpdate = (pb != null);
 
@@ -68,17 +68,13 @@ public class InputPhienBanDialog extends ThaoTacDialog {
 
     @Override
     protected void logicXacNhan() {
-        if (txtMaPB.getText().trim().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập mã phiên bản!");
-            return;
-        }
 
         try {
             double giaNhap = Double.parseDouble(txtGiaNhap.getText().trim());
             double giaBan = Double.parseDouble(txtGiaBan.getText().trim());
-            
+
             if (giaNhap < 0 || giaBan < 0) {
-                JOptionPane.showMessageDialog(this, "Giá tiền không được âm!");
+                JOptionPane.showMessageDialog(this, "Giá tiền không được âm");
                 return;
             }
 
@@ -100,7 +96,8 @@ public class InputPhienBanDialog extends ThaoTacDialog {
                 JOptionPane.showMessageDialog(this, "Lưu thành công!");
                 this.isSuccess = true;
                 this.dispose();
-            } else JOptionPane.showMessageDialog(this, "Lưu thất bại");
+            } else
+                JOptionPane.showMessageDialog(this, "Lưu thất bại");
 
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Giá tiền phải là số hợp lệ!");
@@ -111,9 +108,10 @@ public class InputPhienBanDialog extends ThaoTacDialog {
     }
 
     private void fillData(PhienBanSanPham pb) {
-        if (pb == null) return;
+        if (pb == null)
+            return;
         txtMaPB.setText(pb.getMaPhienBan());
-        txtMauSac.setText(pb.getMauSac());
+        txtMauSac.setText(pb.getMauSac());  
         txtCongSuat.setText(pb.getCongSuat());
         txtPin.setText(pb.getPin());
         txtKetNoi.setText(pb.getKetNoi());
@@ -122,5 +120,7 @@ public class InputPhienBanDialog extends ThaoTacDialog {
         txtSoLuong.setText(String.valueOf(pb.getSoLuongTon()));
     }
 
-    public boolean isSuccess() { return isSuccess; }
+    public boolean isSuccess() {
+        return isSuccess;
+    }
 }

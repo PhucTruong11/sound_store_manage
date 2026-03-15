@@ -130,9 +130,9 @@ public class SuaSanPhamDialog extends JDialog {
         });
 
         btnSuaPhienBan.addActionListener(e -> {
-            JFrame frameCha = (JFrame) SwingUtilities.getWindowAncestor(this);
-            PhienBanSPDialog dialog = new PhienBanSPDialog(frameCha, txtMaSP.getText(), txtTenSP.getText(), true);
-            dialog.setVisible(true);
+            JFrame FrameCha=(JFrame) SwingUtilities.getWindowAncestor(this);
+            PhienBanSPDialog dlgPB=new PhienBanSPDialog(FrameCha,txtMaSP.getText(),txtTenSP.getText(),true);
+            dlgPB.setVisible(true);
         });
     }
 

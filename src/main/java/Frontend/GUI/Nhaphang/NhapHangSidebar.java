@@ -112,7 +112,9 @@ public class NhapHangSidebar extends JPanel {
         add(new JSeparator(), "growx, gaptop 5, gapbottom 5");
 
         add(new JLabel("Số lượng nhập:"), "gaptop 5");
-        spnSoLuongNhap = new JSpinner(new SpinnerNumberModel(1, 1, 10000, 1));
+        spnSoLuongNhap = new JSpinner(new SpinnerNumberModel(1, -10000, 10000, 1));
+
+
         add(spnSoLuongNhap, "split 2, w 120!, h 30!");
 
         CustomButton btnThem = new CustomButton("THÊM", new Color(52, 152, 219));
@@ -178,12 +180,24 @@ public class NhapHangSidebar extends JPanel {
             return;
         }
 
-        int slNhapMoi = (int) spnSoLuongNhap.getValue();
-        boolean found = false;
+        try {
+            spnSoLuongNhap.commitEdit();
+        } catch (java.text.ParseException e) {
+            JOptionPane.showMessageDialog(this, "Số lượng không hợp lệ!");
+            return;
+        }
 
+        int slNhapMoi = (int) spnSoLuongNhap.getValue();
+
+        if (slNhapMoi <= 0) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số lượng lớn hơn 0!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            spnSoLuongNhap.setValue(1);
+            return;
+        }
+
+        boolean found = false;   
         for (int i = 0; i < modelNhap.getRowCount(); i++) {
             String maTrongBang = modelNhap.getValueAt(i, 0).toString();
-
             if(maTrongBang.equals(currenMa)) {
                 int slCu = (int) modelNhap.getValueAt(i, 2);
                 modelNhap.setValueAt(slCu + slNhapMoi, i, 2);
