@@ -118,6 +118,16 @@ public class KhachHangTable extends JPanel {
 
         sorter = new TableRowSorter<>(tblModel);
         tbl.setRowSorter(sorter);
+        
+        sorter.setComparator(2, (o1, o2) -> {
+            String ten1 = o1.toString().trim();
+            String ten2 = o2.toString().trim();
+
+            String last1 = ten1.substring(ten1.lastIndexOf(" ") + 1);
+            String last2 = ten2.substring(ten2.lastIndexOf(" ") + 1);
+
+            return last1.compareToIgnoreCase(last2);
+        });
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);

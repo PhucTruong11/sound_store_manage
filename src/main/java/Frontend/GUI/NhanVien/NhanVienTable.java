@@ -33,6 +33,7 @@ public class NhanVienTable extends JPanel {
     private JComboBox<String> cboChucVu;
     private TableRowSorter<DefaultTableModel> sorter;
     private String currentKeyword = "";
+    private boolean isAdjusting = false;
 
     // private JComboBox<NhanVien> cboNV;
 
@@ -88,31 +89,47 @@ public class NhanVienTable extends JPanel {
 
 
         cboSort.addActionListener(e -> {
-        int colTen = 2; // cột "Tên NV"
+            if (isAdjusting) return;
 
-        switch (cboSort.getSelectedIndex()) {
-            case 0: // Mặc định
-                sorter.setSortKeys(null);
-                break;
+            isAdjusting = true;
 
-            case 1: // A - Z
-                sorter.setSortKeys(
-                    java.util.List.of(
-                        new RowSorter.SortKey(colTen, SortOrder.ASCENDING)
-                    )
-                );
-                break;
+            if (cboSortLuong.getSelectedIndex() != 0) {
+                cboSortLuong.setSelectedIndex(0);
+            }
+            int colTen = 2; // cột "Tên NV"
 
-            case 2: // Z - A
-                sorter.setSortKeys(
-                    java.util.List.of(
-                        new RowSorter.SortKey(colTen, SortOrder.DESCENDING)
-                    )
-                );
-                break;
-        }
-    });
-            cboSortLuong.addActionListener(e -> {
+            switch (cboSort.getSelectedIndex()) {
+                case 0: // Mặc định
+                    sorter.setSortKeys(null);
+                    break;
+
+                case 1: // A - Z
+                    sorter.setSortKeys(
+                        java.util.List.of(
+                            new RowSorter.SortKey(colTen, SortOrder.ASCENDING)
+                        )
+                    );
+                    break;
+
+                case 2: // Z - A
+                    sorter.setSortKeys(
+                        java.util.List.of(
+                            new RowSorter.SortKey(colTen, SortOrder.DESCENDING)
+                        )
+                    );
+                    break;
+            }
+            isAdjusting = false;
+        });
+
+        cboSortLuong.addActionListener(e -> {
+            if (isAdjusting) return;
+
+            isAdjusting = true;
+
+            if (cboSort.getSelectedIndex() != 0) {
+                cboSort.setSelectedIndex(0);                
+            }
             int colLuong = 7; // cột Lương
 
             switch (cboSortLuong.getSelectedIndex()) {
@@ -136,6 +153,7 @@ public class NhanVienTable extends JPanel {
                     );
                     break;
             }
+            isAdjusting = false;
         });
 
         cboChucVu.addActionListener(e -> applyFilters());
@@ -160,6 +178,12 @@ public class NhanVienTable extends JPanel {
         tbl.setModel(tblModel);
 
         sorter = new TableRowSorter<>(tblModel);
+        sorter.setComparator(2, (String s1, String s2) -> {
+            String ten1 = s1.substring(s1.lastIndexOf(" ") + 1);
+            String ten2 = s2.substring(s2.lastIndexOf(" ") + 1);
+            return ten1.compareToIgnoreCase(ten2);
+        });
+        
         sorter.setComparator(7, (String s1, String s2) -> {
             try {
                 // Loại bỏ dấu phẩy trước khi so sánh số

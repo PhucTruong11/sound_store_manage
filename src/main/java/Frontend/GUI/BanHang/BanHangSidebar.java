@@ -95,7 +95,7 @@ public class BanHangSidebar extends JPanel {
 
         add(new JLabel("Số lượng bán:"), "gaptop 5");
 
-        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+        spnSoLuongBan = new JSpinner(new SpinnerNumberModel(1, -10000, Integer.MAX_VALUE, 1));
 
         add(spnSoLuongBan, "split 2, w 100!, h 35!");
 
@@ -199,7 +199,7 @@ public class BanHangSidebar extends JPanel {
         try {
             spnSoLuongBan.commitEdit();
         } catch (java.text.ParseException e) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ!", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Số lượng không hợp lệ!");
             return;
         }
 
@@ -212,6 +212,12 @@ public class BanHangSidebar extends JPanel {
         }
 
         int slBanMoi = (int) spnSoLuongBan.getValue();
+
+        if (slBanMoi <= 0) {
+            JOptionPane.showMessageDialog(this, "Số lượng bán phải lớn hơn 0!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            spnSoLuongBan.setValue(1);
+            return;
+        }
 
         if (slBanMoi > tonKho) {
             JOptionPane.showMessageDialog(this,
@@ -280,7 +286,7 @@ public class BanHangSidebar extends JPanel {
             lblTonKho.setForeground(tonInt > 0 ? Color.BLACK : Color.RED);
 
             if (tonInt > 0) {
-                spnSoLuongBan.setModel(new SpinnerNumberModel(1, 1, Integer.MAX_VALUE, 1));
+                spnSoLuongBan.setModel(new SpinnerNumberModel(1, -10000, Integer.MAX_VALUE, 1));
                 spnSoLuongBan.setEnabled(true);
             } else {
                 spnSoLuongBan.setModel(new SpinnerNumberModel(0, 0, 0, 0));
