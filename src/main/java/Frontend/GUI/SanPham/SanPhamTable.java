@@ -71,9 +71,9 @@ public class SanPhamTable extends JPanel {
         });
 
         pnlHeader.add(lblTitle);
-        pnlHeader.add(new JLabel("Loai:"));
+        pnlHeader.add(new JLabel("Loại:"));
         pnlHeader.add(cboPhanLoai, "w 120!, h 35!");
-        pnlHeader.add(new JLabel("Hang:"));
+        pnlHeader.add(new JLabel("Hãng:"));
         pnlHeader.add(cboHang, "w 120!, h 35!");
         add(pnlHeader, "growx");
     }
