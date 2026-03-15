@@ -1,18 +1,27 @@
 package Frontend.GUI.NhaCungCap;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 import Backend.BUS.NhaCungCapBUS;
 import Backend.DTO.NhaCungCap;
 import Frontend.Compoent.Table;
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableRowSorter;
-import javax.swing.table.DefaultTableCellRenderer;
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 public class NCCTable extends JPanel {
     private JTable tbl;

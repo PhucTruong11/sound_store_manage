@@ -1,21 +1,23 @@
-package Frontend.GUI.NhaCungCap;
+package Frontend.GUI.DoiTra;
 
 import javax.swing.JPanel;
 
 import Frontend.Compoent.Theme;
 import net.miginfocom.swing.MigLayout;
 
-public class MainHienThiNCC extends JPanel{
-    private NCCToolbar toolbar;
-    private NCCTable table;
+public class MainHienThiDoiTra extends JPanel {
 
-    public MainHienThiNCC() {
+    private DoiTraToolbar toolbar;
+    private DoiTraTable table;
+
+    public MainHienThiDoiTra() {
+
         setLayout(new MigLayout("wrap 1, fill, insets 15", "[grow, fill]", "[]20[grow]"));
         setBackground(Theme.BACKGROUND_COLOR);
 
-        table =  new NCCTable();
-        toolbar = new NCCToolbar(table);
-    
+        table = new DoiTraTable();
+        toolbar = new DoiTraToolbar(table);
+
         add(toolbar, "growx");
         add(table, "grow");
     }

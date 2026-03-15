@@ -250,6 +250,21 @@ CREATE TABLE ChiTietBaoHanh (
     FOREIGN KEY (MaBH) REFERENCES BaoHanh(MaBH) ON DELETE CASCADE
 );
 
+CREATE TABLE DoiTra (
+    MaDoiTra VARCHAR(20) PRIMARY KEY,
+    MaPhieuXuat VARCHAR(20),
+    MaKH VARCHAR(20),
+    MaPhienBan VARCHAR(20),
+    NgayDoiTra DATE,
+    SoLuong INT,
+    LyDo TEXT,
+    TinhTrang VARCHAR(50),
+
+    FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat),
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(ID),
+    FOREIGN KEY (MaPhienBan) REFERENCES PhienBanSP(MaPhienBan)
+);
+
 -- --------------------------------------------------------
 
 -- 
@@ -379,7 +394,8 @@ INSERT IGNORE INTO ChucNang (MaChucNang, TenChucNang, MoTa) VALUES
 ('KHUYENMAI', 'Khuyến mãi', 'Quản lý chương trình giảm giá'),
 ('BAOHANH', 'Bảo hành', 'Quản lý thiết bị bảo hành'),
 ('THONGKE', 'Thống kê', 'Xem báo cáo doanh thu và tồn kho'),
-('PHANQUYEN', 'Phân quyền', 'Thiết lập quyền hạn cho nhóm người dùng');
+('PHANQUYEN', 'Phân quyền', 'Thiết lập quyền hạn cho nhóm người dùng'),
+('DOITRA', 'Đổi trả', 'Quản lý đổi trả sản phẩm');
 
 INSERT INTO NhomQuyen VALUES 
 ('NQ01', 'Quản lý cửa hàng', 'Full quyền'),
@@ -411,7 +427,8 @@ INSERT INTO ChiTietQuyen (MaNhomQuyen, MaChucNang, HanhDong) VALUES
 ('NQ03', 'SANPHAM', 'create'), 
 ('NQ03', 'SANPHAM', 'update'),
 ('NQ03', 'NHACUNGCAP', 'read'), 
-('NQ03', 'NHACUNGCAP', 'create');
+('NQ03', 'NHACUNGCAP', 'create'),
+('NQ03','DOITRA','read');
 
 INSERT INTO ConNguoi (ID, HoTen, SDT, DiaChi) VALUES 
 ('NV001', 'Trương Phúc', '0909123456', 'Đà Nẵng'),
@@ -598,6 +615,10 @@ INSERT INTO NCC_SanPham VALUES
 ('NCC002', 'SP025'), 
 ('NCC002', 'SP026'), 
 ('NCC003', 'SP027');
+
+INSERT INTO DoiTra 
+VALUES
+('DT001','PX001','KH001','PB001','2026-03-10',1,'Loa bị rè bass','Đang xử lý');
 
 UPDATE ChiTietBaoHanh 
 SET TinhTrang = 'Còn bảo hành' 
