@@ -277,4 +277,21 @@ public class PhieuXuatDAO implements DAOInterface<PhieuXuat> {
         }
         return 0;
     }
+
+    public String getTenKhachHang(String maKH) {
+        String sql = "SELECT HoTen FROM ConNguoi WHERE ID = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, maKH);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("HoTen");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "Khách vãng lai";
+    }
 }
