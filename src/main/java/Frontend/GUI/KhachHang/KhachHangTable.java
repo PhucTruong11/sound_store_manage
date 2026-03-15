@@ -118,6 +118,16 @@ public class KhachHangTable extends JPanel {
 
         sorter = new TableRowSorter<>(tblModel);
         tbl.setRowSorter(sorter);
+        
+        sorter.setComparator(2, (o1, o2) -> {
+            String ten1 = o1.toString().trim();
+            String ten2 = o2.toString().trim();
+
+            String last1 = ten1.substring(ten1.lastIndexOf(" ") + 1);
+            String last2 = ten2.substring(ten2.lastIndexOf(" ") + 1);
+
+            return last1.compareToIgnoreCase(last2);
+        });
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
@@ -225,6 +235,24 @@ public class KhachHangTable extends JPanel {
     //     }
     //     if (query.isEmpty()) cboKH.setSelectedIndex(0);
     // }
+//     public void resetFilters() {
+//         cboSort.setSelectedIndex(0);
+//         cboSortLuong.setSelectedIndex(0);
+//         cboChucVu.setSelectedIndex(0);
+
+//         currentKeyword = "";
+
+//         if (sorter != null) {
+//             sorter.setRowFilter(null);
+//             sorter.setSortKeys(null);
+//         }
+//     }
+//     btnRefresh.addActionListener(e -> {
+//     txtSearch.setText("");
+//     table.resetFilters();
+//     table.loadData();
+// });
+
     public void loadDataByAdvancedFilter(String ma, String ten, String diaChi, String sdt){
         tblModel.setRowCount(0);
         ArrayList<KhachHang> list = khBUS.getAllKhachHang();
@@ -248,3 +276,68 @@ public class KhachHangTable extends JPanel {
         }
     }
 }
+// btnExcel.addActionListener(e -> {
+
+//     JFileChooser chooser = new JFileChooser();
+//     int result = chooser.showOpenDialog(null);
+
+//     if (result == JFileChooser.APPROVE_OPTION) {
+
+//         File file = chooser.getSelectedFile();
+
+//         try {
+
+//             FileInputStream fis = new FileInputStream(file);
+//             Workbook workbook = new XSSFWorkbook(fis);
+//             Sheet sheet = workbook.getSheetAt(0);
+
+//             boolean firstRow = true;
+//             int soNhanVienThem = 0;
+
+//             for (Row row : sheet) {
+
+//                 // bỏ dòng tiêu đề
+//                 if (firstRow) {
+//                     firstRow = false;
+//                     continue;
+//                 }
+
+//                 DataFormatter formatter = new DataFormatter();
+
+//                 String ma = formatter.formatCellValue(row.getCell(0));
+//                 String ten = formatter.formatCellValue(row.getCell(1));
+//                 String sdt = formatter.formatCellValue(row.getCell(2));
+//                 String diaChi = formatter.formatCellValue(row.getCell(3));
+//                 String chucVu = formatter.formatCellValue(row.getCell(4));
+//                 String email = formatter.formatCellValue(row.getCell(5));
+//                 double luong = row.getCell(6).getNumericCellValue();
+
+//                 NhanVien nv = new NhanVien(ma, ten, sdt, diaChi, chucVu, email, luong);
+
+//                 String check = nvBUS.validate(nv, true);
+
+//                 if (check.equals("OK")) {
+//                     nvBUS.add(nv);
+//                     soNhanVienThem++;
+//                 }
+//             }
+
+//             workbook.close();
+//             fis.close();
+
+//             table.loadData();
+
+//             JOptionPane.showMessageDialog(null,
+//                     "Đã nhập " + soNhanVienThem + " nhân viên từ Excel!",
+//                     "Thành công",
+//                     JOptionPane.INFORMATION_MESSAGE);
+
+//         } catch (Exception ex) {
+//             ex.printStackTrace();
+//             JOptionPane.showMessageDialog(null,
+//                     "Lỗi đọc file Excel!",
+//                     "Error",
+//                     JOptionPane.ERROR_MESSAGE);
+//         }
+//     }
+// });

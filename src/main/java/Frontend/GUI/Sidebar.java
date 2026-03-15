@@ -1,28 +1,31 @@
 package Frontend.GUI;
 
-import javax.swing.*;
+import java.awt.Font;
+
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 import Backend.BUS.ChiTietQuyenBUS;
-
-import java.awt.*;
-import net.miginfocom.swing.MigLayout;
-import Frontend.Compoent.Theme;
 import Frontend.Compoent.CustomButton;
-import Frontend.GUI.KhachHang.FromHienThiKhachHang;
-import Frontend.GUI.Nhaphang.MainHienThiNhapHang;
-import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
-import Frontend.GUI.SanPham.SanPhamPanel;
-import Frontend.GUI.ThongKe.ThongKePanel;
+import Frontend.Compoent.Theme;
 import Frontend.GUI.BanHang.BanHangPanel;
-import Frontend.GUI.KhuyenMai.KhuyenMaiPanel;
-import Frontend.GUI.KhuyenMai.MainKhuyenMai;
 import Frontend.GUI.BaoHanh.BaoHanhPanel;
+import Frontend.GUI.DoiTra.MainHienThiDoiTra;
+import Frontend.GUI.KhachHang.FromHienThiKhachHang;
+import Frontend.GUI.KhuyenMai.MainKhuyenMai;
 import Frontend.GUI.NhaCungCap.MainHienThiNCC;
 import Frontend.GUI.NhanVien.FromHienThiNV;
-import Frontend.GUI.PhieuXuat.PhieuXuatPanel;
+import Frontend.GUI.Nhaphang.MainHienThiNhapHang;
 import Frontend.GUI.PhanQuyen.PhanQuyenPanel;
+import Frontend.GUI.PhieuNhap.FromHienThiPhieuNhap;
+import Frontend.GUI.PhieuXuat.PhieuXuatPanel;
+import Frontend.GUI.SanPham.SanPhamPanel;
+import Frontend.GUI.ThongKe.ThongKePanel;
+import net.miginfocom.swing.MigLayout;
 
 public class Sidebar extends JPanel {
     private MainFrame parent;
@@ -36,7 +39,7 @@ public class Sidebar extends JPanel {
         setLayout(new MigLayout("wrap 1, fillx, insets 20", "[fill]", ""));
 
         String[] menuItems = { "Sản phẩm", "Bán hàng", "Nhập hàng", "Phiếu nhập", "Phiếu xuất", "Khuyến mãi",
-                "Bảo hành", "Nhà cung cấp", "Nhân viên", "Khách hàng", "Thống kê", "Phân quyền" };
+                "Bảo hành", "Nhà cung cấp", "Nhân viên", "Khách hàng", "Thống kê", "Phân quyền","Đổi trả" };
         for (String item : menuItems) {
             String code = getChucNangCode(item);
 
@@ -114,6 +117,9 @@ public class Sidebar extends JPanel {
                 case "Thống kê":
                     parent.setPage(new ThongKePanel());
                     break;
+                case "Đổi trả":
+                    parent.setPage(new MainHienThiDoiTra());
+                    break;
                 case "Đăng xuất":
                     System.exit(0);
                 default:
@@ -123,7 +129,6 @@ public class Sidebar extends JPanel {
         });
         return btn;
     }
-
     private String getIconName(String text) {
         switch (text) {
             case "Sản phẩm":
@@ -150,6 +155,8 @@ public class Sidebar extends JPanel {
                 return "chart-line";
             case "Phân quyền":
                 return "user-round-pen";
+            case "Đổi trả":
+                return "refresh-cw";
             default:
                 return "help-circle";
         }
@@ -181,6 +188,8 @@ public class Sidebar extends JPanel {
                 return "THONGKE";
             case "Phân quyền":
                 return "PHANQUYEN";
+            case "Đổi trả":
+                return "DOITRA";
             default:
                 return "";
         }
