@@ -581,6 +581,14 @@ INSERT INTO ChiTietPhieuXuat (MaPhieuXuat, MaPhienBan, SoLuong, DonGia) VALUES
 UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX001' WHERE MaImei IN ('111222333', '444555666', '777888999');
 -- UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX02' WHERE MaImei IN ('123123123', '456456456', '333111001');
 
+UPDATE ChiTietSP 
+SET TinhTrang = 'Hàng lỗi/Đổi trả', MaPhieuXuat = NULL 
+WHERE MaImei = 'IMEI_CU';
+
+UPDATE ChiTietSP 
+SET TinhTrang = 'Đã bán', MaPhieuXuat = 'PX001' 
+WHERE MaImei = 'IMEI_MOI';
+
 INSERT INTO BaoHanh (MaBH, MaImei, MaPhieuXuat, NgayBatDau, NgayKetThuc, TinhTrang) VALUES 
 ('BH001', '111222333', 'PX001', CURDATE(), DATE_ADD(CURDATE(), INTERVAL 12 MONTH), 'Đang sửa chữa'),
 ('BH002', '444555666', 'PX001', '2026-01-10', '2027-01-10', 'Đã trả máy'),

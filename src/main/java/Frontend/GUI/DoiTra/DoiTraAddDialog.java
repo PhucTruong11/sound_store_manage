@@ -24,11 +24,13 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
     private JButton btnChonPX, btnChonImei;
     private JDateChooser jdNgayDoi;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private JTextField txtMaImeiMoi;
+    private JButton btnChonImeiMoi;
 
     private DoiTraBUS doiTraBUS = new DoiTraBUS();
 
     public DoiTraAddDialog() {
-        super("THÊM PHIẾU ĐỔI TRẢ MỚI", 500, 500);
+        super("THÊM PHIẾU ĐỔI TRẢ MỚI", 500, 700);
 
         String newMa = doiTraBUS.generateMaDoiTra();
         txtMa.setText(newMa);
@@ -80,6 +82,15 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         pnlContent.add(txtMaImei, "split 2, growx, h 35!");
         pnlContent.add(btnChonImei, "w 40!, h 35!");
 
+        pnlContent.add(new JLabel("Mã IMEI thay thế:"));
+        txtMaImeiMoi = new JTextField();
+        txtMaImeiMoi.setEditable(false);
+        btnChonImeiMoi = new JButton("...");
+        btnChonImeiMoi.setEnabled(false);
+        btnChonImeiMoi.addActionListener(e -> openSelectImeiMoi()); 
+        pnlContent.add(txtMaImeiMoi, "split 2, growx, h 35!");
+        pnlContent.add(btnChonImeiMoi, "w 40!, h 35!");
+
         pnlContent.add(new JLabel("Ngày đổi trả:"));
         jdNgayDoi = new JDateChooser();
         jdNgayDoi.setDateFormatString("dd/MM/yyyy");
@@ -110,6 +121,7 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
             }
             
             btnChonImei.setEnabled(true);
+            btnChonImeiMoi.setEnabled(true);
             txtMaImei.setText("");
         }
     }
@@ -124,10 +136,18 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         }
     }
 
+    private void openSelectImeiMoi() {
+        SelectImeiTrongKhoDialog dialog = new SelectImeiTrongKhoDialog();
+        dialog.setVisible(true);
+        if (dialog.getSelectedImei() != null) {
+            txtMaImeiMoi.setText(dialog.getSelectedImei());
+        }
+    }
+
     @Override
     protected void logicXacNhan() {
-        if (txtMaPX.getText().isEmpty() || txtMaImei.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn Phiếu xuất và IMEI sản phẩm!");
+        if (txtMaPX.getText().isEmpty() || txtMaImei.getText().isEmpty() || txtMaImeiMoi.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn Phiếu xuất, máy trả và máy mới thay thế!");
             return;
         }
 
@@ -153,10 +173,11 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         dt.setLyDo(txtLyDo.getText());
         dt.setTrangThai(true);
 
-        String res = doiTraBUS.add(dt);
+        String imeiMoi = txtMaImeiMoi.getText();
+        String res = doiTraBUS.add(dt, imeiMoi);
 
         if (res.equals("OK")) {
-            JOptionPane.showMessageDialog(this, "Đổi trả thành công! Sản phẩm " + dt.getMaImei() + " đã được nhập lại kho.");
+            JOptionPane.showMessageDialog(this, "Đổi trả thành công!\n- Máy cũ đã thu hồi.\n- Máy mới " + imeiMoi + " đã giao cho khách.");
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, res, "Lỗi", JOptionPane.ERROR_MESSAGE);
