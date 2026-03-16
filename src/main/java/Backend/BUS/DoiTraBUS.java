@@ -26,22 +26,45 @@ public class DoiTraBUS {
         return String.format("DT%03d", max + 1);
     }
 
-    public String add(DoiTra dt) {
+    // public String add(DoiTra dt) {
+    //     String validateMsg = validate(dt);
+    //     if (!validateMsg.equals("OK")) {
+    //         return validateMsg;
+    //     }
+    //     int result = dtDAO.insert(dt);
+    //     if (result > 0) {
+    //         boolean isUpdatedStock = dtDAO.updateImeiReturn(dt.getMaImei());
+    //         if (isUpdatedStock) {
+    //             return "OK";
+    //         } else {
+    //             return "Phiếu đã tạo nhưng không thể cập nhật trạng thái kho!";
+    //         }
+    //     }
+    //     return "Lỗi hệ thống: Không thể thêm phiếu đổi trả.";
+    // }
+
+    public String add(DoiTra dt, String imeiMoi) {
         String validateMsg = validate(dt);
-        if (!validateMsg.equals("OK")) {
-            return validateMsg;
-        }
-        int result = dtDAO.insert(dt);
+        if (!validateMsg.equals("OK")) return validateMsg;
+
+        int result = dtDAO.insert(dt); 
+        
         if (result > 0) {
-            boolean isUpdatedStock = dtDAO.updateImeiReturn(dt.getMaImei());
-            if (isUpdatedStock) {
+            // Thu hồi máy cũ (Cập nhật trạng thái 'Lỗi' và gỡ khỏi phiếu xuất)
+            boolean okOld = dtDAO.updateOldImeiStatus(dt.getMaImei(), "Máy lỗi đổi trả");
+            
+            // Giao máy mới (Cập nhật trạng thái 'Đã bán' cho IMEI mới vào phiếu xuất này)
+            boolean okNew = dtDAO.assignNewImeiToInvoice(imeiMoi, dt.getMaPhieuXuat());
+            
+            if (okOld && okNew) {
                 return "OK";
             } else {
-                return "Phiếu đã tạo nhưng không thể cập nhật trạng thái kho!";
+                return "Phiếu đã tạo nhưng gặp lỗi khi điều chuyển IMEI trong kho!";
             }
         }
         return "Lỗi hệ thống: Không thể thêm phiếu đổi trả.";
     }
+
     public boolean delete(String maDT) {
         return dtDAO.softDelete(maDT) > 0;
     }

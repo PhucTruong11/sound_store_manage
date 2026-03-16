@@ -124,4 +124,36 @@ public class DoiTraDAO {
         }
         return null;
     }
+
+    public boolean updateOldImeiStatus(String imeiCu, String tinhTrangMoi) {
+        // Chúng ta set MaPhieuXuat = NULL để máy này không còn thuộc về hóa đơn đó nữa
+        String sql = "UPDATE ChiTietSP SET TinhTrang = ?, MaPhieuXuat = NULL WHERE MaImei = ?";
+        try (java.sql.Connection conn = Backend.DatabaseHelper.getConnection();
+            java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, tinhTrangMoi); // Ví dụ: "Hàng lỗi chờ xử lý" hoặc "Đã đổi trả"
+            ps.setString(2, imeiCu);
+            
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean assignNewImeiToInvoice(String imeiMoi, String maPX) {
+        // Chuyển trạng thái máy mới từ 'Trong kho' sang 'Đã bán' và gán vào phiếu xuất
+        String sql = "UPDATE ChiTietSP SET TinhTrang = 'Đã bán', MaPhieuXuat = ? WHERE MaImei = ?";
+        try (java.sql.Connection conn = Backend.DatabaseHelper.getConnection();
+            java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, maPX);
+            ps.setString(2, imeiMoi);
+            
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
