@@ -59,4 +59,8 @@ public class PhieuXuatBUS {
     public double getPhanTramGiamCuaPhieu(String maPX) {
         return pxDAO.getDiscountPercentage(maPX);
     }
+
+    public String getTenKhachHang(String maKH) {
+        return pxDAO.getTenKhachHang(maKH);
+    }
 }
