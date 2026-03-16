@@ -1,9 +1,13 @@
 package Frontend.GUI.DoiTra;
 
+import java.awt.Color;
+import java.awt.Cursor;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -16,112 +20,148 @@ import Frontend.Compoent.BaseThaoTacDialog;
 
 public class DoiTraFixDialog extends BaseThaoTacDialog {
 
-    private JTextField txtMa, txtMaPX, txtMaKH, txtMaPhienBan, txtLyDo , txtSoLuong, txtTinhTrang;
-    private JDateChooser jdNgay;
+    private JTextField txtMa, txtMaPX, txtMaKH, txtMaImei, txtNgayBan, txtHanCuoi, txtLyDo;
+    private JButton btnChonPX, btnChonImei;
+    private JDateChooser jdNgayDoi;
+    private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private DoiTraBUS doiTraBUS = new DoiTraBUS();
 
-    public DoiTraFixDialog(String ma, String maPX, String maKH, String maPhienBan,
-                           String ngay, String LyDo ,String soLuong, String tinhTrang) {
+    public DoiTraFixDialog(DoiTra dt) {
+        super("CẬP NHẬT PHIẾU ĐỔI TRẢ", 500, 500);
 
-        super("SỬA ĐỔI TRẢ", 450, 500);
+        txtMa.setText(dt.getMaDoiTra());
+        txtMaPX.setText(dt.getMaPhieuXuat());
+        txtMaKH.setText(dt.getMaKH());
+        txtMaImei.setText(dt.getMaImei());
+        txtLyDo.setText(dt.getLyDo());
 
-        txtMa.setText(ma);
-        txtMaPX.setText(maPX);
-        txtMaKH.setText(maKH);
-        txtMaPhienBan.setText(maPhienBan);
-        txtLyDo.setText(LyDo);
-        txtSoLuong.setText(soLuong);
-        txtTinhTrang.setText(tinhTrang);
+        if (dt.getNgayDoiTra() != null) {
+            Date date = Date.from(dt.getNgayDoiTra().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            jdNgayDoi.setDate(date);
+        }
 
         txtMa.setEditable(false);
-        txtMa.setFocusable(false);
-
-        
-        try {
-            LocalDate localDate = LocalDate.parse(ngay);
-            Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            jdNgay.setDate(date);
-        } catch (Exception e) {
-            jdNgay.setDate(new Date()); // Nếu lỗi thì để ngày hiện tại
-        }
+        txtMa.setBackground(new Color(240, 240, 240));
     }
 
     @Override
     protected void initForm() {
+        pnlContent.setLayout(new net.miginfocom.swing.MigLayout("fillx, insets 20", "[right]15[grow, fill]"));
 
-        pnlContent.add(new JLabel("Mã đổi trả:"));
+        pnlContent.add(new JLabel("Mã phiếu đổi trả:"));
         txtMa = new JTextField();
-        pnlContent.add(txtMa, "growx, h 35!");
+        pnlContent.add(txtMa, "h 35!, wrap");
 
-        pnlContent.add(new JLabel("Mã phiếu xuất:"));
+        pnlContent.add(new JLabel("Chọn Phiếu Xuất:"));
         txtMaPX = new JTextField();
-        pnlContent.add(txtMaPX, "growx, h 35!");
+        txtMaPX.setEditable(false);
+        btnChonPX = new JButton("...");
+        btnChonPX.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnChonPX.addActionListener(e -> openSelectPhieuXuat());
+        pnlContent.add(txtMaPX, "split 2, growx, h 35!");
+        pnlContent.add(btnChonPX, "w 40!, h 35!, wrap");
 
         pnlContent.add(new JLabel("Mã khách hàng:"));
         txtMaKH = new JTextField();
-        pnlContent.add(txtMaKH, "growx, h 35!");
+        txtMaKH.setEditable(false);
+        txtMaKH.setBackground(new Color(240, 240, 240));
+        pnlContent.add(txtMaKH, "h 35!, wrap");
 
-        pnlContent.add(new JLabel("Mã phiên bản:"));
-        txtMaPhienBan = new JTextField();
-        pnlContent.add(txtMaPhienBan, "growx, h 35!");
+        pnlContent.add(new JLabel("Ngày bán:"));
+        txtNgayBan = new JTextField();
+        txtNgayBan.setEditable(false);
+        txtNgayBan.setBackground(new Color(240, 240, 240));
+        pnlContent.add(txtNgayBan, "h 35!, wrap");
+
+        pnlContent.add(new JLabel("Hạn cuối đổi trả:"));
+        txtHanCuoi = new JTextField();
+        txtHanCuoi.setEditable(false);
+        txtHanCuoi.setBackground(new Color(240, 240, 240));
+        pnlContent.add(txtHanCuoi, "h 35!, wrap");
+
+        pnlContent.add(new JLabel("Mã IMEI máy trả:"));
+        txtMaImei = new JTextField();
+        txtMaImei.setEditable(false);
+        btnChonImei = new JButton("...");
+        btnChonImei.addActionListener(e -> openSelectImei());
+        pnlContent.add(txtMaImei, "split 2, growx, h 35!");
+        pnlContent.add(btnChonImei, "w 40!, h 35!, wrap");
 
         pnlContent.add(new JLabel("Ngày đổi trả:"));
-        jdNgay = new JDateChooser();
-        jdNgay.setDateFormatString("dd/MM/yyyy");
-        pnlContent.add(jdNgay, "growx, h 35!");
+        jdNgayDoi = new JDateChooser();
+        jdNgayDoi.setDateFormatString("dd/MM/yyyy");
+        pnlContent.add(jdNgayDoi, "h 35!, wrap");
 
-        pnlContent.add(new JLabel("Lý do:"));
+        pnlContent.add(new JLabel("Lý do: "));
         txtLyDo = new JTextField();
-        pnlContent.add(txtLyDo, "growx, h 35!");
+        pnlContent.add(txtLyDo, "h 35!, wrap");
+    }
 
-        pnlContent.add(new JLabel("Số lượng:"));
-        txtSoLuong = new JTextField();
-        pnlContent.add(txtSoLuong, "growx, h 35!");
+    private void openSelectPhieuXuat() {
+        SelectPhieuXuatDialog dialog = new SelectPhieuXuatDialog();
+        dialog.setVisible(true);
+        Backend.DTO.PhieuXuat px = dialog.getSelectedPX();
+        if (px != null) {
+            txtMaPX.setText(px.getMaPhieuXuat());
+            txtMaKH.setText(px.getMaKH());
+            if (px.getNgayXuat() != null) {
+                LocalDate ngayBan = px.getNgayXuat().toLocalDateTime().toLocalDate();
+                txtNgayBan.setText(ngayBan.format(dtf));
+                txtHanCuoi.setText(ngayBan.plusDays(30).format(dtf));
+            }
+            txtMaImei.setText(""); 
+        }
+    }
 
-        pnlContent.add(new JLabel("Tình trạng:"));
-        txtTinhTrang = new JTextField();
-        pnlContent.add(txtTinhTrang, "growx, h 35!");
+    private void openSelectImei() {
+        String maPX = txtMaPX.getText();
+        if(maPX.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn Phiếu xuất trước!");
+            return;
+        }
+        SelectImeiDialog dialog = new SelectImeiDialog(maPX);
+        dialog.setVisible(true);
+        if (dialog.getSelectedImei() != null) {
+            txtMaImei.setText(dialog.getSelectedImei());
+        }
     }
 
     @Override
     protected void logicXacNhan() {
-        // Lấy ngày từ JDateChooser (Không lo bị lỗi gõ chữ "sdg" nữa)
-        Date selectedDate = jdNgay.getDate();
-        if (selectedDate == null) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày hợp lệ!");
+        if (txtMaPX.getText().isEmpty() || txtMaImei.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn Phiếu xuất và IMEI!");
             return;
         }
-        
-        // Chuyển từ Date sang LocalDate
-        LocalDate ngay = selectedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-        try {
-            DoiTra dt = new DoiTra(
-                txtMa.getText(),
-                txtMaPX.getText(),
-                txtMaKH.getText(),
-                txtMaPhienBan.getText(),
-                ngay,
-                Integer.parseInt(txtSoLuong.getText().trim()),
-                txtLyDo.getText(),
-                txtTinhTrang.getText()
-            );
+        if (txtLyDo.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập lý do!");
+            return;
+        }
 
-            String validationMsg = doiTraBUS.validate(dt, false);
+        Date dateDoi = jdNgayDoi.getDate();
+        if (dateDoi == null) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày!");
+            return;
+        }
 
-            if (!validationMsg.equals("OK")) {
-                JOptionPane.showMessageDialog(this, validationMsg, "Lỗi dữ liệu", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
+        LocalDate ngayDoiTra = dateDoi.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            if (doiTraBUS.update(dt)) {
-                JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Số lượng phải là con số!");
+        DoiTra dt = new DoiTra();
+        dt.setMaDoiTra(txtMa.getText());
+        dt.setMaKH(txtMaKH.getText());
+        dt.setMaPhieuXuat(txtMaPX.getText());
+        dt.setMaImei(txtMaImei.getText());
+        dt.setNgayDoiTra(ngayDoiTra);
+        dt.setLyDo(txtLyDo.getText());
+
+        String res = doiTraBUS.update(dt);
+
+        if (res.equals("OK")) {
+            JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, res, "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

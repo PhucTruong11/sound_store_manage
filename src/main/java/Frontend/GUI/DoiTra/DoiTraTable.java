@@ -5,7 +5,6 @@ import java.awt.Font;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,7 +23,6 @@ public class DoiTraTable extends JPanel {
     private JTable tbl;
     private DefaultTableModel tblModel;
     private DoiTraBUS doiTraBUS = new DoiTraBUS();
-    private JComboBox<String> cboTrangThai;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public DoiTraTable() {
@@ -32,31 +30,34 @@ public class DoiTraTable extends JPanel {
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: 20");
 
-        initFilterHeader();
+        initHeader();
         initTable();
         loadData();
     }
 
-    private void initFilterHeader() {
+    private void initHeader() {
         JPanel pnlHeader = new JPanel(new MigLayout("insets 10", "[]push[]"));
         pnlHeader.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
-        JLabel lblTitle = new JLabel("Quản Lý Đổi Trả (Hạn 30 ngày)");
+        
+        JLabel lblTitle = new JLabel("Danh sách đổi trả");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
 
-        cboTrangThai = new JComboBox<>(new String[]{"Tất cả", "Còn thời hạn", "Đã hết hạn đổi trả"});
-        cboTrangThai.addActionListener(e -> locTrangThai());
-
         pnlHeader.add(lblTitle);
-        pnlHeader.add(cboTrangThai, "w 200!, h 35!");
         add(pnlHeader, "growx");
     }
 
     private void initTable() {
-        String[] header = {"Mã DT", "Mã PX", "Mã KH", "Ngày Mua", "Ngày Hết Hạn", "Số Lượng", "Trạng Thái"};
+        String[] header = {
+            "Mã Đổi Trả", "Mã PX", "Khách Hàng", 
+            "Ngày Mua", "Ngày Trả", "Hạn Cuối", 
+            "Mã IMEI", "Lý Do"
+        };
 
         tblModel = new DefaultTableModel(header, 0) {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; }
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
         };
 
         tbl = new Table();
@@ -75,13 +76,19 @@ public class DoiTraTable extends JPanel {
             }
         });
 
-        DefaultTableCellRenderer center = new DefaultTableCellRenderer();
-        center.setHorizontalAlignment(JLabel.CENTER);
-        tbl.setDefaultRenderer(Object.class, center);
+        // Căn giữa dữ liệu trong các cột
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < tbl.getColumnCount(); i++) {
+            tbl.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
 
         add(new JScrollPane(tbl), "grow");
     }
 
+    /**
+     * Tải dữ liệu từ BUS lên Table
+     */
     public void loadData() {
         tblModel.setRowCount(0);
         ArrayList<DoiTra> list = doiTraBUS.getAll();
@@ -90,6 +97,30 @@ public class DoiTraTable extends JPanel {
         }
     }
 
+    /**
+     * Hàm phụ để thêm một dòng vào bảng, xử lý định dạng ngày tháng
+     */
+    private void addRow(DoiTra dt) {
+        // Lấy ngày đã được DTO tự động tính toán (Ngày hết hạn = Ngày mua + 30)
+        String ngayMuaStr = (dt.getNgayMua() != null) ? dt.getNgayMua().format(dtf) : "N/A";
+        String ngayTraStr = (dt.getNgayDoiTra() != null) ? dt.getNgayDoiTra().format(dtf) : "N/A";
+        String hanCuoiStr = (dt.getNgayHetHan() != null) ? dt.getNgayHetHan().format(dtf) : "N/A";
+
+        tblModel.addRow(new Object[]{
+            dt.getMaDoiTra(),
+            dt.getMaPhieuXuat(),
+            dt.getTenKH(),
+            ngayMuaStr,
+            ngayTraStr,
+            hanCuoiStr,
+            dt.getMaImei(), // Cột IMEI mới thay cho cột Số lượng cũ
+            dt.getLyDo()
+        });
+    }
+
+    /**
+     * Tìm kiếm và cập nhật lại bảng
+     */
     public void updateTable(ArrayList<DoiTra> newList) {
         tblModel.setRowCount(0);
         for (DoiTra dt : newList) {
@@ -97,29 +128,11 @@ public class DoiTraTable extends JPanel {
         }
     }
 
-    private void addRow(DoiTra dt) {
-        tblModel.addRow(new Object[]{
-                dt.getMaDoiTra(),
-                dt.getMaPhieuXuat(),
-                dt.getMaKH(),
-                dt.getNgayDoiTra().format(dtf),
-                dt.getNgayHetHan().format(dtf),
-                dt.getSoLuong(),
-                dt.getTrangThaiThoiHan()
-        });
-    }
-
-    private void locTrangThai() {
-        String filter = cboTrangThai.getSelectedItem().toString();
-        tblModel.setRowCount(0);
-        for (DoiTra dt : doiTraBUS.getAll()) {
-            if (filter.equals("Tất cả") || dt.getTrangThaiThoiHan().equals(filter)) {
-                addRow(dt);
-            }
-        }
-    }
-
+    /**
+     * Hiển thị Dialog chi tiết khi Double Click
+     */
     private void showDetail(String maDT) {
+        // Tìm đối tượng DoiTra trong list hiện tại
         DoiTra selected = null;
         for (DoiTra dt : doiTraBUS.getAll()) {
             if (dt.getMaDoiTra().equals(maDT)) {
@@ -129,7 +142,7 @@ public class DoiTraTable extends JPanel {
         }
 
         if (selected != null) {
-            // Sử dụng Dialog chi tiết mới thay vì JOptionPane
+            // Hiển thị Dialog chi tiết sản phẩm và quá trình nhập lại kho
             DoiTraDetailDialog detailDialog = new DoiTraDetailDialog(selected);
             detailDialog.setVisible(true);
         }
@@ -137,7 +150,5 @@ public class DoiTraTable extends JPanel {
 
     public JTable getTable() { return tbl; }
     
-    public DefaultTableModel getModel() {
-        return tblModel;
-    }
+    public DefaultTableModel getModel() { return tblModel; }
 }
