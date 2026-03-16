@@ -33,7 +33,7 @@ public class ChiTietSPDialog extends JDialog {
         }
 
         public void initComponents() {
-                // --- HEADER ---
+
                 JPanel pnlHeader = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
                 pnlHeader.setBackground(Theme.PRIMARY_COLOR);
                 JLabel lblHeader = new JLabel(isEditMode ? "SỬA CHI TIẾT - " + maPBHT : "DANH SÁCH CHI TIẾT - " + maPBHT);
@@ -49,7 +49,7 @@ public class ChiTietSPDialog extends JDialog {
                                 return false;
                         }
                 };
-                tblCT = new Table();
+                tblCT = new Table();  
                 tblCT.setModel(model);
 
                 JScrollPane scroll = new JScrollPane(tblCT);
@@ -57,7 +57,6 @@ public class ChiTietSPDialog extends JDialog {
                 scroll.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
                 add(scroll, BorderLayout.CENTER);
 
-                // --- FOOTER ---
                 JPanel pnlFooter = new JPanel(new FlowLayout(FlowLayout.RIGHT));
                 pnlFooter.setBackground(Color.WHITE);
 
@@ -69,11 +68,11 @@ public class ChiTietSPDialog extends JDialog {
                         addEditEvents(btnSua); 
                 }
 
-                CustomButton btnDong = new CustomButton("Thoát", new Color(149, 165, 166));
-                btnDong.setPreferredSize(new Dimension(80, 40));
-                btnDong.addActionListener(e -> dispose());
-                pnlFooter.add(btnDong);
-
+                // CustomButton btnDong = new CustomButton("Thoát", new Color(149, 165, 166));
+                // btnDong.setPreferredSize(new Dimension(80, 40));
+                // btnDong.addActionListener(e -> dispose());
+                // pnlFooter.add(btnDong);
+                
                 add(pnlFooter, BorderLayout.SOUTH);
         }
 

@@ -16,7 +16,7 @@ public class SanPhamTable extends JPanel {
     private JTable tbl;
     private DefaultTableModel tblModel;
     private JScrollPane scrollPane;
-    private JComboBox<String> cboPhanLoai;
+    private JComboBox<String> cboPhanLoai,cboHang;
     private TableRowSorter<DefaultTableModel> sorter;
 
     public SanPhamTable() {
@@ -29,10 +29,8 @@ public class SanPhamTable extends JPanel {
     }
 
     private void initHeader() {
-        JPanel pnlHeader = new JPanel(new MigLayout("insets 10", "[]push[]"));
+        JPanel pnlHeader = new JPanel(new MigLayout("insets 10","[]push[][][][]"));
         pnlHeader.putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
-
-        // pnlHeader.setOpaque(false);
 
         JLabel lblTitle = new JLabel("Sản Phẩm");
         lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 16));
@@ -43,31 +41,40 @@ public class SanPhamTable extends JPanel {
         cboPhanLoai.setFocusable(false);
         cboPhanLoai.setPreferredSize(new Dimension(130, 30));
 
+        cboHang = new JComboBox<>(new String[] { "Tất cả", "Marsall", "Sony", "JBL" });
+        cboHang.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        cboHang.setBackground(Color.WHITE);
+        cboHang.setFocusable(false);
+        cboHang.setPreferredSize(new Dimension(130, 30));
+
         cboPhanLoai.addActionListener(e -> {
-            String selected = cboPhanLoai.getSelectedItem().toString();
-            if (sorter != null) {
-                if (selected.equals("Tất cả")) {
-                    sorter.setRowFilter(null);
-                } else {
-                    String maLoaiCanTim = "";
-                    switch (selected) {
-                        case "Loa":
-                            maLoaiCanTim = "L01";
-                            break;
-                        case "Tai nghe":
-                            maLoaiCanTim = "L02";
-                            break;
-                        case "Phụ kiện":
-                            maLoaiCanTim = "L03";
-                            break;
-                    }
-                    sorter.setRowFilter(RowFilter.regexFilter("^" + maLoaiCanTim + "$", 4));
-                }
-            }
+            loai = cboPhanLoai.getSelectedItem().toString();
+            Filter();
+            // if (sorter != null) {
+            //     if (selected.equals("Tất cả")) {
+            //         sorter.setRowFilter(null);
+            //     } else {
+            //         String maLoai = "";
+            //         switch (selected) {
+            //             case "Loa":maLoai = "L01"; break;
+            //             case "Tai nghe":maLoai = "L02"; break;
+            //             case "Phụ kiện":maLoai = "L03"; break;
+            //         }
+            //         sorter.setRowFilter(RowFilter.regexFilter("^" + maLoai + "$", 4));
+            //     }
+            // }
+        });
+
+        cboHang.addActionListener(e->{
+            hang=cboHang.getSelectedItem().toString();
+            Filter();
         });
 
         pnlHeader.add(lblTitle);
-        pnlHeader.add(cboPhanLoai, "w 150!, h 35!");
+        pnlHeader.add(new JLabel("Loại:"));
+        pnlHeader.add(cboPhanLoai, "w 120!, h 35!");
+        pnlHeader.add(new JLabel("Hãng:"));
+        pnlHeader.add(cboHang, "w 120!, h 35!");
         add(pnlHeader, "growx");
     }
 
@@ -96,7 +103,6 @@ public class SanPhamTable extends JPanel {
         add(scrollPane, "grow");
     }
 
-    // Hiển thị dữ liệu
     public void showData(ArrayList<SanPham> list) {
         tblModel.setRowCount(0);
         int stt = 1;
@@ -111,8 +117,62 @@ public class SanPhamTable extends JPanel {
 
     public void resetFilters() {
         if (cboPhanLoai != null) cboPhanLoai.setSelectedIndex(0); 
+        if (cboHang != null) cboHang.setSelectedIndex(0);
+        // this.loai = "Tất cả";
+        // this.hang = "Tất cả";
+        // this.textTK = "";
+        if (tbl.getRowSorter() != null) {
+        ((TableRowSorter<?>) tbl.getRowSorter()).setRowFilter(null);
+    }
     }
 
     public JTable getTable() { return tbl; }
+
+    private String textTK="";
+    private String loai="Tất cả";
+    private String hang="Tất cả";
+    public void search(String text){
+            this.textTK=text;
+            Filter();
+        }
+
+    private void Filter() {
+
+        TableRowSorter<?> sorter = (TableRowSorter<?>) tbl.getRowSorter();
+        if (sorter == null) return;
+        java.util.List<RowFilter<Object, Object>> filters = new java.util.ArrayList<>();
+
+        if (!loai.equalsIgnoreCase("Tất cả")) {
+            String maLoai = "";
+            switch (loai) {
+                case "Loa": maLoai = "L01"; break;
+                case "Tai nghe": maLoai = "L02"; break;
+                case "Phụ kiện": maLoai = "L03"; break;
+            }
+            if (!maLoai.isEmpty()) {
+                filters.add(RowFilter.regexFilter("^" + maLoai + "$", 4));
+            }
+        }
+
+        if (!hang.equalsIgnoreCase("Tất cả")) {
+            String maHang = "";
+            switch (hang) {
+                case "Marsall": maHang = "H01"; break; 
+                case "Sony": maHang = "H02"; break;
+                case "JBL": maHang = "H03"; break;
+            }
+            if (!maHang.isEmpty()) {
+                filters.add(RowFilter.regexFilter("^" + maHang + "$", 5));
+            }
+        }
+        if (!textTK.isEmpty()) {
+            filters.add(RowFilter.regexFilter("(?i)" + java.util.regex.Pattern.quote(textTK)));
+        }
+        if (filters.isEmpty()) {
+            sorter.setRowFilter(null);
+        } else {
+            sorter.setRowFilter(RowFilter.andFilter(filters));
+        }
+    }
     
 }
