@@ -31,6 +31,7 @@ public class Sidebar extends JPanel {
     private MainFrame parent;
     private ChiTietQuyenBUS qBUS = new ChiTietQuyenBUS();
     private String maNQ;
+    private CustomButton activeButton = null;  // Lưu button đang active
 
     public Sidebar(MainFrame parent, String maNQ) {
         this.parent = parent;
@@ -79,6 +80,14 @@ public class Sidebar extends JPanel {
         btn.setFocusPainted(false);
 
         btn.addActionListener(e -> {
+            // Deactivate button cũ
+            if (activeButton != null) {
+                activeButton.setActive(false);
+            }
+            // Activate button mới
+            btn.setActive(true);
+            activeButton = btn;
+            
             switch (text) {
                 case "Sản phẩm":
                     parent.setPage(new SanPhamPanel());
@@ -156,7 +165,7 @@ public class Sidebar extends JPanel {
             case "Phân quyền":
                 return "user-round-pen";
             case "Đổi trả":
-                return "refresh-cw";
+                return "panel-top-close";
             default:
                 return "help-circle";
         }

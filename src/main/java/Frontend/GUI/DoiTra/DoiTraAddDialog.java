@@ -2,6 +2,7 @@ package Frontend.GUI.DoiTra;
 
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -91,6 +92,11 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         pnlContent.add(txtMaImeiMoi, "split 2, growx, h 35!");
         pnlContent.add(btnChonImeiMoi, "w 40!, h 35!");
 
+        JLabel lblNote = new JLabel("(Tùy chọn - Để trống nếu chưa có máy thay thế)");
+        lblNote.setFont(new Font("Segoe UI", Font.ITALIC, 10));
+        lblNote.setForeground(Color.GRAY);
+        pnlContent.add(lblNote, "wrap, gaptop -30");
+
         pnlContent.add(new JLabel("Ngày đổi trả:"));
         jdNgayDoi = new JDateChooser();
         jdNgayDoi.setDateFormatString("dd/MM/yyyy");
@@ -109,20 +115,36 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         Backend.DTO.PhieuXuat px = dialog.getSelectedPX();
         
         if (px != null) {
-            txtMaPX.setText(px.getMaPhieuXuat());
-            txtMaKH.setText(px.getMaKH());
-            
-            if (px.getNgayXuat() != null) {
-                LocalDate ngayBan = px.getNgayXuat().toLocalDateTime().toLocalDate();
+            try {
+                String maPX = px.getMaPhieuXuat();
+                String maKH = px.getMaKH();
                 
-                txtNgayBan.setText(ngayBan.format(dtf));
+                if (maPX == null || maPX.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Lỗi: Mã phiếu xuất không hợp lệ!");
+                    return;
+                }
                 
-                txtHanCuoi.setText(ngayBan.plusDays(30).format(dtf));
+                txtMaPX.setText(maPX);
+                txtMaKH.setText(maKH != null ? maKH : "N/A");
+                
+                if (px.getNgayXuat() != null) {
+                    LocalDate ngayBan = px.getNgayXuat().toLocalDateTime().toLocalDate();
+                    txtNgayBan.setText(ngayBan.format(dtf));
+                    txtHanCuoi.setText(ngayBan.plusDays(30).format(dtf));
+                } else {
+                    txtNgayBan.setText("N/A");
+                    txtHanCuoi.setText("N/A");
+                }
+                
+                btnChonImei.setEnabled(true);
+                btnChonImeiMoi.setEnabled(true);
+                txtMaImei.setText("");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Lỗi xử lý phiếu xuất: " + ex.getMessage());
+                ex.printStackTrace();
             }
-            
-            btnChonImei.setEnabled(true);
-            btnChonImeiMoi.setEnabled(true);
-            txtMaImei.setText("");
+        } else {
+            JOptionPane.showMessageDialog(this, "Chưa chọn phiếu xuất hoặc dialog bị hủy!");
         }
     }
 
@@ -146,8 +168,8 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
 
     @Override
     protected void logicXacNhan() {
-        if (txtMaPX.getText().isEmpty() || txtMaImei.getText().isEmpty() || txtMaImeiMoi.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Vui lòng chọn Phiếu xuất, máy trả và máy mới thay thế!");
+        if (txtMaPX.getText().isEmpty() || txtMaImei.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn Phiếu xuất và máy trả!");
             return;
         }
 
@@ -173,11 +195,16 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         dt.setLyDo(txtLyDo.getText());
         dt.setTrangThai(true);
 
-        String imeiMoi = txtMaImeiMoi.getText();
-        String res = doiTraBUS.add(dt, imeiMoi);
+        String imeiMoi = txtMaImeiMoi.getText().trim();
+        // imeiMoi is now optional
+        String res = doiTraBUS.add(dt, imeiMoi.isEmpty() ? null : imeiMoi);
 
         if (res.equals("OK")) {
-            JOptionPane.showMessageDialog(this, "Đổi trả thành công!\n- Máy cũ đã thu hồi.\n- Máy mới " + imeiMoi + " đã giao cho khách.");
+            if (imeiMoi.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Đổi trả thành công!\n- Máy cũ đã được thu hồi.\n- Khách hàng sẽ nhận máy thay thế sau.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Đổi trả thành công!\n- Máy cũ đã thu hồi.\n- Máy mới " + imeiMoi + " đã giao cho khách.");
+            }
             dispose();
         } else {
             JOptionPane.showMessageDialog(this, res, "Lỗi", JOptionPane.ERROR_MESSAGE);
