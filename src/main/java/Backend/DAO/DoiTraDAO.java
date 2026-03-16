@@ -34,7 +34,9 @@ public class DoiTraDAO {
                     rs.getBoolean("TrangThai")
                 );
                 dt.setTenKH(rs.getString("HoTen"));
-                dt.setNgayMua(rs.getDate("NgayXuat").toLocalDate());
+                LocalDate ngayMua = rs.getDate("NgayXuat").toLocalDate();
+                dt.setNgayMua(ngayMua);
+                // ngayHetHan sẽ auto calculate trong setNgayMua (ngayMua + 30)
                 list.add(dt);
             }
         } catch (Exception e) {
@@ -63,13 +65,14 @@ public class DoiTraDAO {
     }
 
     public int update(DoiTra dt) {
-        String sql = "UPDATE DoiTra SET NgayDoiTra = ?, LyDo = ? WHERE MaDoiTra = ? AND TrangThai = 1";
+        String sql = "UPDATE DoiTra SET NgayDoiTra = ?, LyDo = ?, MaImei = ? WHERE MaDoiTra = ? AND TrangThai = 1";
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             
             ps.setDate(1, Date.valueOf(dt.getNgayDoiTra()));
             ps.setString(2, dt.getLyDo());
-            ps.setString(3, dt.getMaDoiTra());
+            ps.setString(3, dt.getMaImei());
+            ps.setString(4, dt.getMaDoiTra());
             
             return ps.executeUpdate();
         } catch (Exception e) {
@@ -89,6 +92,36 @@ public class DoiTraDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public String getImeiByMaDoiTra(String maDT) {
+        String sql = "SELECT MaImei FROM DoiTra WHERE MaDoiTra = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, maDT);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("MaImei");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean restoreImeiStatus(String imei) {
+        // Restore máy trả về trạng thái 'Đã bán' 
+        String sql = "UPDATE ChiTietSP SET TinhTrang = 'Đã bán' WHERE MaImei = ? AND TinhTrang = 'Máy lỗi đổi trả'";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, imei);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public boolean updateImeiReturn(String maImei) {
@@ -155,5 +188,42 @@ public class DoiTraDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    // Check if IMEI belongs to the invoice (PhieuXuat)
+    public boolean checkImeiInvoice(String imei, String maPX) {
+        String sql = "SELECT COUNT(*) FROM ChiTietSP WHERE MaImei = ? AND MaPhieuXuat = ?";
+        try (java.sql.Connection conn = Backend.DatabaseHelper.getConnection();
+            java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, imei);
+            ps.setString(2, maPX);
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    // Check if IMEI exists in kho (Trong kho)
+    public boolean checkImeiInStock(String imei) {
+        String sql = "SELECT COUNT(*) FROM ChiTietSP WHERE MaImei = ? AND TinhTrang = 'Trong kho'";
+        try (java.sql.Connection conn = Backend.DatabaseHelper.getConnection();
+            java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, imei);
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

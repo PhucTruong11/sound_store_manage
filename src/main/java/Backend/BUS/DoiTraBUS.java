@@ -47,26 +47,56 @@ public class DoiTraBUS {
         String validateMsg = validate(dt);
         if (!validateMsg.equals("OK")) return validateMsg;
 
+        // Validate IMEI cũ (máy trả) có thuộc phiếu xuất này không
+        if (!dtDAO.checkImeiInvoice(dt.getMaImei(), dt.getMaPhieuXuat())) {
+            return "Lỗi: IMEI máy trả không thuộc phiếu xuất đã chọn!";
+        }
+
+        // Nếu có IMEI mới, kiểm tra nó có trong kho không
+        if (imeiMoi != null && !imeiMoi.trim().isEmpty()) {
+            if (!dtDAO.checkImeiInStock(imeiMoi)) {
+                return "Lỗi: IMEI máy thay thế không có sẵn trong kho!";
+            }
+        }
+
         int result = dtDAO.insert(dt); 
         
         if (result > 0) {
             // Thu hồi máy cũ (Cập nhật trạng thái 'Lỗi' và gỡ khỏi phiếu xuất)
             boolean okOld = dtDAO.updateOldImeiStatus(dt.getMaImei(), "Máy lỗi đổi trả");
             
-            // Giao máy mới (Cập nhật trạng thái 'Đã bán' cho IMEI mới vào phiếu xuất này)
-            boolean okNew = dtDAO.assignNewImeiToInvoice(imeiMoi, dt.getMaPhieuXuat());
-            
-            if (okOld && okNew) {
-                return "OK";
+            if (okOld) {
+                // Nếu có IMEI mới, giao cho khách
+                if (imeiMoi != null && !imeiMoi.trim().isEmpty()) {
+                    boolean okNew = dtDAO.assignNewImeiToInvoice(imeiMoi, dt.getMaPhieuXuat());
+                    if (okNew) {
+                        return "OK";
+                    } else {
+                        return "Phiếu đã tạo nhưng gặp lỗi khi gán IMEI máy mới!";
+                    }
+                } else {
+                    // Không có IMEI mới - chỉ thu hồi máy lỗi
+                    return "OK";
+                }
             } else {
-                return "Phiếu đã tạo nhưng gặp lỗi khi điều chuyển IMEI trong kho!";
+                return "Phiếu đã tạo nhưng không thể cập nhật trạng thái máy cũ!";
             }
         }
         return "Lỗi hệ thống: Không thể thêm phiếu đổi trả.";
     }
 
     public boolean delete(String maDT) {
-        return dtDAO.softDelete(maDT) > 0;
+        // Get IMEI before delete to restore it
+        String imei = dtDAO.getImeiByMaDoiTra(maDT);
+        
+        boolean isDeleted = dtDAO.softDelete(maDT) > 0;
+        
+        if (isDeleted && imei != null) {
+            // Restore IMEI status from "Máy lỗi đổi trả" back to "Đã bán"
+            dtDAO.restoreImeiStatus(imei);
+        }
+        
+        return isDeleted;
     }
 
     public String update(DoiTra dt) {
@@ -85,6 +115,11 @@ public class DoiTraBUS {
             return "Chưa chọn mã IMEI sản phẩm!";
         if (dt.getLyDo() == null || dt.getLyDo().trim().isEmpty()) 
             return "Lý do đổi trả không được để trống!";
+
+        // Check IMEI belongs to invoice
+        if (!dtDAO.checkImeiInvoice(dt.getMaImei(), dt.getMaPhieuXuat())) {
+            return "Lỗi: IMEI không thuộc phiếu xuất đã chọn!";
+        }
 
         LocalDate ngayMua = dtDAO.getNgayMuaByMaPX(dt.getMaPhieuXuat());
         if (ngayMua == null) return "Không tìm thấy thông tin ngày mua của phiếu xuất này!";

@@ -83,10 +83,13 @@ public class SelectImeiTrongKhoDialog extends JDialog {
              java.sql.PreparedStatement ps = conn.prepareStatement(sql);
              java.sql.ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
+                String tenSP = rs.getString("TenSP");
+                String mauSac = rs.getString("MauSac");
+                double giaBan = rs.getDouble("GiaBan");
                 tblModel.addRow(new Object[]{
                     rs.getString("MaImei"),
-                    rs.getString("TenSP") + " (" + rs.getString("MauSac") + ")",
-                    String.format("%,.0f VNĐ", rs.getDouble("GiaBan"))
+                    (tenSP != null ? tenSP : "N/A") + " (" + (mauSac != null ? mauSac : "N/A") + ")",
+                    String.format("%,.0f VNĐ", giaBan)
                 });
             }
         } catch (Exception e) {

@@ -108,13 +108,17 @@ public class SelectImeiDialog extends JDialog {
             ps.setString(1, maPX);
             java.sql.ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String tenHienThi = rs.getString("TenSP") + " [" + 
-                               rs.getString("MauSac") + " - " + 
-                               rs.getString("CongSuat") + "]";
+                String maSP = rs.getString("TenSP");
+                String mauSac = rs.getString("MauSac");
+                String congSuat = rs.getString("CongSuat");
+                String tenHienThi = (maSP != null ? maSP : "N/A") + " [" + 
+                               (mauSac != null ? mauSac : "N/A") + " - " + 
+                               (congSuat != null ? congSuat : "N/A") + "]";
+                String tinhTrang = rs.getString("TinhTrang");
                 result.add(new String[]{
                     rs.getString("MaImei"),
                     tenHienThi,
-                    rs.getString("TinhTrang")
+                    (tinhTrang != null ? tinhTrang : "Chưa rõ")
                 });
             }
         } catch (Exception e) {
