@@ -1,80 +1,102 @@
 package Frontend.GUI.DoiTra;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.time.format.DateTimeFormatter;
-
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
-
 import Backend.DTO.DoiTra;
 import Frontend.Compoent.BaseThaoTacDialog;
 
 public class DoiTraDetailDialog extends BaseThaoTacDialog {
 
-    private DoiTra dt;
+    private DoiTra doiTra;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    public DoiTraDetailDialog(DoiTra dt) {
-        super("CHI TIẾT PHIẾU ĐỔI TRẢ", 500, 600);
-        this.dt = dt;
+    private JTextField txtMaDT, txtNgayDT, txtLyDo, txtMaPX, txtTenKH, txtImei, txtStatus;
+
+    public DoiTraDetailDialog(DoiTra doiTra) {
+        super("CHI TIẾT PHIẾU ĐỔI TRẢ", 450, 600);
+        this.doiTra = doiTra;
+        
         fillData();
-        // Ẩn nút xác nhận vì đây là form chỉ xem
+        
         btnXacNhan.setVisible(false);
         btnHuy.setText("Đóng");
     }
 
     @Override
     protected void initForm() {
-        // Form này dùng để hiển thị nên mình sẽ thiết kế nhãn và ô text khóa
-        addInfoField("Mã đổi trả:", txtMa = new JTextField());
-        addInfoField("Mã phiếu xuất:", txtMaPX = new JTextField());
-        
-        pnlContent.add(new JSeparator(), "growx, span, gaptop 10, gapbottom 10");
-        
-        addInfoField("Khách hàng:", txtTenKH = new JTextField());
-        addInfoField("Sản phẩm:", txtTenSP = new JTextField());
-        
-        pnlContent.add(new JSeparator(), "growx, span, gaptop 10, gapbottom 10");
+        pnlContent.setLayout(new net.miginfocom.swing.MigLayout("fillx, insets 20", "[right]15[grow, fill]"));
 
-        addInfoField("Ngày mua:", txtNgayMua = new JTextField());
-        addInfoField("Hạn đổi trả:", txtHanDoi = new JTextField());
-        addInfoField("Tình trạng hạn:", txtTrangThai = new JTextField());
+        addHeaderLabel("THÔNG TIN PHIẾU");
         
-        addInfoField("Lý do:", txtLyDo = new JTextField());
-        addInfoField("Số lượng:", txtSL = new JTextField());
+        pnlContent.add(new JLabel("Mã phiếu đổi trả:"));
+        txtMaDT = createReadOnlyField("");
+        pnlContent.add(txtMaDT, "h 35!, wrap");
+
+        pnlContent.add(new JLabel("Ngày thực hiện:"));
+        txtNgayDT = createReadOnlyField("");
+        pnlContent.add(txtNgayDT, "h 35!, wrap");
+
+        pnlContent.add(new JLabel("Lý do trả hàng:"));
+        txtLyDo = createReadOnlyField("");
+        pnlContent.add(txtLyDo, "h 35!, wrap");
+
+        pnlContent.add(new JSeparator(), "span, growx, gaptop 10, gapbottom 10, wrap");
+
+        addHeaderLabel("NGUỒN GỐC GIAO DỊCH");
+
+        pnlContent.add(new JLabel("Mã phiếu xuất:"));
+        txtMaPX = createReadOnlyField("");
+        pnlContent.add(txtMaPX, "h 35!, wrap");
+
+        pnlContent.add(new JLabel("Khách hàng:"));
+        txtTenKH = createReadOnlyField("");
+        pnlContent.add(txtTenKH, "h 35!, wrap");
+
+        pnlContent.add(new JSeparator(), "span, growx, gaptop 10, gapbottom 10, wrap");
+
+        addHeaderLabel("SẢN PHẨM ĐÃ THU HỒI");
+
+        pnlContent.add(new JLabel("Mã IMEI:"));
+        txtImei = createReadOnlyField(""); 
+        txtImei.setForeground(new Color(231, 76, 60)); 
+        txtImei.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        pnlContent.add(txtImei, "h 35!, wrap");
+
+        pnlContent.add(new JLabel("Trạng thái:"));
+        txtStatus = createReadOnlyField("Đã nhập lại kho");
+        txtStatus.setForeground(new Color(46, 204, 113)); 
+        pnlContent.add(txtStatus, "h 35!, wrap");
     }
 
-    private void addInfoField(String label, JTextField txt) {
-        pnlContent.add(new JLabel(label));
-        txt.setEditable(false);
-        txt.setFocusable(false);
-        txt.setBackground(new Color(245, 245, 245)); // Màu xám nhẹ cho ô bị khóa
-        pnlContent.add(txt, "growx, h 35!");
+    private void addHeaderLabel(String text) {
+        JLabel lbl = new JLabel(text);
+        lbl.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lbl.setForeground(new Color(52, 73, 94));
+        pnlContent.add(lbl, "span, growx, gaptop 5, gapbottom 5, wrap");
+    }
+
+    private JTextField createReadOnlyField(String text) {
+        JTextField field = new JTextField(text);
+        field.setEditable(false);
+        field.setFocusable(false);
+        field.setBackground(new Color(245, 245, 245));
+        return field;
     }
 
     private void fillData() {
-        txtMa.setText(dt.getMaDoiTra());
-        txtMaPX.setText(dt.getMaPhieuXuat());
-        txtTenKH.setText(dt.getTenKH() + " (" + dt.getMaKH() + ")");
-        txtTenSP.setText(dt.getTenSP());
-        txtNgayMua.setText(dt.getNgayDoiTra().format(dtf));
-        txtHanDoi.setText(dt.getNgayHetHan().format(dtf));
-        
-        txtTrangThai.setText(dt.getTrangThaiThoiHan());
-        // Highlight màu nếu hết hạn
-        if(dt.getTrangThaiThoiHan().equals("Đã hết hạn đổi trả")) {
-            txtTrangThai.setForeground(Color.RED);
-        } else {
-            txtTrangThai.setForeground(new Color(0, 150, 0)); // Màu xanh lá
+        if (doiTra != null) {
+            txtMaDT.setText(doiTra.getMaDoiTra());
+            txtNgayDT.setText(doiTra.getNgayDoiTra().format(dtf));
+            txtLyDo.setText(doiTra.getLyDo());
+            txtMaPX.setText(doiTra.getMaPhieuXuat());
+            txtTenKH.setText(doiTra.getTenKH());
+            txtImei.setText(doiTra.getMaImei());
         }
-        
-        txtLyDo.setText(dt.getLyDo());
-        txtSL.setText(String.valueOf(dt.getSoLuong()));
     }
-
-    // Khai báo các biến UI
-    private JTextField txtMa, txtMaPX, txtTenKH, txtTenSP, txtNgayMua, txtHanDoi, txtTrangThai, txtLyDo, txtSL;
 
     @Override
     protected void logicXacNhan() {

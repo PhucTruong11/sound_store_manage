@@ -3,73 +3,107 @@ package Backend.DTO;
 import java.time.LocalDate;
 
 public class DoiTra {
-
     private String maDoiTra;
-    private String maPhieuXuat;
     private String maKH;
-    private String tenKH;
-    private String maPhienBan;
-    private String tenSP;
+    private String maPhieuXuat;
+    private String maImei;
     private LocalDate ngayDoiTra;
-    private int soLuong;
     private String lyDo;
-    private String tinhTrang;
+    private boolean trangThai;
 
-    public DoiTra() {}
+    private String tenKH;
+    private LocalDate ngayMua;
+    private LocalDate ngayHetHan;
 
-    public DoiTra(String maDoiTra, String maPhieuXuat, String maKH,
-                  String maPhienBan, LocalDate ngayDoiTra,
-                  int soLuong, String lyDo, String tinhTrang) {
+    public DoiTra() {
+    }
 
+    public DoiTra(String maDoiTra, String maKH, String maPhieuXuat, String maImei, LocalDate ngayDoiTra, String lyDo, boolean trangThai) {
         this.maDoiTra = maDoiTra;
-        this.maPhieuXuat = maPhieuXuat;
         this.maKH = maKH;
-        this.maPhienBan = maPhienBan;
+        this.maPhieuXuat = maPhieuXuat;
+        this.maImei = maImei;
         this.ngayDoiTra = ngayDoiTra;
-        this.soLuong = soLuong;
         this.lyDo = lyDo;
-        this.tinhTrang = tinhTrang;
+        this.trangThai = trangThai;
+    }
+
+    public String getMaDoiTra() {
+        return maDoiTra;
+    }
+
+    public void setMaDoiTra(String maDoiTra) {
+        this.maDoiTra = maDoiTra;
+    }
+
+    public String getMaKH() {
+        return maKH;
+    }
+
+    public void setMaKH(String maKH) {
+        this.maKH = maKH;
+    }
+
+    public String getMaPhieuXuat() {
+        return maPhieuXuat;
+    }
+
+    public void setMaPhieuXuat(String maPhieuXuat) {
+        this.maPhieuXuat = maPhieuXuat;
+    }
+
+    public String getMaImei() {
+        return maImei;
+    }
+
+    public void setMaImei(String maImei) {
+        this.maImei = maImei;
+    }
+
+    public LocalDate getNgayDoiTra() {
+        return ngayDoiTra;
+    }
+
+    public void setNgayDoiTra(LocalDate ngayDoiTra) {
+        this.ngayDoiTra = ngayDoiTra;
+    }
+
+    public String getLyDo() {
+        return lyDo;
+    }
+
+    public void setLyDo(String lyDo) {
+        this.lyDo = lyDo;
+    }
+
+    public boolean isTrangThai() {
+        return trangThai;
+    }
+
+    public void setTrangThai(boolean trangThai) {
+        this.trangThai = trangThai;
+    }
+
+    public String getTenKH() {
+        return tenKH;
+    }
+
+    public void setTenKH(String tenKH) {
+        this.tenKH = tenKH;
+    }
+
+    public LocalDate getNgayMua() {
+        return ngayMua;
+    }
+
+    public void setNgayMua(LocalDate ngayMua) {
+        this.ngayMua = ngayMua;
+        if (ngayMua != null) {
+            this.ngayHetHan = ngayMua.plusDays(30);
+        }
     }
 
     public LocalDate getNgayHetHan() {
-        if (ngayDoiTra == null) return null;
-        return ngayDoiTra.plusDays(30);
+        return ngayHetHan;
     }
-    public String getTrangThaiThoiHan() {
-        if (getNgayHetHan() == null) return "Không xác định";
-        if (LocalDate.now().isAfter(getNgayHetHan())) {
-            return "Đã hết hạn đổi trả";
-        }
-        return "Còn thời hạn";
-    }
-
-    public String getMaDoiTra() { return maDoiTra; }
-    public void setMaDoiTra(String maDoiTra) { this.maDoiTra = maDoiTra; }
-
-    public String getMaPhieuXuat() { return maPhieuXuat; }
-    public void setMaPhieuXuat(String maPhieuXuat) { this.maPhieuXuat = maPhieuXuat; }
-
-    public String getMaKH() { return maKH; }
-    public void setMaKH(String maKH) { this.maKH = maKH; }
-
-    public String getTenKH() { return tenKH; }
-    public void setTenKH(String tenKH) { this.tenKH = tenKH; }
-
-    public String getMaPhienBan() { return maPhienBan; }
-    public void setMaPhienBan(String maPhienBan) { this.maPhienBan = maPhienBan; }
-
-    public String getTenSP() { return tenSP; }
-    public void setTenSP(String tenSP) { this.tenSP = tenSP; }
-
-    public LocalDate getNgayDoiTra() { return ngayDoiTra; }
-    public void setNgayDoiTra(LocalDate ngayDoiTra) { this.ngayDoiTra = ngayDoiTra; }
-
-    public int getSoLuong() { return soLuong; }
-    public void setSoLuong(int soLuong) { this.soLuong = soLuong; }
-
-    public String getLyDo() { return lyDo; }
-    public void setLyDo(String lyDo) { this.lyDo = lyDo; }
-
-    public String getTinhTrang() { return tinhTrang; }
-    public void setTinhTrang(String tinhTrang) { this.tinhTrang = tinhTrang; }
 }

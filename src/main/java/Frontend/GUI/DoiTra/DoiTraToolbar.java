@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 import Backend.BUS.DoiTraBUS;
 import Backend.DTO.DoiTra;
@@ -30,13 +29,12 @@ public class DoiTraToolbar extends JPanel {
     private SearchTextField txtSearch;
 
     public DoiTraToolbar(DoiTraTable table) {
-
         this.table = table;
-        setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]10[]"));
+        setLayout(new MigLayout("fillx, insets 10", "[grow]10[]10[]10[]10[]"));
         setBackground(Color.WHITE);
         putClientProperty("FlatLaf.style", "arc: " + Theme.ROUNDING_ARC);
 
-        txtSearch = new SearchTextField("Tìm kiếm đổi trả ...");
+        txtSearch = new SearchTextField("Tìm kiếm mã DT, mã PX, IMEI, khách hàng...");
         btnAdd = new ButtonAdd("Thêm");
         btnFix = new ButtonFix("Sửa");
         btnDele = new ButtonDele("Xóa");
@@ -47,15 +45,14 @@ public class DoiTraToolbar extends JPanel {
         add(btnFix, "w 95!, h 35!");
         add(btnDele, "w 95!, h 35!");
         add(btnXuatExcel, "w 105!, h 35!");
+        
         initEvent();
     }
+
     private void initEvent() {
-
         btnAdd.addActionListener(e -> {
-
             DoiTraAddDialog dialog = new DoiTraAddDialog();
             dialog.setVisible(true);
-
             table.loadData();
         });
 
@@ -64,51 +61,52 @@ public class DoiTraToolbar extends JPanel {
             int row = tbl.getSelectedRow();
 
             if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa");
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn phiếu đổi trả cần sửa!");
                 return;
             }
 
-            DefaultTableModel model = table.getModel();
+            String maDT = tbl.getValueAt(row, 0).toString();
+            
+            DoiTra selectedDTO = null;
+            for (DoiTra item : doiTraBUS.getAll()) {
+                if (item.getMaDoiTra().equals(maDT)) {
+                    selectedDTO = item;
+                    break;
+                }
+            }
 
-            String ma = model.getValueAt(row, 0).toString();
-            String maPX = model.getValueAt(row, 1).toString();   
-            String maKH = model.getValueAt(row, 2).toString();
-            String ngay = model.getValueAt(row, 3).toString();    
-            String sl = model.getValueAt(row, 5).toString(); 
-            String tinhTrang = model.getValueAt(row, 6).toString(); 
-            String maPB = ""; 
-
-            DoiTraFixDialog dialog = new DoiTraFixDialog(ma, maPX, maKH, maPB, ngay, "Lý do", sl, tinhTrang);
-            dialog.setVisible(true);
-            table.loadData();
+            if (selectedDTO != null) {
+                DoiTraFixDialog dialog = new DoiTraFixDialog(selectedDTO);
+                dialog.setVisible(true);
+                table.loadData();
+            }
         });
 
         btnDele.addActionListener(e -> {
-
             JTable tbl = table.getTable();
             int row = tbl.getSelectedRow();
 
             if (row == -1) {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần xóa");
+                JOptionPane.showMessageDialog(this, "Vui lòng chọn phiếu cần xóa!");
                 return;
             }
 
-            String ma = table.getModel().getValueAt(row, 0).toString();
+            String ma = tbl.getValueAt(row, 0).toString();
 
             int confirm = JOptionPane.showConfirmDialog(
                     this,
-                    "Bạn có chắc muốn xóa?",
-                    "Xác nhận",
-                    JOptionPane.YES_NO_OPTION
+                    "Bạn có chắc muốn xóa phiếu " + ma + "?\n(Lưu ý: Thao tác này sẽ ẩn phiếu khỏi danh sách hiển thị)",
+                    "Xác nhận xóa",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
             );
 
             if (confirm == JOptionPane.YES_OPTION) {
-
                 if (doiTraBUS.delete(ma)) {
-                    JOptionPane.showMessageDialog(this, "Xóa thành công");
+                    JOptionPane.showMessageDialog(this, "Đã xóa thành công!");
                     table.loadData();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Xóa thất bại");
+                    JOptionPane.showMessageDialog(this, "Lỗi: Không thể xóa phiếu này.");
                 }
             }
         });
@@ -120,6 +118,10 @@ public class DoiTraToolbar extends JPanel {
                 ArrayList<DoiTra> result = doiTraBUS.search(keyword);
                 table.updateTable(result); 
             }
+        });
+        
+        btnXuatExcel.addActionListener(e -> {
+            Frontend.Compoent.XuatExcel.xuat(table.getTable());
         });
     }
 }

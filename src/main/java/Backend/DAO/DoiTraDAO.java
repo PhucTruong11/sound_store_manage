@@ -1,27 +1,22 @@
 package Backend.DAO;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
-
 import Backend.DTO.DoiTra;
 import Backend.DatabaseHelper;
 
 public class DoiTraDAO {
 
     public ArrayList<DoiTra> selectAll() {
-
         ArrayList<DoiTra> list = new ArrayList<>();
-
         String sql = """
-            SELECT dt.*, cn.HoTen AS TenKhachHang, sp.TenSP 
+            SELECT dt.*, px.NgayXuat, cn.HoTen 
             FROM DoiTra dt
-            LEFT JOIN KhachHang kh ON dt.MaKH = kh.ID
-            LEFT JOIN ConNguoi cn ON kh.ID = cn.ID
-            LEFT JOIN PhienBanSP pb ON dt.MaPhienBan = pb.MaPhienBan
-            LEFT JOIN SanPham sp ON pb.MaSP = sp.MaSP
+            JOIN PhieuXuat px ON dt.MaPhieuXuat = px.MaPhieuXuat
+            JOIN KhachHang kh ON dt.MaKH = kh.ID
+            JOIN ConNguoi cn ON kh.ID = cn.ID
+            WHERE dt.TrangThai = 1
         """;
 
         try (Connection conn = DatabaseHelper.getConnection();
@@ -29,106 +24,104 @@ public class DoiTraDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-
                 DoiTra dt = new DoiTra(
-                        rs.getString("MaDoiTra"),
-                        rs.getString("MaPhieuXuat"),
-                        rs.getString("MaKH"),
-                        rs.getString("MaPhienBan"),
-                        rs.getDate("NgayDoiTra").toLocalDate(),
-                        rs.getInt("SoLuong"),
-                        rs.getString("LyDo"),
-                        rs.getString("TinhTrang")
+                    rs.getString("MaDoiTra"),
+                    rs.getString("MaKH"),
+                    rs.getString("MaPhieuXuat"),
+                    rs.getString("MaImei"),
+                    rs.getDate("NgayDoiTra").toLocalDate(),
+                    rs.getString("LyDo"),
+                    rs.getBoolean("TrangThai")
                 );
-            dt.setTenKH(rs.getString("TenKhachHang") != null ? rs.getString("TenKhachHang") : "N/A");
-            dt.setTenSP(rs.getString("TenSP") != null ? rs.getString("TenSP") : "N/A");
-
-            list.add(dt);
+                dt.setTenKH(rs.getString("HoTen"));
+                dt.setNgayMua(rs.getDate("NgayXuat").toLocalDate());
+                list.add(dt);
             }
-
         } catch (Exception e) {
-            System.err.println("Lỗi SQL tại DoiTraDAO: " + e.getMessage());
             e.printStackTrace();
         }
-
         return list;
     }
 
     public int insert(DoiTra dt) {
-
-        String sql = "INSERT INTO DoiTra VALUES (?,?,?,?,?,?,?,?)";
-
+        String sql = "INSERT INTO DoiTra (MaDoiTra, MaKH, MaPhieuXuat, MaImei, NgayDoiTra, LyDo, TrangThai) VALUES (?, ?, ?, ?, ?, ?, 1)";
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
+            
             ps.setString(1, dt.getMaDoiTra());
-            ps.setString(2, dt.getMaPhieuXuat());
-            ps.setString(3, dt.getMaKH());
-            ps.setString(4, dt.getMaPhienBan());
+            ps.setString(2, dt.getMaKH());
+            ps.setString(3, dt.getMaPhieuXuat());
+            ps.setString(4, dt.getMaImei());
             ps.setDate(5, Date.valueOf(dt.getNgayDoiTra()));
-            ps.setInt(6, dt.getSoLuong());
-            ps.setString(7, dt.getLyDo());
-            ps.setString(8, dt.getTinhTrang());
-
+            ps.setString(6, dt.getLyDo());
+            
             return ps.executeUpdate();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
     public int update(DoiTra dt) {
-
-        String sql = """
-            UPDATE DoiTra
-            SET MaPhieuXuat=?,
-                MaKH=?,
-                MaPhienBan=?,
-                NgayDoiTra=?,
-                SoLuong=?,
-                LyDo=?,
-                TinhTrang=?
-            WHERE MaDoiTra=?
-        """;
-
+        String sql = "UPDATE DoiTra SET NgayDoiTra = ?, LyDo = ? WHERE MaDoiTra = ? AND TrangThai = 1";
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, dt.getMaPhieuXuat());
-            ps.setString(2, dt.getMaKH());
-            ps.setString(3, dt.getMaPhienBan());
-            ps.setDate(4, Date.valueOf(dt.getNgayDoiTra()));
-            ps.setInt(5, dt.getSoLuong());
-            ps.setString(6, dt.getLyDo());
-            ps.setString(7, dt.getTinhTrang());
-            ps.setString(8, dt.getMaDoiTra());
-
+            
+            ps.setDate(1, Date.valueOf(dt.getNgayDoiTra()));
+            ps.setString(2, dt.getLyDo());
+            ps.setString(3, dt.getMaDoiTra());
+            
             return ps.executeUpdate();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
-    public int delete(String ma) {
-
-        String sql = "DELETE FROM DoiTra WHERE MaDoiTra=?";
-
+    public int softDelete(String maDT) {
+        String sql = "UPDATE DoiTra SET TrangThai = 0 WHERE MaDoiTra = ?";
         try (Connection conn = DatabaseHelper.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, ma);
-
+            
+            ps.setString(1, maDT);
             return ps.executeUpdate();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
+    }
+
+    public boolean updateImeiReturn(String maImei) {
+        String sql = """
+            UPDATE ChiTietSP 
+            SET TinhTrang = 'Trong kho', 
+                MaPhieuXuat = NULL 
+            WHERE MaImei = ?
+        """;
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, maImei);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public LocalDate getNgayMuaByMaPX(String maPX) {
+        String sql = "SELECT NgayXuat FROM PhieuXuat WHERE MaPhieuXuat = ?";
+        try (Connection conn = DatabaseHelper.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, maPX);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDate("NgayXuat").toLocalDate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

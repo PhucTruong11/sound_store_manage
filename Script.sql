@@ -251,19 +251,22 @@ CREATE TABLE ChiTietBaoHanh (
 );
 
 CREATE TABLE DoiTra (
-    MaDoiTra VARCHAR(20) PRIMARY KEY,
-    MaPhieuXuat VARCHAR(20),
+MaDoiTra VARCHAR(20) PRIMARY KEY,
     MaKH VARCHAR(20),
-    MaPhienBan VARCHAR(20),
+    MaPhieuXuat VARCHAR(20),
     NgayDoiTra DATE,
-    SoLuong INT,
     LyDo TEXT,
-    TinhTrang VARCHAR(50),
-
-    FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat),
-    FOREIGN KEY (MaKH) REFERENCES KhachHang(ID),
-    FOREIGN KEY (MaPhienBan) REFERENCES PhienBanSP(MaPhienBan)
+    TrangThai BOOLEAN DEFAULT TRUE, -- Xóa mềm
+    -- Các trường này sẽ JOIN hoặc lấy từ logic để hiển thị
+    CONSTRAINT FK_DoiTra_KhachHang FOREIGN KEY (MaKH) REFERENCES KhachHang(ID),
+    CONSTRAINT FK_DoiTra_PhieuXuat FOREIGN KEY (MaPhieuXuat) REFERENCES PhieuXuat(MaPhieuXuat)
 );
+
+ALTER TABLE DoiTra ADD COLUMN MaImei VARCHAR(50) AFTER MaPhieuXuat;
+
+ALTER TABLE DoiTra 
+ADD CONSTRAINT FK_DoiTra_Imei 
+FOREIGN KEY (MaImei) REFERENCES ChiTietSP(MaImei);
 
 -- --------------------------------------------------------
 
@@ -616,9 +619,8 @@ INSERT INTO NCC_SanPham VALUES
 ('NCC002', 'SP026'), 
 ('NCC003', 'SP027');
 
-INSERT INTO DoiTra 
-VALUES
-('DT001','PX001','KH001','PB001','2026-03-10',1,'Loa bị rè bass','Đang xử lý');
+INSERT INTO DoiTra (MaDoiTra, MaKH, MaPhieuXuat, MaImei, NgayDoiTra, LyDo, TrangThai)
+VALUES ('DT001', 'KH001', 'PX001', '111222333', '2026-03-20', 'Loa bị rè bass', 1);
 
 UPDATE ChiTietBaoHanh 
 SET TinhTrang = 'Còn bảo hành' 
@@ -638,3 +640,4 @@ SELECT bh.MaBH, ct.MaCTBH, ct.TinhTrang
 FROM BaoHanh bh
 LEFT JOIN ChiTietBaoHanh ct ON ct.MaBH = bh.MaBH
 ORDER BY bh.MaBH, ct.MaCTBH DESC;
+
