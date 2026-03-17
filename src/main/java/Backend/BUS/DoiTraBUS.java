@@ -47,57 +47,47 @@ public class DoiTraBUS {
         String validateMsg = validate(dt);
         if (!validateMsg.equals("OK")) return validateMsg;
 
-        // Validate IMEI cũ (máy trả) có thuộc phiếu xuất này không
-        if (!dtDAO.checkImeiInvoice(dt.getMaImei(), dt.getMaPhieuXuat())) {
-            return "Lỗi: IMEI máy trả không thuộc phiếu xuất đã chọn!";
-        }
+        // Lấy thông tin phiên bản của máy cũ và máy mới để so sánh
+        String maPB_Cu = dtDAO.getMaPhienBanByImei(dt.getMaImei());
+        String maPB_Moi = (imeiMoi != null) ? dtDAO.getMaPhienBanByImei(imeiMoi) : null;
 
-        // Nếu có IMEI mới, kiểm tra nó có trong kho không
-        if (imeiMoi != null && !imeiMoi.trim().isEmpty()) {
-            if (!dtDAO.checkImeiInStock(imeiMoi)) {
-                return "Lỗi: IMEI máy thay thế không có sẵn trong kho!";
-            }
+        if (dtDAO.getMaDoiTraByImei(dt.getMaImei()) != null) {
+            return "Lỗi: Máy này đã được thực hiện đổi trả trước đó!";
         }
-
         int result = dtDAO.insert(dt); 
         
         if (result > 0) {
-            // Thu hồi máy cũ (Cập nhật trạng thái 'Lỗi' và gỡ khỏi phiếu xuất)
-            boolean okOld = dtDAO.updateOldImeiStatus(dt.getMaImei(), "Máy lỗi đổi trả");
+            // 1. Thu hồi máy cũ (Set MaPhieuXuat = NULL)
+            dtDAO.updateOldImeiStatus(dt.getMaImei(), "Máy lỗi đổi trả");
             
-            if (okOld) {
-                // Nếu có IMEI mới, giao cho khách
-                if (imeiMoi != null && !imeiMoi.trim().isEmpty()) {
-                    boolean okNew = dtDAO.assignNewImeiToInvoice(imeiMoi, dt.getMaPhieuXuat());
-                    if (okNew) {
-                        return "OK";
-                    } else {
-                        return "Phiếu đã tạo nhưng gặp lỗi khi gán IMEI máy mới!";
-                    }
-                } else {
-                    // Không có IMEI mới - chỉ thu hồi máy lỗi
-                    return "OK";
+            if (imeiMoi != null && !imeiMoi.isEmpty()) {
+                // 2. Giao máy mới (Gán MaPhieuXuat cũ vào IMEI mới)
+                dtDAO.assignNewImeiToInvoice(imeiMoi, dt.getMaPhieuXuat());
+
+                // 3. XỬ LÝ ĐỔI KHÁC PHIÊN BẢN
+                if (!maPB_Cu.equals(maPB_Moi)) {
+                    // Giảm số lượng dòng cũ trong ChiTietPhieuXuat
+                    dtDAO.updateQuantityInChiTietPX(dt.getMaPhieuXuat(), maPB_Cu, -1);
+                    // Tăng (hoặc thêm mới) dòng phiên bản mới vào ChiTietPhieuXuat
+                    dtDAO.updateQuantityInChiTietPX(dt.getMaPhieuXuat(), maPB_Moi, 1);
                 }
-            } else {
-                return "Phiếu đã tạo nhưng không thể cập nhật trạng thái máy cũ!";
             }
+            return "OK";
         }
-        return "Lỗi hệ thống: Không thể thêm phiếu đổi trả.";
+        return "Lỗi hệ thống";
     }
 
-    public boolean delete(String maDT) {
-        // Get IMEI before delete to restore it
-        String imei = dtDAO.getImeiByMaDoiTra(maDT);
-        
-        boolean isDeleted = dtDAO.softDelete(maDT) > 0;
-        
-        if (isDeleted && imei != null) {
-            // Restore IMEI status from "Máy lỗi đổi trả" back to "Đã bán"
-            dtDAO.restoreImeiStatus(imei);
-        }
-        
-        return isDeleted;
+    // Sửa hàm delete để khi xóa phiếu đổi trả thì máy phải được "hồi sinh" về trạng thái Đã bán
+public boolean delete(String maDT) {
+    String imeiLoi = dtDAO.getImeiByMaDoiTra(maDT);
+    boolean isDeleted = dtDAO.softDelete(maDT) > 0;
+    if (isDeleted && imeiLoi != null) {
+        // Trả máy lỗi về trạng thái Đã bán (coi như chưa từng đổi trả)
+        dtDAO.restoreImeiStatus(imeiLoi);
+        // Lưu ý: Nếu có máy mới đã giao, bạn cần logic thu hồi máy mới đó về kho (tùy độ phức tạp)
     }
+    return isDeleted;
+}
 
     public String update(DoiTra dt) {
         String validateMsg = validate(dt);
@@ -165,5 +155,9 @@ public class DoiTraBUS {
             }
         }
         return result;
+    }
+
+    public java.util.HashMap<String, String> getProductInfoByImei(String imei) {
+        return dtDAO.getProductInfoByImei(imei);
     }
 }

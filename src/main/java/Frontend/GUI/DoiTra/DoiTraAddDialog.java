@@ -3,21 +3,28 @@ package Frontend.GUI.DoiTra;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
+import java.awt.Image;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.BorderFactory;
 
 import com.toedter.calendar.JDateChooser;
 
 import Backend.BUS.DoiTraBUS;
 import Backend.DTO.DoiTra;
 import Frontend.Compoent.BaseThaoTacDialog;
+import Frontend.Compoent.Theme;
+import net.miginfocom.swing.MigLayout;
 
 public class DoiTraAddDialog extends BaseThaoTacDialog {
 
@@ -27,6 +34,10 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private JTextField txtMaImeiMoi;
     private JButton btnChonImeiMoi;
+    
+    // Panel hiển thị thông tin sản phẩm
+    private JLabel lblProductImage;
+    private JTextField txtProductInfo, txtProductPrice, txtProductStatus;
 
     private DoiTraBUS doiTraBUS = new DoiTraBUS();
 
@@ -105,6 +116,35 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         pnlContent.add(new JLabel("Lý do: "));
         txtLyDo = new JTextField();
         pnlContent.add(txtLyDo, "growx, h 35!");
+        
+        // Panel hiển thị thông tin sản phẩm khi chọn IMEI
+        pnlContent.add(new JLabel("Thông tin sản phẩm:"), "newline");
+        
+        JPanel pnlProductInfo = new JPanel(new MigLayout("wrap 1, fill, insets 10", "[center]"));
+        pnlProductInfo.setBackground(new Color(248, 249, 250));
+        pnlProductInfo.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+        
+        lblProductImage = new JLabel();
+        lblProductImage.setHorizontalAlignment(JLabel.CENTER);
+        lblProductImage.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+        pnlProductInfo.add(lblProductImage, "w 220!, h 180!");
+        
+        txtProductInfo = new JTextField();
+        txtProductInfo.setEditable(false);
+        txtProductInfo.setBackground(new Color(240, 240, 240));
+        pnlProductInfo.add(txtProductInfo, "growx, h 35!");
+        
+        txtProductPrice = new JTextField();
+        txtProductPrice.setEditable(false);
+        txtProductPrice.setBackground(new Color(240, 240, 240));
+        pnlProductInfo.add(txtProductPrice, "growx, h 35!");
+        
+        txtProductStatus = new JTextField();
+        txtProductStatus.setEditable(false);
+        txtProductStatus.setBackground(new Color(240, 240, 240));
+        pnlProductInfo.add(txtProductStatus, "growx, h 35!");
+        
+        pnlContent.add(pnlProductInfo, "span 2, grow");
     }
 
 
@@ -154,7 +194,70 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         dialog.setVisible(true);
         
         if (dialog.getSelectedImei() != null) {
-            txtMaImei.setText(dialog.getSelectedImei());
+            String imei = dialog.getSelectedImei();
+            txtMaImei.setText(imei);
+            
+            // Load thông tin sản phẩm từ IMEI
+            loadProductInfo(imei);
+        }
+    }
+    
+    private void loadProductInfo(String imei) {
+        try {
+            HashMap<String, String> productInfo = doiTraBUS.getProductInfoByImei(imei);
+            
+            if (productInfo != null && !productInfo.isEmpty()) {
+                // Load hình ảnh
+                String hinhAnh = productInfo.get("hinhAnh");
+                if (hinhAnh != null && !hinhAnh.isEmpty()) {
+                    loadProductImage(hinhAnh);
+                } else {
+                    lblProductImage.setIcon(null);
+                    lblProductImage.setText("Không có ảnh");
+                }
+                
+                // Load thông tin sản phẩm
+                String tenSP = productInfo.get("tenSP");
+                String mauSac = productInfo.get("mauSac");
+                String congSuat = productInfo.get("congSuat");
+                String productText = "🔹 " + tenSP + "\n📦 " + mauSac + " | " + congSuat;
+                txtProductInfo.setText(productText);
+                
+                // Load giá
+                String giaBan = productInfo.get("giaBan");
+                try {
+                    double gia = Double.parseDouble(giaBan);
+                    txtProductPrice.setText("💰 Giá: " + String.format("%,.0f VNĐ", gia));
+                } catch (Exception ex) {
+                    txtProductPrice.setText("💰 Giá: N/A");
+                }
+                
+                // Load tình trạng
+                String tinhTrang = productInfo.get("tinhTrang");
+                txtProductStatus.setText("📊 Tình trạng: " + tinhTrang);
+            }
+        } catch (Exception ex) {
+            System.err.println("Lỗi load thông tin sản phẩm: " + ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+    
+    private void loadProductImage(String imgName) {
+        try {
+            java.net.URL imgURL = getClass().getClassLoader().getResource("images/product/" + imgName);
+            if (imgURL != null) {
+                ImageIcon icon = new ImageIcon(imgURL);
+                Image scaled = icon.getImage().getScaledInstance(220, 180, Image.SCALE_SMOOTH);
+                lblProductImage.setIcon(new ImageIcon(scaled));
+                lblProductImage.setText("");
+            } else {
+                lblProductImage.setIcon(null);
+                lblProductImage.setText("Không tìm thấy ảnh");
+            }
+        } catch (Exception e) {
+            lblProductImage.setIcon(null);
+            lblProductImage.setText("Lỗi tải ảnh");
+            e.printStackTrace();
         }
     }
 
@@ -162,7 +265,11 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         SelectImeiTrongKhoDialog dialog = new SelectImeiTrongKhoDialog();
         dialog.setVisible(true);
         if (dialog.getSelectedImei() != null) {
-            txtMaImeiMoi.setText(dialog.getSelectedImei());
+            String imei = dialog.getSelectedImei();
+            txtMaImeiMoi.setText(imei);
+            
+            // Cũng load thông tin sản phẩm mới để xem
+            loadProductInfo(imei);
         }
     }
 
