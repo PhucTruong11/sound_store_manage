@@ -106,6 +106,8 @@ public class DoiTraFixDialog extends BaseThaoTacDialog {
 
         pnlContent.add(new JLabel("Ngày đổi trả:"));
         jdNgayDoi = new JDateChooser();
+        jdNgayDoi.setBorder(null);
+        jdNgayDoi.setBackground(Color.WHITE);
         jdNgayDoi.setDateFormatString("dd/MM/yyyy");
         pnlContent.add(jdNgayDoi, "h 35!, wrap");
 
@@ -114,33 +116,33 @@ public class DoiTraFixDialog extends BaseThaoTacDialog {
         pnlContent.add(txtLyDo, "h 35!, wrap");
         
         // Panel hiển thị thông tin sản phẩm
-        pnlContent.add(new JLabel("Thông tin sản phẩm:"), "newline");
+        // pnlContent.add(new JLabel("Thông tin sản phẩm:"), "newline");
         
-        JPanel pnlProductInfo = new JPanel(new MigLayout("wrap 1, fill, insets 10", "[center]"));
-        pnlProductInfo.setBackground(new Color(248, 249, 250));
-        pnlProductInfo.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
+        // JPanel pnlProductInfo = new JPanel(new MigLayout("wrap 1, fill, insets 10", "[center]"));
+        // pnlProductInfo.setBackground(new Color(248, 249, 250));
+        // pnlProductInfo.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230)));
         
-        lblProductImage = new JLabel();
-        lblProductImage.setHorizontalAlignment(JLabel.CENTER);
-        lblProductImage.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
-        pnlProductInfo.add(lblProductImage, "w 220!, h 180!");
+        // lblProductImage = new JLabel();
+        // lblProductImage.setHorizontalAlignment(JLabel.CENTER);
+        // lblProductImage.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)));
+        // pnlProductInfo.add(lblProductImage, "w 220!, h 180!");
         
-        txtProductInfo = new JTextField();
-        txtProductInfo.setEditable(false);
-        txtProductInfo.setBackground(new Color(240, 240, 240));
-        pnlProductInfo.add(txtProductInfo, "growx, h 35!");
+        // txtProductInfo = new JTextField();
+        // txtProductInfo.setEditable(false);
+        // txtProductInfo.setBackground(new Color(240, 240, 240));
+        // pnlProductInfo.add(txtProductInfo, "growx, h 35!");
         
-        txtProductPrice = new JTextField();
-        txtProductPrice.setEditable(false);
-        txtProductPrice.setBackground(new Color(240, 240, 240));
-        pnlProductInfo.add(txtProductPrice, "growx, h 35!");
+        // txtProductPrice = new JTextField();
+        // txtProductPrice.setEditable(false);
+        // txtProductPrice.setBackground(new Color(240, 240, 240));
+        // pnlProductInfo.add(txtProductPrice, "growx, h 35!");
         
-        txtProductStatus = new JTextField();
-        txtProductStatus.setEditable(false);
-        txtProductStatus.setBackground(new Color(240, 240, 240));
-        pnlProductInfo.add(txtProductStatus, "growx, h 35!");
+        // txtProductStatus = new JTextField();
+        // txtProductStatus.setEditable(false);
+        // txtProductStatus.setBackground(new Color(240, 240, 240));
+        // pnlProductInfo.add(txtProductStatus, "growx, h 35!");
         
-        pnlContent.add(pnlProductInfo, "span 2, grow");
+        // pnlContent.add(pnlProductInfo, "span 2, grow");
     }
 
     private void openSelectPhieuXuat() {
