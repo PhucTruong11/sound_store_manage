@@ -22,15 +22,13 @@ public class MainFrame extends JFrame {
         mainContent.setBackground(Theme.BACKGROUND_COLOR);
         add(mainContent, BorderLayout.CENTER);
 
-        // --- TẠO PANEL CHÀO MỪNG ---
         JPanel pnlWelcome = new JPanel(new GridBagLayout());
         pnlWelcome.setBackground(Theme.BACKGROUND_COLOR);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.insets = new Insets(10, 10, 10, 10); // Khoảng cách giữa các thành phần
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        // 1. Xử lý hình ảnh
         JLabel lblImage = new JLabel();
         try {
             ImageIcon icon = new ImageIcon(getClass().getResource("/images/isometric-logistics-delivery-composition-with-images-shelves-parcel-boxes-human-characters-workers-vector-illustration.png"));
@@ -42,19 +40,15 @@ public class MainFrame extends JFrame {
             lblImage.setForeground(new Color(200, 200, 200));
         }
         
-        // Thêm ảnh vào pnlWelcome (ở trên)
         pnlWelcome.add(lblImage, gbc);
 
-        // 2. Xử lý lời chào
         JLabel lblWelcome = new JLabel("Chào mừng " + userName + " trở lại hệ thống!");
-        lblWelcome.setFont(new Font("Segoe UI", Font.ITALIC, 24)); // Tăng size chữ cho đẹp
+        lblWelcome.setFont(new Font("Segoe UI", Font.ITALIC, 24));
         lblWelcome.setForeground(new Color(80, 80, 80));
 
-        // Thêm chữ vào pnlWelcome (ở dưới ảnh)
         gbc.gridy = 1; 
         pnlWelcome.add(lblWelcome, gbc);
         
-        // Hiển thị pnlWelcome lên mainContent
         setPage(pnlWelcome);
     }
 

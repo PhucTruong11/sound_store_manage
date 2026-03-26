@@ -8,12 +8,12 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class Navigation extends JPanel{
     
-    // Nhận userName từ MainFrame truyền xuống
     public Navigation(String userName) {
         setBackground(Theme.PRIMARY_COLOR);
         
         setLayout(new MigLayout("fill, insets 0 40 0 40", "[200!][grow, center][200!]", "[65!, center]"));
-        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)));
+        setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, 
+                                                    new Color(230, 230, 230)));
 
         JPanel userBox = new JPanel(new MigLayout("insets 0, gapx 10", "[] []", "center"));
         userBox.setOpaque(false);
@@ -35,7 +35,5 @@ public class Navigation extends JPanel{
         lblLogo.setForeground(Color.WHITE);
         
         add(lblLogo, "center");
-
-        
     }
 }

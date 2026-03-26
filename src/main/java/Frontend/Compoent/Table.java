@@ -10,7 +10,7 @@ public class Table extends JTable{
         setRowHeight(35);
         setShowGrid(false);
         setIntercellSpacing(new Dimension(0, 0));
-        setSelectionBackground(new Color(232, 240, 254)); // Màu xanh rất nhẹ khi click
+        setSelectionBackground(new Color(232, 240, 254));
         setSelectionForeground(Color.BLACK);
         setFont(new Font("Segoe UI", Font.PLAIN, 13));
 
@@ -19,7 +19,8 @@ public class Table extends JTable{
         header.setBackground(Theme.SECONDARY_COLOR);
         header.setForeground(Color.WHITE);
         header.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, new Color(230, 230, 230)));
+        header.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, 
+                                                            new Color(230, 230, 230)));
         header.setPreferredSize(new Dimension(header.getWidth(), 45));
 
         // Căn giữa nội dung

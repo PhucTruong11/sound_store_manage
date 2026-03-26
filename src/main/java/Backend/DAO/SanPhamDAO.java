@@ -9,9 +9,10 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
     @Override
     public ArrayList<SanPham> selectAll() {
         ArrayList<SanPham> list = new ArrayList<>();
-        //String sql = "SELECT * FROM SanPham WHERE TrangThai = TRUE";
         String sql = "SELECT sp.*, " +
-             "(SELECT COALESCE(SUM(pb.SoLuongTon), 0) " +" FROM PhienBanSP pb " +" WHERE pb.MaSP = sp.MaSP AND pb.TrangThai = 1) AS TongSoLuong " + "FROM SanPham sp " +"WHERE sp.TrangThai = TRUE"; 
+             "(SELECT COALESCE(SUM(pb.SoLuongTon), 0) " +" FROM PhienBanSP pb " +
+             " WHERE pb.MaSP = sp.MaSP AND pb.TrangThai = 1) AS TongSoLuong " + 
+             "FROM SanPham sp " +"WHERE sp.TrangThai = TRUE"; 
         try (Connection conn = DatabaseHelper.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql);
                 ResultSet rs = stmt.executeQuery()) {
@@ -147,7 +148,8 @@ public class SanPhamDAO implements DAOInterface<SanPham> {
         }
         return list;
     }
-    // Hàm sinh mã tự động
+
+    
     public String getNextID() {
         String sql = "SELECT MaSP FROM SanPham";
         int maxId = 0;
