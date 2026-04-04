@@ -4,20 +4,21 @@ import Frontend.Compoent.CustomButton;
 import Frontend.Compoent.Theme;
 import Frontend.GUI.Nhaphang.NhapHangTable;
 
-import com.toedter.calendar.JDateChooser;
-
 import Backend.BUS.NhaCungCapBUS;
 import Backend.DTO.NhaCungCap;
 import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 
 public class PhieuNhapSidebar extends JPanel{
-    private JDateChooser dateFrom;
-    private JDateChooser dateTo;
+    private JSpinner dateFrom;
+    private JSpinner dateTo;
     private JTextField txtMinPrice, txtMaxPrice;
     private JComboBox<String> cbxNhanVien;
     private JComboBox<NhaCungCap> cbxNhaCungCap;
@@ -65,8 +66,8 @@ public class PhieuNhapSidebar extends JPanel{
     // }
 
     private void onFilterChange() {
-        Date start = getStartOfDay(dateFrom.getDate());
-        Date end = getEndOfDay(dateTo.getDate());
+        Date start = getStartOfDay((Date) ((SpinnerDateModel) dateFrom.getModel()).getValue());
+        Date end = getEndOfDay((Date) ((SpinnerDateModel) dateTo.getModel()).getValue());
         // NhaCungCap ncc = (NhaCungCap) cbxNhaCungCap.getSelectedItem();
         // String maNCC = (ncc != null) ? ncc.getMaNCC() : "All";
         table.filter(/*maNCC,*/ start, end, txtMinPrice.getText(), txtMaxPrice.getText());
@@ -96,29 +97,22 @@ public class PhieuNhapSidebar extends JPanel{
 
     private void initDate() {
         add(new JLabel("Từ ngày:"), "gaptop 10");
-        dateFrom = new JDateChooser();
-        dateFrom.setBorder(null);
-        dateFrom.setBackground(Color.WHITE);
-        dateFrom.setDateFormatString("dd/MM/yyyy");
-        Calendar cal = Calendar.getInstance();
-        cal.set(2000, 0, 1);
-        dateFrom.setDate(cal.getTime());
+        Calendar calFrom = Calendar.getInstance();
+        calFrom.set(2000, 0, 1);
+        SpinnerDateModel modelFrom = new SpinnerDateModel(calFrom.getTime(), null, null, Calendar.DAY_OF_MONTH);
+        dateFrom = new JSpinner(modelFrom);
+        dateFrom.setEditor(new JSpinner.DateEditor(dateFrom, "dd/MM/yyyy"));
         add(dateFrom, "h 35!");
 
         add(new JLabel("Đến ngày:"), "gaptop 10");
-        dateTo = new JDateChooser();
-        dateTo.setBorder(null);
-        dateTo.setBackground(Color.WHITE);
-        dateTo.setDateFormatString("dd/MM/yyyy");
-        dateTo.setDate(new Date());
+        SpinnerDateModel modelTo = new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH);
+        dateTo = new JSpinner(modelTo);
+        dateTo.setEditor(new JSpinner.DateEditor(dateTo, "dd/MM/yyyy"));
         add(dateTo, "h 35!");
 
-        dateFrom.addPropertyChangeListener(e -> {
-            if("date".equals(e.getPropertyName())) onFilterChange();
-        });
-        dateTo.addPropertyChangeListener(e -> {
-            if("date".equals(e.getPropertyName())) onFilterChange();
-        });
+        ChangeListener changeListener = e -> onFilterChange();
+        modelFrom.addChangeListener(changeListener);
+        modelTo.addChangeListener(changeListener);
     }
 
     private void initPrice() {
@@ -160,9 +154,9 @@ public class PhieuNhapSidebar extends JPanel{
     private void resetFilters() {
         Calendar cal = Calendar.getInstance();
         cal.set(2000, 0, 1);
-        dateFrom.setDate(cal.getTime());
+        ((SpinnerDateModel) dateFrom.getModel()).setValue(cal.getTime());
         
-        dateTo.setDate(new Date());
+        ((SpinnerDateModel) dateTo.getModel()).setValue(new Date());
         
         txtMinPrice.setText("");
         txtMaxPrice.setText("");
