@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
@@ -17,7 +18,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
 
-import com.toedter.calendar.JDateChooser;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 
 import Backend.BUS.DoiTraBUS;
 import Backend.DTO.DoiTra;
@@ -29,7 +31,7 @@ public class DoiTraFixDialog extends BaseThaoTacDialog {
 
     private JTextField txtMa, txtMaPX, txtMaKH, txtMaImei, txtNgayBan, txtHanCuoi, txtLyDo;
     private JButton btnChonPX, btnChonImei;
-    private JDateChooser jdNgayDoi;
+    private JSpinner jdNgayDoi;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     
     // Panel hiển thị thông tin sản phẩm
@@ -49,7 +51,7 @@ public class DoiTraFixDialog extends BaseThaoTacDialog {
 
         if (dt.getNgayDoiTra() != null) {
             Date date = Date.from(dt.getNgayDoiTra().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            jdNgayDoi.setDate(date);
+            ((SpinnerDateModel) jdNgayDoi.getModel()).setValue(date);
         }
 
         txtMa.setEditable(false);
@@ -105,10 +107,9 @@ public class DoiTraFixDialog extends BaseThaoTacDialog {
         pnlContent.add(btnChonImei, "w 40!, h 35!, wrap");
 
         pnlContent.add(new JLabel("Ngày đổi trả:"));
-        jdNgayDoi = new JDateChooser();
-        jdNgayDoi.setBorder(null);
-        jdNgayDoi.setBackground(Color.WHITE);
-        jdNgayDoi.setDateFormatString("dd/MM/yyyy");
+        SpinnerDateModel modelNgayDoi = new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH);
+        jdNgayDoi = new JSpinner(modelNgayDoi);
+        jdNgayDoi.setEditor(new JSpinner.DateEditor(jdNgayDoi, "dd/MM/yyyy"));
         pnlContent.add(jdNgayDoi, "h 35!, wrap");
 
         pnlContent.add(new JLabel("Lý do: "));
@@ -249,7 +250,7 @@ public class DoiTraFixDialog extends BaseThaoTacDialog {
             return;
         }
 
-        Date dateDoi = jdNgayDoi.getDate();
+        Date dateDoi = (Date) ((SpinnerDateModel) jdNgayDoi.getModel()).getValue();
         if (dateDoi == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày!");
             return;
@@ -267,7 +268,7 @@ public class DoiTraFixDialog extends BaseThaoTacDialog {
 
         DoiTra dt = new DoiTra();
         dt.setMaDoiTra(txtMa.getText());
-        dt.setNgayDoiTra(jdNgayDoi.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        dt.setNgayDoiTra(((Date) ((SpinnerDateModel) jdNgayDoi.getModel()).getValue()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
         dt.setLyDo(txtLyDo.getText());
 
         String res = doiTraBUS.update(dt);

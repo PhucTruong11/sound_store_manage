@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
@@ -17,8 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.BorderFactory;
-
-import com.toedter.calendar.JDateChooser;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
 
 import Backend.BUS.DoiTraBUS;
 import Backend.DTO.DoiTra;
@@ -30,7 +31,7 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
 
     private JTextField txtMa, txtMaPX, txtMaKH, txtMaImei, txtNgayBan, txtHanCuoi, txtLyDo;
     private JButton btnChonPX, btnChonImei;
-    private JDateChooser jdNgayDoi;
+    private JSpinner jdNgayDoi;
     private DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private JTextField txtMaImeiMoi;
     private JButton btnChonImeiMoi;
@@ -47,7 +48,7 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         String newMa = doiTraBUS.generateMaDoiTra();
         txtMa.setText(newMa);
         
-        jdNgayDoi.setDate(new Date());
+        ((SpinnerDateModel) jdNgayDoi.getModel()).setValue(new Date());
     }
 
     @Override
@@ -109,10 +110,9 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
         pnlContent.add(lblNote, "wrap, gaptop -30");
 
         pnlContent.add(new JLabel("Ngày đổi trả:"));
-        jdNgayDoi = new JDateChooser();
-        jdNgayDoi.setBorder(null);
-        jdNgayDoi.setBackground(Color.WHITE);
-        jdNgayDoi.setDateFormatString("dd/MM/yyyy");
+        SpinnerDateModel modelNgayDoi = new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_MONTH);
+        jdNgayDoi = new JSpinner(modelNgayDoi);
+        jdNgayDoi.setEditor(new JSpinner.DateEditor(jdNgayDoi, "dd/MM/yyyy"));
         pnlContent.add(jdNgayDoi, "growx, h 35!");
 
         pnlContent.add(new JLabel("Lý do: "));
@@ -287,7 +287,7 @@ public class DoiTraAddDialog extends BaseThaoTacDialog {
             return;
         }
 
-        Date dateDoi = jdNgayDoi.getDate();
+        Date dateDoi = (Date) ((SpinnerDateModel) jdNgayDoi.getModel()).getValue();
         if (dateDoi == null) {
             JOptionPane.showMessageDialog(this, "Vui lòng chọn ngày đổi trả!");
             return;

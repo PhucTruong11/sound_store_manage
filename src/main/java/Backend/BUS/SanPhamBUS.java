@@ -29,7 +29,6 @@ public class SanPhamBUS {
         return false;
     }
 
-    // Hàm sinh mã tự động
     public String getNextID() {
         return spDAO.getNextID();
     }
