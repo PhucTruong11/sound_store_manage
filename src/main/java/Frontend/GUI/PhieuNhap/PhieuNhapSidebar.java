@@ -100,7 +100,9 @@ public class PhieuNhapSidebar extends JPanel{
         dateFrom.setBorder(null);
         dateFrom.setBackground(Color.WHITE);
         dateFrom.setDateFormatString("dd/MM/yyyy");
-        dateFrom.setDate(new Date(100, 0, 1));
+        Calendar cal = Calendar.getInstance();
+        cal.set(2000, 0, 1);
+        dateFrom.setDate(cal.getTime());
         add(dateFrom, "h 35!");
 
         add(new JLabel("Đến ngày:"), "gaptop 10");
@@ -156,7 +158,9 @@ public class PhieuNhapSidebar extends JPanel{
     }
 
     private void resetFilters() {
-        dateFrom.setDate(new Date(100, 0, 1));
+        Calendar cal = Calendar.getInstance();
+        cal.set(2000, 0, 1);
+        dateFrom.setDate(cal.getTime());
         
         dateTo.setDate(new Date());
         

@@ -3,6 +3,7 @@ package Frontend.GUI.PhieuXuat;
 import javax.swing.*;
 import com.toedter.calendar.JDateChooser;
 import java.awt.*;
+import java.util.Calendar;
 import java.util.Date;
 
 import Frontend.Compoent.CustomButton;
@@ -74,7 +75,9 @@ public class PhieuXuatSidebar extends JPanel {
         dateFrom.setBorder(null);
         dateFrom.setBackground(Color.WHITE);
         dateFrom.setDateFormatString("dd/MM/yyyy");
-        dateFrom.setDate(new Date(100, 0, 1)); 
+        Calendar cal = Calendar.getInstance();
+        cal.set(2000, 0, 1);
+        dateFrom.setDate(cal.getTime()); 
         add(dateFrom, "h 35!");
 
         add(new JLabel("Đến ngày:"), "gaptop 10");
@@ -135,7 +138,9 @@ public class PhieuXuatSidebar extends JPanel {
     }
 
     private void resetFilters() {
-        dateFrom.setDate(new Date(100, 0, 1)); 
+        Calendar cal = Calendar.getInstance();
+        cal.set(2000, 0, 1);
+        dateFrom.setDate(cal.getTime()); 
         dateTo.setDate(new Date()); 
 
         txtMinPrice.setText("");
