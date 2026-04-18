@@ -58,53 +58,6 @@ src/main/java/
 
 ---
 
-## Tổng quan dự án
-    -Đăng nhập(Nhân viên, khách hàng, admin)
-    -Trang chủ
-        Bán hàng
-        Nhập hàng
-        Sản phẩm
-        Hóa đơn bán hàng/nhập hàng
-        Khuyến mãi
-        Nhân viên
-            Admin(có thể phân quyền cho nhân viên)
-            Nhân viên bán hàng
-            Kế toán
-            Bảo vệ
-        Khách hàng 
-        Nhà cung cấp
-        Tài khoản(Đăng nhập, đăng xuất)
-        Giỏ hàng
-        Cài đặt
-    Sản phẩm
-        Thêm
-        Sửa
-        Xóa
-        Nhập, xuất Excel
-        Tìm kiếm
-            Theo tên
-            theo giá
-            hãng
-        Sắp xếp
-            tăng dần
-            giảm dần
-            từ - đến
-    Bán hàng
-        Chọn sản phẩm
-            Xác nhận mua
-                Xuất hóa đơn bán hàng(xuất pdf)
-            Thêm vào giỏ hàng
-                Giữ hàng
-    Thống kê
-        Thống kê cơ bản(xuất pdf)
-            Sản phẩm
-            Nhân viên
-            Khách hàng
-            Nhà cung cấp
-            Bán hàng
-            Nhập hàng
-
-
 ## 🛠️ Công Nghệ Sử Dụng
 
 | Thành Phần | Chi Tiết |
