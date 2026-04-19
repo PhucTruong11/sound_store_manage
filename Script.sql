@@ -1,4 +1,4 @@
--- DROP TABLE IF EXISTS sanpham;
+baohanh-- DROP TABLE IF EXISTS sanpham;
 -- DROP TABLE IF EXISTS nhanvien;
 -- DROP TABLE IF EXISTS khachhang;
 
