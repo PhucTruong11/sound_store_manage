@@ -1,8 +1,3 @@
-baohanh-- DROP TABLE IF EXISTS sanpham;
--- DROP TABLE IF EXISTS nhanvien;
--- DROP TABLE IF EXISTS khachhang;
-
--- Tạo Database tên là 'quanlyamthanh' (nếu chưa có)
 CREATE DATABASE IF NOT EXISTS quanlyamthanh CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 USE quanlyamthanh;
